@@ -1,4 +1,5 @@
-package de.uni_koeln.spinfo.maalr.webapp.controller;
+package java.de.uni_koeln.spinfo.maalr.webapp.controller;
+
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

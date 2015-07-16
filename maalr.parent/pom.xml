@@ -7,7 +7,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>../maalr.antlr</module>
 		<module>../maalr.common</module>
 		<module>../maalr.mongo</module>
 		<module>../maalr.lucene</module>
