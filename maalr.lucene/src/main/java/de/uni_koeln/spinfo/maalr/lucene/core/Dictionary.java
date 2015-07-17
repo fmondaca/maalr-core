@@ -55,6 +55,7 @@ import de.uni_koeln.spinfo.maalr.common.shared.LexEntry;
 import de.uni_koeln.spinfo.maalr.common.shared.NoDatabaseAvailableException;
 import de.uni_koeln.spinfo.maalr.common.shared.description.LemmaDescription;
 import de.uni_koeln.spinfo.maalr.lucene.config.LuceneIndexManager;
+import de.uni_koeln.spinfo.maalr.lucene.config.interpreter.MaalrQueryBuilder;
 import de.uni_koeln.spinfo.maalr.lucene.config.interpreter.modifier.ExactMatchQueryBuilder;
 import de.uni_koeln.spinfo.maalr.lucene.config.interpreter.modifier.SimplePrefixQueryBuilder;
 import de.uni_koeln.spinfo.maalr.lucene.exceptions.BrokenIndexException;
@@ -67,12 +68,12 @@ import de.uni_koeln.spinfo.maalr.lucene.stats.IndexStatistics;
 import de.uni_koeln.spinfo.maalr.lucene.util.LuceneConfiguration;
 
 /**
- * This class is responsible for managing the lucene index used by maalr,
- * and provides all required methods to perform CRUD-like operations on it.
+ * This class is responsible for managing the lucene index used by maalr, and
+ * provides all required methods to perform CRUD-like operations on it.
  * Internally, two indices are managed: All read- and query-requests are
- * executed on an in-memory-index, whereas write-requests are executed on
- * a {@link NIOFSDirectory}. Index-Changes are executed in-order with the 
- * help of a {@link IndexCommandQueue}.
+ * executed on an in-memory-index, whereas write-requests are executed on a
+ * {@link NIOFSDirectory}. Index-Changes are executed in-order with the help of
+ * a {@link IndexCommandQueue}.
  * 
  * @author sschwieb
  * @author matana
@@ -89,9 +90,9 @@ public class Dictionary {
 	private DictionaryCreator indexCreator;
 
 	private LuceneConfiguration environment;
-	
+
 	private LemmaDescription description;
-	
+
 	private LuceneIndexManager indexManager;
 
 	private HashMap<String, Type> sortTypes;
@@ -103,7 +104,7 @@ public class Dictionary {
 	private ExactMatchQueryBuilder exactMatchesLangA;
 
 	private ExactMatchQueryBuilder exactMatchesLangB;
-	
+
 	public LuceneConfiguration getEnvironment() {
 		return environment;
 	}
@@ -118,26 +119,33 @@ public class Dictionary {
 		indexCreator.initialize();
 		indexCreator.resetIndexDirectory();
 		indexManager = LuceneIndexManager.getInstance();
-		List<IndexedColumn> columns = Configuration.getInstance().getDictionaryConfig().getIndexedColumns();
+		List<IndexedColumn> columns = Configuration.getInstance()
+				.getDictionaryConfig().getIndexedColumns();
 		sortTypes = new HashMap<String, Type>();
 		for (IndexedColumn item : columns) {
 			sortTypes.put(item.getIndexFieldName(), getType(item.getType()));
 		}
 		// Create query builder for static dictionary pages
 		langAIndexBuilder = new SimplePrefixQueryBuilder();
-		langAIndexBuilder.setColumn(Configuration.getInstance().getLemmaDescription().getFirstLanguage().getMainColumn());
+		langAIndexBuilder.setColumn(Configuration.getInstance()
+				.getLemmaDescription().getFirstLanguage().getMainColumn());
 		langBIndexBuilder = new SimplePrefixQueryBuilder();
-		langBIndexBuilder.setColumn(Configuration.getInstance().getLemmaDescription().getFirstLanguage().getMainColumn());
+		langBIndexBuilder.setColumn(Configuration.getInstance()
+				.getLemmaDescription().getFirstLanguage().getMainColumn());
 		exactMatchesLangA = new ExactMatchQueryBuilder();
-		exactMatchesLangA.setColumn(Configuration.getInstance().getLemmaDescription().getFirstLanguage().getMainColumn());
+		exactMatchesLangA.setColumn(Configuration.getInstance()
+				.getLemmaDescription().getFirstLanguage().getMainColumn());
 		exactMatchesLangB = new ExactMatchQueryBuilder();
-		exactMatchesLangB.setColumn(Configuration.getInstance().getLemmaDescription().getSecondLanguage().getMainColumn());
+		exactMatchesLangB.setColumn(Configuration.getInstance()
+				.getLemmaDescription().getSecondLanguage().getMainColumn());
 	}
 
 	private Type getType(MaalrFieldType type) {
-		switch(type) {
-		case INTEGER: return Type.INT;
-		default: return Type.STRING;
+		switch (type) {
+		case INTEGER:
+			return Type.INT;
+		default:
+			return Type.STRING;
 		}
 	}
 
@@ -152,28 +160,37 @@ public class Dictionary {
 		description = Configuration.getInstance().getLemmaDescription();
 		logger.info("Created new index.");
 	}
-	
-	public QueryResult query(MaalrQuery maalrQuery) throws InvalidQueryException,
-			NoIndexAvailableException, BrokenIndexException, IOException, InvalidTokenOffsetsException {
+
+	public QueryResult query(MaalrQuery maalrQuery)
+			throws InvalidQueryException, NoIndexAvailableException,
+			BrokenIndexException, IOException, InvalidTokenOffsetsException {
 		long start = System.nanoTime();
 		validateQuery(maalrQuery);
 		int pageSize = maalrQuery.getPageSize();
 		long s1 = System.nanoTime();
+
+		// TODO: in buildQuery muss der Feldname 'ersetzt' werden
+
+		logger.info("maalrQuery: " + maalrQuery);
 		Query query = indexManager.buildQuery(maalrQuery);
+		logger.info("luceneQuery: " + query);
+
 		TopDocs docs = null;
 		// TODO: Make this configurable!
 		Sort sort = new Sort();
 		String[] items = null;
-		if(maalrQuery.getValue("language") != null && maalrQuery.getValue("language").equals(description.getLanguageName(false))) {
+		if (maalrQuery.getValue("language") != null
+				&& maalrQuery.getValue("language").equals(
+						description.getLanguageName(false))) {
 			items = description.getSortList(false);
 		} else {
 			items = description.getSortList(true);
 		}
-		SortField[] fields = new SortField[items.length+1];
+		SortField[] fields = new SortField[items.length + 1];
 		fields[0] = SortField.FIELD_SCORE;
-		for(int i = 0; i < items.length; i++) {
+		for (int i = 0; i < items.length; i++) {
 			String item = items[i];
-			fields[i+1] = new SortField(item, sortTypes.get(item));
+			fields[i + 1] = new SortField(item, sortTypes.get(item));
 		}
 		sort.setSort(fields);
 		QueryResult result = null;
@@ -184,9 +201,11 @@ public class Dictionary {
 			docs = indexProvider.getSearcher().search(query,
 					pageSize * (pageNr + 1), sort);
 			long e2 = System.nanoTime();
-			result = toQueryResult(docs, pageSize * pageNr, maalrQuery.getPageSize());
-			if(logger.isDebugEnabled()) {
-				logger.debug("Time to build query: " + (e1-s1)/1000000 + ", Time to execute query: " + ((e2-s2)/1000000));
+			result = toQueryResult(docs, pageSize * pageNr,
+					maalrQuery.getPageSize());
+			if (logger.isDebugEnabled()) {
+				logger.debug("Time to build query: " + (e1 - s1) / 1000000
+						+ ", Time to execute query: " + ((e2 - s2) / 1000000));
 			}
 		} catch (IOException e) {
 			throw new BrokenIndexException("Failed to access index", e);
@@ -215,27 +234,33 @@ public class Dictionary {
 			maalrQuery.setPageSize(1);
 		}
 	}
-	
+
 	private QueryResult toQueryResult(TopDocs docs, int startIndex, int pageSize)
-			throws NoIndexAvailableException, BrokenIndexException, IOException, InvalidTokenOffsetsException {
-		final ArrayList<LemmaVersion> results = new ArrayList<LemmaVersion>(pageSize);
+			throws NoIndexAvailableException, BrokenIndexException,
+			IOException, InvalidTokenOffsetsException {
+		final ArrayList<LemmaVersion> results = new ArrayList<LemmaVersion>(
+				pageSize);
 		final ScoreDoc[] scoreDocs = docs.scoreDocs;
 		IndexSearcher searcher = indexProvider.getSearcher();
 		for (int i = startIndex; i < scoreDocs.length
 				&& i < startIndex + pageSize; i++) {
 			Document doc = searcher.doc(scoreDocs[i].doc);
+
+			// TODO: LemmaVersion muss auch plaintext enthalten:
 			LemmaVersion e = indexManager.getLemmaVersion(doc);
+
 			results.add(e);
 		}
 		return new QueryResult(results, docs.totalHits, pageSize);
 	}
 
-	
-	public QueryResult queryExact(String phrase, boolean firstLanguage) throws NoIndexAvailableException, BrokenIndexException, InvalidQueryException {
+	public QueryResult queryExact(String phrase, boolean firstLanguage)
+			throws NoIndexAvailableException, BrokenIndexException,
+			InvalidQueryException {
 		String sortField = null;
 		List<Query> queries = null;
 		sortField = description.getSortOrder(firstLanguage);
-		if(firstLanguage) {
+		if (firstLanguage) {
 			queries = exactMatchesLangA.transform(phrase);
 		} else {
 			queries = exactMatchesLangB.transform(phrase);
@@ -248,10 +273,11 @@ public class Dictionary {
 			}
 			BooleanQuery bc = new BooleanQuery();
 			bc.add(query, Occur.MUST);
-			bc.add(new TermQuery(new Term(LemmaVersion.VERIFICATION, Verification.ACCEPTED.toString())),Occur.MUST);
+			bc.add(new TermQuery(new Term(LemmaVersion.VERIFICATION,
+					Verification.ACCEPTED.toString())), Occur.MUST);
 			query = bc;
-			TopDocs docs = indexProvider.getSearcher().search(query,
-					null, pageSize,
+			TopDocs docs = indexProvider.getSearcher().search(query, null,
+					pageSize,
 					new Sort(new SortField(sortField, SortField.Type.STRING)));
 
 			return toQueryResult(docs, 0, pageSize);
@@ -268,9 +294,10 @@ public class Dictionary {
 		String field = null;
 		String sortField = null;
 		List<Query> queries = null;
-		boolean firstLanguage = language.equals(description.getLanguageName(true));
+		boolean firstLanguage = language.equals(description
+				.getLanguageName(true));
 		field = description.getDictField(firstLanguage);
-		if(firstLanguage) {
+		if (firstLanguage) {
 			queries = langAIndexBuilder.transform(prefix);
 			sortField = langAIndexBuilder.getIndexSortField();
 		} else {
@@ -285,7 +312,8 @@ public class Dictionary {
 			}
 			BooleanQuery bc = new BooleanQuery();
 			bc.add(query, Occur.MUST);
-			bc.add(new TermQuery(new Term(LemmaVersion.VERIFICATION, Verification.ACCEPTED.toString())),Occur.MUST);
+			bc.add(new TermQuery(new Term(LemmaVersion.VERIFICATION,
+					Verification.ACCEPTED.toString())), Occur.MUST);
 			query = bc;
 			TopDocs docs = indexProvider.getSearcher().search(query,
 					new DuplicateFilter(field), Integer.MAX_VALUE,
@@ -302,22 +330,27 @@ public class Dictionary {
 		final IndexStatistics statistics = new IndexStatistics();
 		try {
 			queue.push(new IndexOperation() {
-				
+
 				@Override
 				public void execute() throws Exception {
-					int all = indexProvider.getSearcher().getIndexReader().numDocs();
+					int all = indexProvider.getSearcher().getIndexReader()
+							.numDocs();
 					int unverified = 0;
 					int approved = 0;
 					int unknown = 0;
-					IndexReader reader = indexProvider.getSearcher().getIndexReader();
+					IndexReader reader = indexProvider.getSearcher()
+							.getIndexReader();
 					HashMap<String, Integer> byCategory = new HashMap<String, Integer>();
 					for (int i = 0; i < all; i++) {
 						Document document = reader.document(i);
-						String verification = document.get(LemmaVersion.VERIFICATION);
+						String verification = document
+								.get(LemmaVersion.VERIFICATION);
 						try {
-							if (Verification.ACCEPTED.equals(Verification.valueOf(verification))) {
+							if (Verification.ACCEPTED.equals(Verification
+									.valueOf(verification))) {
 								approved++;
-							} else if (Verification.UNVERIFIED.equals(Verification.valueOf(verification))) {
+							} else if (Verification.UNVERIFIED
+									.equals(Verification.valueOf(verification))) {
 								unverified++;
 							} else {
 								unknown++;
@@ -325,19 +358,23 @@ public class Dictionary {
 						} catch (Exception e) {
 							unknown++;
 						}
-						String overlayA = document.get(LemmaVersion.OVERLAY_LANG1);
-						if(overlayA != null) {
+						String overlayA = document
+								.get(LemmaVersion.OVERLAY_LANG1);
+						if (overlayA != null) {
 							Integer old = byCategory.get(overlayA);
-							if(old == null) old = 0;
-							byCategory.put(overlayA, old+1);
+							if (old == null)
+								old = 0;
+							byCategory.put(overlayA, old + 1);
 						}
-						String overlayB = document.get(LemmaVersion.OVERLAY_LANG2);
-						if(overlayB != null) {
+						String overlayB = document
+								.get(LemmaVersion.OVERLAY_LANG2);
+						if (overlayB != null) {
 							Integer old = byCategory.get(overlayB);
-							if(old == null) old = 0;
-							byCategory.put(overlayB, old+1);
+							if (old == null)
+								old = 0;
+							byCategory.put(overlayB, old + 1);
 						}
-						
+
 					}
 					statistics.setOverlayCount(byCategory);
 					statistics.setNumberOfEntries(all);
@@ -351,14 +388,14 @@ public class Dictionary {
 		} catch (Exception e) {
 			return new IndexStatistics();
 		}
-			
+
 	}
-	
+
 	public ArrayList<String> getSuggestionsForField(String fieldName,
 			String value, int limit) throws QueryNodeException,
 			NoIndexAvailableException, IOException, ParseException {
 		Query query = indexManager.getSuggestionsQuery(fieldName, value);
-		if(query == null) {
+		if (query == null) {
 			return new ArrayList<String>();
 		}
 		ArrayList<String> results = new ArrayList<String>();
@@ -366,16 +403,23 @@ public class Dictionary {
 		ArrayList<String> fields = new ArrayList<String>();
 		fields.add(fieldName);
 		for (String field : fields) {
-			TopDocs docs = indexProvider.getSearcher().search(query, new DuplicateFilter(field), Integer.MAX_VALUE);
+			TopDocs docs = indexProvider.getSearcher().search(query,
+					new DuplicateFilter(field), Integer.MAX_VALUE);
 			ScoreDoc[] scoreDocs = docs.scoreDocs;
 			for (int i = 0; i < scoreDocs.length; i++) {
-				Document doc = indexProvider.getSearcher().doc(scoreDocs[i].doc);
+				Document doc = indexProvider.getSearcher()
+						.doc(scoreDocs[i].doc);
 				IndexableField[] indexableFields = doc.getFields(field);
-				// FIXME: Don't split always - instead, implement MaalrFieldType.CSV!
+				// FIXME: Don't split always - instead, implement
+				// MaalrFieldType.CSV!
 				for (IndexableField indexedField : indexableFields) {
-					String[] parts = indexedField.stringValue().split(", ");//TODO: FieldType.CSV has no effect
+					String[] parts = indexedField.stringValue().split(", ");// TODO:
+																			// FieldType.CSV
+																			// has
+																			// no
+																			// effect
 					for (String part : parts) {
-						if(part.toLowerCase().startsWith(value.toLowerCase())) {
+						if (part.toLowerCase().startsWith(value.toLowerCase())) {
 							allValues.add(part);
 						}
 					}
@@ -383,37 +427,46 @@ public class Dictionary {
 			}
 		}
 		results.addAll(allValues);
-		if(results.size() > 0) {
-			List<String> resultList = results.subList(0, Math.min(results.size(), limit));//restrict length to 'limit'
+		if (results.size() > 0) {
+			List<String> resultList = results.subList(0,
+					Math.min(results.size(), limit));// restrict length to
+														// 'limit'
 			return new ArrayList<String>(resultList);
 		} else {
 			return results;
 		}
 	}
-	
+
 	public ArrayList<String> getSuggestionsForFieldChoice(String fieldName,
 			String value, int limit) throws QueryNodeException,
 			NoIndexAvailableException, IOException, ParseException {
 		MaalrQuery maalrQuery = new MaalrQuery();
 		maalrQuery.setQueryValue(fieldName, value);
 		Query query = indexManager.buildQuery(maalrQuery);
-		if(query == null) {
+		if (query == null) {
 			return new ArrayList<String>();
 		}
 		ArrayList<String> results = new ArrayList<String>();
 		Set<String> allValues = new TreeSet<String>();
 		Set<String> fields = indexManager.getFieldNames(fieldName);
 		for (String field : fields) {
-			TopDocs docs = indexProvider.getSearcher().search(query, new DuplicateFilter(field), Integer.MAX_VALUE);
+			TopDocs docs = indexProvider.getSearcher().search(query,
+					new DuplicateFilter(field), Integer.MAX_VALUE);
 			ScoreDoc[] scoreDocs = docs.scoreDocs;
 			for (int i = 0; i < scoreDocs.length; i++) {
-				Document doc = indexProvider.getSearcher().doc(scoreDocs[i].doc);
+				Document doc = indexProvider.getSearcher()
+						.doc(scoreDocs[i].doc);
 				IndexableField[] indexableFields = doc.getFields(field);
-				// FIXME: Don't split always - instead, implement MaalrFieldType.CSV!
+				// FIXME: Don't split always - instead, implement
+				// MaalrFieldType.CSV!
 				for (IndexableField indexedField : indexableFields) {
-					String[] parts = indexedField.stringValue().split(", ");//TODO: FieldType.CSV has no effect
+					String[] parts = indexedField.stringValue().split(", ");// TODO:
+																			// FieldType.CSV
+																			// has
+																			// no
+																			// effect
 					for (String part : parts) {
-						if(part.toLowerCase().startsWith(value.toLowerCase())) {
+						if (part.toLowerCase().startsWith(value.toLowerCase())) {
 							allValues.add(part);
 						}
 					}
@@ -421,8 +474,10 @@ public class Dictionary {
 			}
 		}
 		results.addAll(allValues);
-		if(results.size() > 0) {
-			List<String> resultList = results.subList(0, Math.min(results.size(), limit));//restrict length to 'limit'
+		if (results.size() > 0) {
+			List<String> resultList = results.subList(0,
+					Math.min(results.size(), limit));// restrict length to
+														// 'limit'
 			return new ArrayList<String>(resultList);
 		} else {
 			return results;
@@ -434,7 +489,7 @@ public class Dictionary {
 	public void reloadIndex() throws NoIndexAvailableException {
 		try {
 			queue.push(new IndexOperation() {
-				
+
 				@Override
 				public void execute() throws NoIndexAvailableException {
 					logger.info("Reloading index...");
@@ -451,7 +506,7 @@ public class Dictionary {
 			throws NoDatabaseAvailableException, IndexException {
 		try {
 			queue.push(new IndexOperation() {
-				
+
 				@Override
 				public void execute() throws Exception {
 					int added = indexCreator.addToIndex(iterator);
@@ -465,7 +520,7 @@ public class Dictionary {
 	public void dropIndex() throws IndexException {
 		try {
 			queue.push(new IndexOperation() {
-				
+
 				@Override
 				public void execute() throws Exception {
 					indexCreator.dropIndex();
@@ -475,11 +530,11 @@ public class Dictionary {
 			throw new IndexException(e);
 		}
 	}
-	
+
 	public void update(final LexEntry entry) throws IOException {
 		try {
 			queue.push(new IndexOperation() {
-				
+
 				@Override
 				public void execute() throws Exception {
 					long start = System.currentTimeMillis();
@@ -493,13 +548,13 @@ public class Dictionary {
 		} catch (Exception e) {
 			throw new IOException(e);
 		}
-		
+
 	}
 
 	public void delete(final LexEntry entry) throws IOException {
 		try {
 			queue.push(new IndexOperation() {
-				
+
 				@Override
 				public void execute() throws Exception {
 					indexCreator.delete(entry);

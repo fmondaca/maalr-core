@@ -1,0 +1,38 @@
+#finalBase {
+	width: 100%;
+	float: left;
+	display: inline-block;
+}
+
+#imagePanel {
+	width: 50%;
+	float: left;
+	overflow: auto style;
+	display: inline-block;
+}
+
+#languages {
+	width: 50%;
+	float: left;
+	display: inline-block;
+}
+
+#langA {
+	width: auto;
+	float: left;
+}
+
+#rta_langA {
+	width: auto;
+	float: left;
+}
+
+#langB {
+	width: auto;
+	float: left;
+}
+
+#rta_langB {
+	width: 60%;
+	float: left;
+}

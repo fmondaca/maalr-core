@@ -80,7 +80,7 @@ public class LemmaEditor {
 	}
 
 	private static LemmaEditorWidget internalOpenEditor(final LemmaVersion lemma, String title, String subTitle, final boolean modify) {
-		final LemmaEditorWidget editor = new LemmaEditorWidget(AsyncLemmaDescriptionLoader.getDescription(), UseCase.FIELDS_FOR_SIMPLE_EDITOR, false, 1, false, null);
+		final LemmaEditorWidget editor = new LemmaEditorWidget(AsyncLemmaDescriptionLoader.getDescription(), UseCase.FIELDS_FOR_SIMPLE_EDITOR, 1, false, null);
 		final Modal popup = new Modal(true);
 		popup.setBackdrop(BackdropType.STATIC);
 		popup.setCloseVisible(true);

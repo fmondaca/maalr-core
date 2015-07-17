@@ -37,8 +37,10 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.NIOFSDirectory;
+import org.apache.tika.exception.TikaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 import de.uni_koeln.spinfo.maalr.common.shared.LemmaVersion;
 import de.uni_koeln.spinfo.maalr.common.shared.LexEntry;
@@ -49,8 +51,8 @@ import de.uni_koeln.spinfo.maalr.lucene.util.LuceneConfiguration;
 import de.uni_koeln.spinfo.maalr.lucene.util.LuceneHelper;
 
 /**
- * Helper class used by {@link Dictionary}. It manages the lucene index
- * held in a {@link NIOFSDirectory}.
+ * Helper class used by {@link Dictionary}. It manages the lucene index held in
+ * a {@link NIOFSDirectory}.
  *
  */
 class DictionaryCreator {
@@ -63,7 +65,7 @@ class DictionaryCreator {
 	private Analyzer analyzer;
 	private final boolean tracing = logger.isTraceEnabled();
 	private LuceneIndexManager indexManager;
-	
+
 	LuceneConfiguration getEnvironment() {
 		return environment;
 	}
@@ -74,12 +76,14 @@ class DictionaryCreator {
 
 	void initialize() throws IOException {
 		resetIndexDirectory();
-//		analyzer = LuceneHelper.newAnalyzer();
+		// analyzer = LuceneHelper.newAnalyzer();
 		analyzer = LuceneHelper.newWhitespaceAnalyzer();
 		indexManager = LuceneIndexManager.getInstance();
 	}
-	
-	int addToIndex(final Iterator<LexEntry> iterator) throws NoDatabaseAvailableException, IndexException {
+
+	int addToIndex(final Iterator<LexEntry> iterator)
+			throws NoDatabaseAvailableException, IndexException, IOException,
+			SAXException, TikaException {
 		logger.info("Indexing...");
 		int counter = 0;
 		try {
@@ -105,9 +109,9 @@ class DictionaryCreator {
 			throw new IndexException(e);
 		}
 	}
-	
+
 	void resetIndexDirectory() throws IOException {
-		if(indexDirectory != null) {
+		if (indexDirectory != null) {
 			indexDirectory.close();
 		}
 		indexDirectory = new NIOFSDirectory(environment.getLuceneIndexDir());
@@ -152,33 +156,36 @@ class DictionaryCreator {
 	}
 
 	private int indexDocs(final IndexWriter writer,
-			final Iterator<LexEntry> iterator) throws IOException {
+			final Iterator<LexEntry> iterator) throws IOException,
+			SAXException, TikaException {
 		int counter = 0;
 		NumberFormat nf = NumberFormat.getNumberInstance();
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			LexEntry lexEntry = iterator.next();
 			List<Document> docs = createDocument(lexEntry);
-			if(tracing) {
+			if (tracing) {
 				logger.trace("Indexing Documents: " + docs);
 			}
 			for (Document doc : docs) {
 				writer.addDocument(doc);
 			}
 			counter++;
-			if(counter % 10000 == 0) {
+			if (counter % 10000 == 0) {
 				logger.debug("Indexed " + nf.format(counter) + " documents.");
 			}
 		}
 		logger.info("###########################################");
-		logger.info("Indexing completed - " + nf.format(counter) + " entries have been indexed.");
+		logger.info("Indexing completed - " + nf.format(counter)
+				+ " entries have been indexed.");
 		logger.info("###########################################");
 		return counter;
 	}
 
-	private List<Document> createDocument(LexEntry lexEntry) {
+	private List<Document> createDocument(LexEntry lexEntry)
+			throws IOException, SAXException, TikaException {
 		List<Document> docs = new ArrayList<Document>();
 		Set<LemmaVersion> versions = new HashSet<LemmaVersion>();
-		if(lexEntry.getCurrent() != null) {
+		if (lexEntry.getCurrent() != null) {
 			versions.add(lexEntry.getCurrent());
 		}
 		versions.addAll(lexEntry.getUnapprovedVersions());
@@ -201,7 +208,7 @@ class DictionaryCreator {
 		} catch (IOException e) {
 			throw new IndexException(e);
 		} finally {
-			if(writer != null) {
+			if (writer != null) {
 				try {
 					writer.close();
 				} catch (IOException e) {
@@ -211,11 +218,11 @@ class DictionaryCreator {
 		}
 	}
 
-	void update(LexEntry entry) throws IOException {
+	void update(LexEntry entry) throws IOException, SAXException, TikaException {
 		IndexWriter writer = initIndexWriter();
 		Term queryTerm = new Term(LexEntry.ID, entry.getId());
 		writer.deleteDocuments(queryTerm);
-		if(entry.getCurrent() != null) {
+		if (entry.getCurrent() != null) {
 			List<Document> docs = createDocument(entry);
 			for (Document document : docs) {
 				writer.addDocument(document);
@@ -237,7 +244,7 @@ class DictionaryCreator {
 		long lastModified = 0;
 		File[] files = dir.listFiles();
 		for (File file : files) {
-			if(file.lastModified() > lastModified) {
+			if (file.lastModified() > lastModified) {
 				lastModified = file.lastModified();
 			}
 		}

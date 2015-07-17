@@ -13,7 +13,7 @@ body {
 /* HEAD */ 
 /* HEAD-TITLE */ 
 #navi_head {
-  background-color: #fef7d9;
+  background-color: #3C68C7;
   width: 100%;
   z-index: 998;
   height: 140px;
@@ -33,10 +33,10 @@ body {
   font-family: ‘Oswald’, sans-serif;
   font-weight: 700;
   font-size: 42px;
-  color: #6FB8CE;}
+  color: #eaf0f2;}
     
     #navi_head .active:hover {
-    color: #836a00;
+    color: #2095c4;
     text-decoration: none;}
      
      

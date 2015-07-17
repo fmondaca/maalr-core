@@ -56,6 +56,14 @@ public class DefaultQueryBuilder extends MaalrQueryBuilder {
 	@Override
 	public List<Query> transform(String value) {
 		value = TokenizerHelper.tokenizeString(analyzer, value);
+		
+//		String firstFieldName = super.getFieldName("first").replace("RStichwort", "plaintext");
+//		String secondFieldName = super.getFieldName("second").replace("RStichwort", "plaintext");
+//		String thirdFieldName = super.getFieldName("third").replace("RStichwort", "plaintext");
+//		System.out.println(firstFieldName);
+//		System.out.println(secondFieldName);
+//		System.out.println(thirdFieldName);
+
 		TermQuery first = new TermQuery(new Term(super.getFieldName("first"), value));
 		first.setBoost(1000f);
 		//match entries where searchphrase is followed by whitespace
@@ -64,6 +72,9 @@ public class DefaultQueryBuilder extends MaalrQueryBuilder {
 		PrefixQuery fourth = new PrefixQuery(new Term(super.getFieldName("first"), value));
 		fourth.setBoost(10f);
 		PrefixQuery fifth = new PrefixQuery(new Term(super.getFieldName("third"), value));
+		
+		
+		
 		return Arrays.asList(first,second,fourth, fifth);
 	}
 	

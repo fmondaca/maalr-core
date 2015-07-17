@@ -33,8 +33,10 @@ import org.apache.lucene.search.similarities.SimilarityBase;
 import org.apache.lucene.store.IOContext;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.lucene.store.RAMDirectory;
+import org.apache.tika.exception.TikaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 import de.uni_koeln.spinfo.maalr.common.shared.LemmaVersion;
 import de.uni_koeln.spinfo.maalr.common.shared.LexEntry;
@@ -46,20 +48,19 @@ import de.uni_koeln.spinfo.maalr.lucene.util.LuceneHelper;
 /**
  * Helper class used by {@link Dictionary}. It manages the lucene index kept in
  * a {@link RAMDirectory}.
- * 
+ *
  */
 class DictionaryLoader {
 
-	
-	private static final Logger logger = LoggerFactory.getLogger(DictionaryLoader.class);
+	private IndexSearcher searcher;
+	private static final Logger logger = LoggerFactory
+			.getLogger(DictionaryLoader.class);
 
 	private LuceneConfiguration environment;
 	private LuceneIndexManager indexManager;
 
 	private RAMDirectory ram;
 	private DirectoryReader reader;
-	private IndexSearcher searcher;
-	
 
 	LuceneConfiguration getEnvironment() {
 		return environment;
@@ -126,7 +127,7 @@ class DictionaryLoader {
 		return writer;
 	}
 
-	void update(LexEntry entry) throws IOException {
+	void update(LexEntry entry) throws IOException, SAXException, TikaException {
 		IndexWriter writer = initIndexWriter();
 		Term queryTerm = new Term(LexEntry.ID, entry.getId());
 		writer.deleteDocuments(queryTerm);
@@ -143,7 +144,8 @@ class DictionaryLoader {
 		searcher = new IndexSearcher(reader);
 	}
 
-	private List<Document> createDocument(Set<String> keys, LexEntry lexEntry) {
+	private List<Document> createDocument(Set<String> keys, LexEntry lexEntry)
+			throws IOException, SAXException, TikaException {
 		List<Document> docs = new ArrayList<Document>();
 		Set<LemmaVersion> versions = new HashSet<LemmaVersion>();
 		if (lexEntry.getCurrent() != null) {

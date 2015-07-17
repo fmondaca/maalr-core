@@ -71,7 +71,8 @@ import de.uni_koeln.spinfo.maalr.webapp.ui.user.client.entry.OverlayPopup;
 
 public class ResultCellTable extends Composite {
 
-	interface RCTInterface extends UiBinder<Widget, ResultCellTable> {}
+	interface RCTInterface extends UiBinder<Widget, ResultCellTable> {
+	}
 
 	private static RCTInterface uiBinder = GWT.create(RCTInterface.class);
 
@@ -103,7 +104,7 @@ public class ResultCellTable extends Composite {
 	private MaalrQuery maalrQuery;
 
 	private Column<LemmaVersion, SafeHtml> popupColumn;
-	
+
 	private static final ProvidesKey<LemmaVersion> KEY_PROVIDER = new ProvidesKey<LemmaVersion>() {
 		public Object getKey(LemmaVersion item) {
 			return item;
@@ -111,17 +112,18 @@ public class ResultCellTable extends Composite {
 	};
 
 	public ResultCellTable() {
-		AsyncLemmaDescriptionLoader.afterLemmaDescriptionLoaded(new AsyncCallback<LemmaDescription>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-			}
+		AsyncLemmaDescriptionLoader
+				.afterLemmaDescriptionLoaded(new AsyncCallback<LemmaDescription>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+					}
 
-			@Override
-			public void onSuccess(LemmaDescription result) {
-				description = result;
-			}
-		});
+					@Override
+					public void onSuccess(LemmaDescription result) {
+						description = result;
+					}
+				});
 		cellTable = new CellTable<LemmaVersion>(KEY_PROVIDER);
 		cellTable.addStyleName("resultlist");
 		cellTable.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
@@ -142,9 +144,6 @@ public class ResultCellTable extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 		label = new HTML();
 		resultLabelCell.add(label);
-		resultLabelCell.getElement().setId("result_cell_label");
-		cellTable.getElement().setId("result_cell_table");
-		pager.getElement().setId("result_cell_table_pager");
 	}
 
 	private void addOptionsColumn(TranslationMap translationMap) {
@@ -159,10 +158,15 @@ public class ResultCellTable extends Composite {
 			}
 
 			@Override
-			public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
-				super.onBrowserEvent(context, parent, value, event, valueUpdater);
+			public void onBrowserEvent(
+					com.google.gwt.cell.client.Cell.Context context,
+					Element parent, String value, NativeEvent event,
+					ValueUpdater<String> valueUpdater) {
+				super.onBrowserEvent(context, parent, value, event,
+						valueUpdater);
 				if (event.getType().equals(BrowserEvents.CLICK)) {
-					LemmaVersion selected = dataProvider.getList().get(hoveredRow);
+					LemmaVersion selected = dataProvider.getList().get(
+							hoveredRow);
 					onButtonClicked(selected);
 				}
 			}
@@ -217,9 +221,11 @@ public class ResultCellTable extends Composite {
 		});
 	}
 
-	private void addOverlayColumn(final String overlayField, final TranslationMap translationMap) {
+	private void addOverlayColumn(final String overlayField,
+			final TranslationMap translationMap) {
 		final SafeHtmlCell overlayCell = new SafeHtmlCell() {
-			final String closeButton = translationMap.get("maalr.verbOverlayPopup.closeButton");
+			final String closeButton = translationMap
+					.get("maalr.verbOverlayPopup.closeButton");
 
 			@Override
 			public Set<String> getConsumedEvents() {
@@ -229,11 +235,17 @@ public class ResultCellTable extends Composite {
 			}
 
 			@Override
-			public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, SafeHtml value, NativeEvent event, ValueUpdater<SafeHtml> valueUpdater) {
-				super.onBrowserEvent(context, parent, value, event, valueUpdater);
-				super.onBrowserEvent(context, parent, value, event, valueUpdater);
+			public void onBrowserEvent(
+					com.google.gwt.cell.client.Cell.Context context,
+					Element parent, SafeHtml value, NativeEvent event,
+					ValueUpdater<SafeHtml> valueUpdater) {
+				super.onBrowserEvent(context, parent, value, event,
+						valueUpdater);
+				super.onBrowserEvent(context, parent, value, event,
+						valueUpdater);
 				if (event.getType().equals(BrowserEvents.CLICK)) {
-					LemmaVersion selected = dataProvider.getList().get(hoveredRow);
+					LemmaVersion selected = dataProvider.getList().get(
+							hoveredRow);
 					onButtonClicked(selected);
 				}
 			}
@@ -257,7 +269,8 @@ public class ResultCellTable extends Composite {
 				String overlay = object.getEntryValue(overlayField);
 				if (overlay != null) {
 					SafeHtmlBuilder builder = new SafeHtmlBuilder();
-					builder.appendHtmlConstant("<span class=\"maalr_overlay maalr_overlay_" + overlay + "\">" + overlay + "</span>");
+					builder.appendHtmlConstant("<span class=\"maalr_overlay maalr_overlay_"
+							+ overlay + "\">" + overlay + "</span>");
 					return builder.toSafeHtml();
 				} else {
 					return nothing;
@@ -275,10 +288,13 @@ public class ResultCellTable extends Composite {
 			@Override
 			public SafeHtml getValue(LemmaVersion object) {
 				SafeHtmlBuilder sb = new SafeHtmlBuilder();
-				String toDisplay = description.toString(object, UseCase.RESULT_LIST, b);
-				String redirect = b ? object.getEntryValue("redirect_a") : object.getEntryValue("redirect_b");
+				String toDisplay = description.toString(object,
+						UseCase.RESULT_LIST, b);
+				String redirect = b ? object.getEntryValue("redirect_a")
+						: object.getEntryValue("redirect_b");
 				if (maalrQuery.isHighlight() && redirect == null) {
-					toDisplay = Highlighter.highlight(toDisplay, maalrQuery.getValue("searchPhrase"));
+					toDisplay = Highlighter.highlight(toDisplay,
+							maalrQuery.getValue("searchPhrase"));
 				}
 				if (redirect != null) {
 					MaalrQuery mq = new MaalrQuery();
@@ -286,20 +302,27 @@ public class ResultCellTable extends Composite {
 					mq.setQueryValue(redir[0], redir[1]);
 					String text = redir[1];
 					if (maalrQuery.isHighlight()) {
-						text = Highlighter.highlight(text, maalrQuery.getValue("searchPhrase"));
+						text = Highlighter.highlight(text,
+								maalrQuery.getValue("searchPhrase"));
 					}
-					String url = "<a href=\"" + Window.Location.getPath() + "#" + mq.toURL() + "\">" + text + "</a>";
+					String url = "<a href=\"" + Window.Location.getPath() + "#"
+							+ mq.toURL() + "\">" + text + "</a>";
 					toDisplay = toDisplay.replace(redir[1], url);
 				}
 				if (!object.isApproved()) {
-					toDisplay = "<span class=\"unverified\">" + toDisplay + "</span>";
+					toDisplay = "<span class=\"unverified\">" + toDisplay
+							+ "</span>";
 				}
 				sb.appendHtmlConstant(toDisplay);
 				return sb.toSafeHtml();
 			}
 		};
 
-		cellTable.addColumn(columnA, new SafeHtmlBuilder().appendHtmlConstant("<span class=\"maalr_result_title\">" + langA + "</span>").toSafeHtml());
+		cellTable.addColumn(
+				columnA,
+				new SafeHtmlBuilder().appendHtmlConstant(
+						"<span class=\"maalr_result_title\">" + langA
+								+ "</span>").toSafeHtml());
 	}
 
 	private void addColumnB(String langB, final boolean b) {
@@ -308,10 +331,14 @@ public class ResultCellTable extends Composite {
 			@Override
 			public SafeHtml getValue(LemmaVersion object) {
 				SafeHtmlBuilder sb = new SafeHtmlBuilder();
-				String toDisplay = description.toString(object, UseCase.RESULT_LIST, b);
-				String redirect = b ? object.getEntryValue("redirect_a") : object.getEntryValue("redirect_b");
+				String toDisplay = description.toString(object,
+						UseCase.RESULT_LIST, b);
+
+				String redirect = b ? object.getEntryValue("redirect_a")
+						: object.getEntryValue("redirect_b");
 				if (maalrQuery.isHighlight() && redirect == null) {
-					toDisplay = Highlighter.highlight(toDisplay, maalrQuery.getValue("searchPhrase"));
+					toDisplay = Highlighter.highlight(toDisplay,
+							maalrQuery.getValue("searchPhrase"));
 				}
 				if (redirect != null) {
 					MaalrQuery mq = new MaalrQuery();
@@ -319,25 +346,33 @@ public class ResultCellTable extends Composite {
 					mq.setQueryValue(redir[0], redir[1]);
 					String text = redir[1];
 					if (maalrQuery.isHighlight()) {
-						text = Highlighter.highlight(text, maalrQuery.getValue("searchPhrase"));
+						text = Highlighter.highlight(text,
+								maalrQuery.getValue("searchPhrase"));
 					}
-					String url = "<a href=\"" + Window.Location.getPath() + "#" + mq.toURL() + "\">" + text + "</a>";
+					String url = "<a href=\"" + Window.Location.getPath() + "#"
+							+ mq.toURL() + "\">" + text + "</a>";
 					toDisplay = toDisplay.replace(redir[1], url);
-					// toDisplay = "<a href=\"" + mq.toURL() + "\">" + redir[1]
-					// + "</a>";
+					toDisplay = "<a href=\"" + mq.toURL() + "\">" + redir[1]
+							+ "</a>";
 				}
 				if (!object.isApproved()) {
-					toDisplay = "<span class=\"unverified\">" + toDisplay + "</span>";
+					toDisplay = "<span class=\"unverified\">" + toDisplay
+							+ "</span>";
 				}
-				// if (!b)
-				// sb.appendHtmlConstant(refereTo(toDisplay));
-				// else
-				sb.appendHtmlConstant(toDisplay);
+
+				//Render HTML properly
+				HTML html = new HTML(toDisplay);
+				sb.appendHtmlConstant(html.getText());
+
 				return sb.toSafeHtml();
 			}
 
 		};
-		cellTable.addColumn(columnB, new SafeHtmlBuilder().appendHtmlConstant("<span class=\"maalr_result_title\">" + langB + "</span>").toSafeHtml());
+		cellTable.addColumn(
+				columnB,
+				new SafeHtmlBuilder().appendHtmlConstant(
+						"<span class=\"maalr_result_title\">" + langB
+								+ "</span>").toSafeHtml());
 	}
 
 	public void setResults(final MaalrQuery query, QueryResult result) {
@@ -368,16 +403,19 @@ public class ResultCellTable extends Composite {
 
 				@Override
 				public void onSuccess(TranslationMap result) {
+					// TODO: Disable propose functionality in surmiran edition
 					String info = result.get("maalr.query.nothing_found");
 					if (info != null) {
-						if(MaalrQueryFormatter.getQueryLabel(query) == null){
-							label.setHTML(""); //return nothing on empty searchphrases
+						if (MaalrQueryFormatter.getQueryLabel(query) == null) {
+							label.setHTML(""); // return nothing on empty
+												// searchphrases
 							setSuggestVisible(false);
 							return;
-						}
-						else{
-							info = info.replaceAll("\\{0\\}", MaalrQueryFormatter.getQueryLabel(query));
-							info = info.replaceAll("\\{1\\}", result.get("suggest.button"));
+						} else {
+							info = info.replaceAll("\\{0\\}",
+									MaalrQueryFormatter.getQueryLabel(query));
+							info = info.replaceAll("\\{1\\}",
+									result.get("suggest.button"));
 							label.setHTML(info);
 						}
 					}
@@ -396,7 +434,7 @@ public class ResultCellTable extends Composite {
 		if (suggest != null)
 			suggest.setVisible(visible);
 	}
-	
+
 	private void initSuggestButton(TranslationMap result) {
 		suggest = new Button(result.get("suggest.button"), IconType.INFO_SIGN);
 		suggest.addClickHandler(new ClickHandler() {
@@ -428,21 +466,27 @@ public class ResultCellTable extends Composite {
 				if (description.getLanguageName(false).equals(value)) {
 					defaultOrder = false;
 				}
-				addOverlayColumn(defaultOrder ? LemmaVersion.OVERLAY_LANG1 : LemmaVersion.OVERLAY_LANG2, translationMap);
-				addColumnA(translationMap.get(description.getLanguageName(defaultOrder)), defaultOrder);
-				addOverlayColumn(defaultOrder ? LemmaVersion.OVERLAY_LANG2 : LemmaVersion.OVERLAY_LANG1, translationMap);
-				addColumnB(translationMap.get(description.getLanguageName(!defaultOrder)), !defaultOrder);
+				addOverlayColumn(defaultOrder ? LemmaVersion.OVERLAY_LANG1
+						: LemmaVersion.OVERLAY_LANG2, translationMap);
+				addColumnA(translationMap.get(description
+						.getLanguageName(defaultOrder)), defaultOrder);
+				addOverlayColumn(defaultOrder ? LemmaVersion.OVERLAY_LANG2
+						: LemmaVersion.OVERLAY_LANG1, translationMap);
+				addColumnB(translationMap.get(description
+						.getLanguageName(!defaultOrder)), !defaultOrder);
+				// TODO: Commented to disable modify option for surmiran
 				addOptionsColumn(translationMap);
 			}
 		});
 
 	}
 
-	private void addResultLabel(MaalrQuery maalrQuery,
-			final QueryResult result) {
-		int a = ((maalrQuery.getPageNr() + 1) * maalrQuery.getPageSize()) - (maalrQuery.getPageSize() - 1);
+	private void addResultLabel(MaalrQuery maalrQuery, final QueryResult result) {
+		int a = ((maalrQuery.getPageNr() + 1) * maalrQuery.getPageSize())
+				- (maalrQuery.getPageSize() - 1);
 		int b = ((maalrQuery.getPageNr() + 1) * maalrQuery.getPageSize());
-		if (((maalrQuery.getPageNr() + 1) * maalrQuery.getPageSize()) > result.getMaxEntries()) {
+		if (((maalrQuery.getPageNr() + 1) * maalrQuery.getPageSize()) > result
+				.getMaxEntries()) {
 			b = result.getMaxEntries();
 		}
 		final String formatted = MaalrQueryFormatter.getQueryLabel(maalrQuery);
@@ -457,9 +501,12 @@ public class ResultCellTable extends Composite {
 					toShow = toShow.replaceAll("\\{0\\}", "");
 					toShow = toShow.replaceAll("\\{1\\}", first + "");
 					toShow = toShow.replaceAll("\\{2\\}", last + "");
-					toShow = toShow.replaceAll("\\{3\\}", result.getMaxEntries() + "");
-					String text = "<span style=\"font-size: large;font-weight: bold; text-align: left;\">" + toShow + "</span>";
-					String wrappedSearchPhraseForCss = "<span id=\"searchphrase\">" + formatted + "</span>";
+					toShow = toShow.replaceAll("\\{3\\}",
+							result.getMaxEntries() + "");
+					String text = "<span style=\"font-size: large;font-weight: bold; text-align: left;\">"
+							+ toShow + "</span>";
+					String wrappedSearchPhraseForCss = "<span id=\"searchphrase\">"
+							+ formatted + "</span>";
 					label.setHTML(wrappedSearchPhraseForCss + text);
 				}
 
@@ -475,5 +522,5 @@ public class ResultCellTable extends Composite {
 		cellTable.setPageSize(size);
 		cellTable.redraw();
 	}
-	
+
 }
