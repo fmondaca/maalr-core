@@ -73,13 +73,13 @@ public class User implements EntryPoint {
 
 			@Override
 			public void onSuccess(LemmaDescription result) {
-				HiJax.hijackAnchor("propose_navi", new Command() {
-
-					@Override
-					public void execute() {
-						openEditor();
-					}
-				});
+//				HiJax.hijackAnchor("propose_navi", new Command() {
+//
+//					@Override
+//					public void execute() {
+//						openEditor();
+//					}
+//				});
 				try {
 					initializeMainPanel();
 				} catch (Exception e) {
