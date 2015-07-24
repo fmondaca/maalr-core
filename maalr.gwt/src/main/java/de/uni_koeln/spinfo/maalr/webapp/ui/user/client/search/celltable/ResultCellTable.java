@@ -18,14 +18,15 @@ package de.uni_koeln.spinfo.maalr.webapp.ui.user.client.search.celltable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.github.gwtbootstrap.client.ui.Button;
-import com.github.gwtbootstrap.client.ui.ButtonCell;
 import com.github.gwtbootstrap.client.ui.CellTable;
-import com.github.gwtbootstrap.client.ui.constants.ButtonType;
+import com.github.gwtbootstrap.client.ui.LabelCell;
 import com.github.gwtbootstrap.client.ui.constants.IconType;
-import com.github.gwtbootstrap.client.ui.resources.ButtonSize;
+import com.github.gwtbootstrap.client.ui.constants.LabelType;
 import com.google.gwt.cell.client.SafeHtmlCell;
+import com.google.gwt.cell.client.TextButtonCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
@@ -61,7 +62,6 @@ import de.uni_koeln.spinfo.maalr.webapp.ui.common.client.CustomPager;
 import de.uni_koeln.spinfo.maalr.webapp.ui.common.client.Highlighter;
 import de.uni_koeln.spinfo.maalr.webapp.ui.common.client.i18n.LocalizedStrings;
 import de.uni_koeln.spinfo.maalr.webapp.ui.user.client.entry.LemmaEditor;
-import de.uni_koeln.spinfo.maalr.webapp.ui.user.client.entry.OverlayPopup;
 
 /**
  * Composite that displays query results.
@@ -75,6 +75,8 @@ public class ResultCellTable extends Composite {
 	}
 
 	private static RCTInterface uiBinder = GWT.create(RCTInterface.class);
+
+	Logger logger = Logger.getLogger("ResultCellTable");
 
 	@UiField(provided = true)
 	CellTable<LemmaVersion> cellTable;
@@ -99,11 +101,11 @@ public class ResultCellTable extends Composite {
 
 	private Column<LemmaVersion, String> optionsColumn;
 
+	private Column<LemmaVersion, String> percentageColumn;
+
 	private int hoveredRow;
 
 	private MaalrQuery maalrQuery;
-
-	private Column<LemmaVersion, SafeHtml> popupColumn;
 
 	private static final ProvidesKey<LemmaVersion> KEY_PROVIDER = new ProvidesKey<LemmaVersion>() {
 		public Object getKey(LemmaVersion item) {
@@ -146,51 +148,6 @@ public class ResultCellTable extends Composite {
 		resultLabelCell.add(label);
 	}
 
-	private void addOptionsColumn(TranslationMap translationMap) {
-		final ButtonCell cell = new ButtonCell(IconType.EDIT,
-				ButtonType.DEFAULT, ButtonSize.MINI) {
-
-			@Override
-			public Set<String> getConsumedEvents() {
-				Set<String> consumed = new HashSet<String>();
-				consumed.add(BrowserEvents.CLICK);
-				return consumed;
-			}
-
-			@Override
-			public void onBrowserEvent(
-					com.google.gwt.cell.client.Cell.Context context,
-					Element parent, String value, NativeEvent event,
-					ValueUpdater<String> valueUpdater) {
-				super.onBrowserEvent(context, parent, value, event,
-						valueUpdater);
-				if (event.getType().equals(BrowserEvents.CLICK)) {
-					LemmaVersion selected = dataProvider.getList().get(
-							hoveredRow);
-					onButtonClicked(selected);
-				}
-			}
-
-			private void onButtonClicked(LemmaVersion selected) {
-				final LemmaVersion lemma = new LemmaVersion();
-				lemma.setEntryValues(selected.getEntryValues());
-				lemma.setMaalrValues(selected.getMaalrValues());
-				openModifyEditor(lemma);
-			}
-		};
-		final String modify = translationMap.get("maalr.query.result_modify");
-		optionsColumn = new Column<LemmaVersion, String>(cell) {
-
-			@Override
-			public String getValue(LemmaVersion object) {
-				return modify;
-			}
-
-		};
-		cellTable.addColumn(optionsColumn);
-
-	}
-
 	private void openModifyEditor(final LemmaVersion lemma) {
 		GWT.runAsync(new RunAsyncCallback() {
 
@@ -219,65 +176,6 @@ public class ResultCellTable extends Composite {
 				Window.alert("Code download failed");
 			}
 		});
-	}
-
-	private void addOverlayColumn(final String overlayField,
-			final TranslationMap translationMap) {
-		final SafeHtmlCell overlayCell = new SafeHtmlCell() {
-			final String closeButton = translationMap
-					.get("maalr.verbOverlayPopup.closeButton");
-
-			@Override
-			public Set<String> getConsumedEvents() {
-				Set<String> consumed = new HashSet<String>();
-				consumed.add(BrowserEvents.CLICK);
-				return consumed;
-			}
-
-			@Override
-			public void onBrowserEvent(
-					com.google.gwt.cell.client.Cell.Context context,
-					Element parent, SafeHtml value, NativeEvent event,
-					ValueUpdater<SafeHtml> valueUpdater) {
-				super.onBrowserEvent(context, parent, value, event,
-						valueUpdater);
-				super.onBrowserEvent(context, parent, value, event,
-						valueUpdater);
-				if (event.getType().equals(BrowserEvents.CLICK)) {
-					LemmaVersion selected = dataProvider.getList().get(
-							hoveredRow);
-					onButtonClicked(selected);
-				}
-			}
-
-			private void onButtonClicked(LemmaVersion selected) {
-				// Window.alert("Selected: " + selected.getEntryValues());
-				OverlayPopup.show(selected, overlayField, closeButton);
-				// final LemmaVersion lemma = new LemmaVersion();
-				// lemma.setEntryValues(selected.getEntryValues());
-				// lemma.setMaalrValues(selected.getMaalrValues());
-				// openModifyEditor(lemma);
-			}
-
-		};
-		popupColumn = new Column<LemmaVersion, SafeHtml>(overlayCell) {
-
-			private final SafeHtml nothing = new SafeHtmlBuilder().toSafeHtml();
-
-			@Override
-			public SafeHtml getValue(LemmaVersion object) {
-				String overlay = object.getEntryValue(overlayField);
-				if (overlay != null) {
-					SafeHtmlBuilder builder = new SafeHtmlBuilder();
-					builder.appendHtmlConstant("<span class=\"maalr_overlay maalr_overlay_"
-							+ overlay + "\">" + overlay + "</span>");
-					return builder.toSafeHtml();
-				} else {
-					return nothing;
-				}
-			}
-		};
-		cellTable.addColumn(popupColumn);
 	}
 
 	private void addColumnA(String langA, final boolean b) {
@@ -360,7 +258,7 @@ public class ResultCellTable extends Composite {
 							+ "</span>";
 				}
 
-				//Render HTML properly
+				// Render HTML properly
 				HTML html = new HTML(toDisplay);
 				sb.appendHtmlConstant(html.getText());
 
@@ -375,13 +273,94 @@ public class ResultCellTable extends Composite {
 								+ "</span>").toSafeHtml());
 	}
 
+	private void addOptionsColumn(TranslationMap translationMap,
+			final List<LemmaVersion> dataList) {
+
+		final TextButtonCell cell = new TextButtonCell() {
+
+			@Override
+			public Set<String> getConsumedEvents() {
+				Set<String> consumed = new HashSet<String>();
+				consumed.add(BrowserEvents.CLICK);
+				return consumed;
+			}
+
+			@Override
+			public void onBrowserEvent(
+					com.google.gwt.cell.client.Cell.Context context,
+					Element parent, String value, NativeEvent event,
+					ValueUpdater<String> valueUpdater) {
+				super.onBrowserEvent(context, parent, value, event,
+						valueUpdater);
+				if (event.getType().equals(BrowserEvents.CLICK)) {
+					LemmaVersion selected = dataProvider.getList().get(
+							hoveredRow);
+
+					// Workaround not to open the editor, because setEnabled
+					// does not appear to block this call
+					if (!selected.getEntryValue("correction").equals("95")) {
+						onButtonClicked(selected);
+					}
+
+				}
+			}
+
+			private void onButtonClicked(LemmaVersion selected) {
+				final LemmaVersion lemma = new LemmaVersion();
+				lemma.setEntryValues(selected.getEntryValues());
+				lemma.setMaalrValues(selected.getMaalrValues());
+				openModifyEditor(lemma);
+			}
+		};
+
+		final String modify = translationMap.get("maalr.query.result_modify");
+
+		optionsColumn = new Column<LemmaVersion, String>(cell) {
+
+			@Override
+			public String getValue(LemmaVersion object) {
+
+				if (object.getEntryValue("correction").equals("95")) {
+
+					cell.setEnabled(false);
+
+				}
+
+				return modify;
+			}
+
+		};
+
+		cellTable.addColumn(optionsColumn);
+
+	}
+
+	private void addPercentageColumn() {
+
+		final LabelCell progressCell = new LabelCell(LabelType.WARNING);
+
+		percentageColumn = new Column<LemmaVersion, String>(progressCell) {
+
+			@Override
+			public String getValue(LemmaVersion object) {
+
+				String toReturn = object.getEntryValue("correction");
+				return toReturn + "%";
+			}
+
+		};
+
+		cellTable.addColumn(percentageColumn);
+
+	}
+
 	public void setResults(final MaalrQuery query, QueryResult result) {
 		if (result.getMaxEntries() > 0) {
+			List<LemmaVersion> dataList = dataProvider.getList();
 			this.maalrQuery = query;
 			setSuggestVisible(false);
 			removeColumns();
-			addColumns(query);
-			List<LemmaVersion> dataList = dataProvider.getList();
+			addColumns(query, dataList);
 			dataList.clear();
 			dataList.addAll(result.getEntries());
 			dataProvider.refresh();
@@ -451,7 +430,9 @@ public class ResultCellTable extends Composite {
 		}
 	}
 
-	private void addColumns(final MaalrQuery maalrQuery) {
+	private void addColumns(final MaalrQuery maalrQuery,
+			final List<LemmaVersion> dataList) {
+
 		LocalizedStrings.afterLoad(new AsyncCallback<TranslationMap>() {
 
 			@Override
@@ -466,16 +447,14 @@ public class ResultCellTable extends Composite {
 				if (description.getLanguageName(false).equals(value)) {
 					defaultOrder = false;
 				}
-				addOverlayColumn(defaultOrder ? LemmaVersion.OVERLAY_LANG1
-						: LemmaVersion.OVERLAY_LANG2, translationMap);
+
 				addColumnA(translationMap.get(description
 						.getLanguageName(defaultOrder)), defaultOrder);
-				addOverlayColumn(defaultOrder ? LemmaVersion.OVERLAY_LANG2
-						: LemmaVersion.OVERLAY_LANG1, translationMap);
 				addColumnB(translationMap.get(description
 						.getLanguageName(!defaultOrder)), !defaultOrder);
-				// TODO: Commented to disable modify option for surmiran
-				addOptionsColumn(translationMap);
+				addOptionsColumn(translationMap, dataList);
+				addPercentageColumn();
+
 			}
 		});
 
