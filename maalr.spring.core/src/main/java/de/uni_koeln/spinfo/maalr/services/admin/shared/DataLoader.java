@@ -37,7 +37,7 @@ import de.uni_koeln.spinfo.maalr.common.shared.LemmaVersion;
 import de.uni_koeln.spinfo.maalr.common.shared.LemmaVersion.Status;
 import de.uni_koeln.spinfo.maalr.common.shared.LemmaVersion.Verification;
 import de.uni_koeln.spinfo.maalr.common.shared.LexEntry;
-import de.uni_koeln.spinfo.maalr.common.shared.NoDatabaseAvailableException; 
+import de.uni_koeln.spinfo.maalr.common.shared.NoDatabaseAvailableException;
 import de.uni_koeln.spinfo.maalr.common.shared.Role;
 import de.uni_koeln.spinfo.maalr.login.LoginManager;
 import de.uni_koeln.spinfo.maalr.lucene.Index;
@@ -118,18 +118,17 @@ public class DataLoader {
 						content.append(line);
 						content.append("\n");
 					} else {
-
-						// content.setLength(content.length() - 1);
-						// content.append("<c>");
-						// content.append("\n");
-
 						version.setValue("RStichwort", content.toString());
 						break;
 					}
 
 				}
 
-				version.setValue("DGrammatik", "page-1.jpg");
+				if (counter <= 1000) {
+					version.setValue("correction", "95");
+				} else {
+					version.setValue("correction", "15");
+				}
 
 				LexEntry entry = new LexEntry(version);
 				System.out.println(entry.toString());
