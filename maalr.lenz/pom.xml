@@ -1,20 +1,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>de.uni_koeln.spinfo.maalr.russian.demo</groupId>
-  <artifactId>russian</artifactId>
+  <groupId>de.uni_koeln.spinfo.maalr.lenz</groupId>
+  <artifactId>lenz</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
   
   <properties>
-      	<maalr.context.path>/maalr</maalr.context.path>
- 	  	<maalr.webapp.build>../maalr.russian.demo/target</maalr.webapp.build>
-		<maalr.webapp.name>russian-${project.version}</maalr.webapp.name>
+      	<maalr.context.path>/lenz</maalr.context.path>
+ 	  	<maalr.webapp.build>../maalr.lenz/target</maalr.webapp.build>
+		<maalr.webapp.name>lenz-${project.version}</maalr.webapp.name>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<project.svn.name>maalr</project.svn.name>
-		<application.title>Maalr</application.title>
+		<project.svn.name>lenz</project.svn.name>
+		<application.title>Lenz</application.title>
 		<logback.version>1.1.2</logback.version>
 		<slf4j.version>1.7.10</slf4j.version>
 		<jetty.default.port>8080</jetty.default.port>
