@@ -298,7 +298,7 @@ public class ResultCellTable extends Composite {
 
 					// Workaround not to open the editor, because setEnabled
 					// does not appear to block this call
-					if (!selected.getEntryValue("correction").equals("95")) {
+					if (!selected.getEntryValue("Correction").equals("95")) {
 						onButtonClicked(selected);
 					}
 
@@ -320,7 +320,7 @@ public class ResultCellTable extends Composite {
 			@Override
 			public String getValue(LemmaVersion object) {
 
-				if (object.getEntryValue("correction").equals("95")) {
+				if (object.getEntryValue("Correction").equals("95")) {
 
 					cell.setEnabled(false);
 
@@ -344,7 +344,7 @@ public class ResultCellTable extends Composite {
 			@Override
 			public String getValue(LemmaVersion object) {
 
-				String toReturn = object.getEntryValue("correction");
+				String toReturn = object.getEntryValue("Correction");
 				return toReturn + "%";
 			}
 
