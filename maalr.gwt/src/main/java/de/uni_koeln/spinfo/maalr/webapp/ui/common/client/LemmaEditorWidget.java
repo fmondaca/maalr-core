@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.ControlGroup;
@@ -33,6 +35,7 @@ import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -40,7 +43,6 @@ import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RichTextArea;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -70,18 +72,20 @@ public class LemmaEditorWidget extends SimplePanel {
 	private static LemmaEditorBinder uiBinder = GWT
 			.create(LemmaEditorBinder.class);
 
+	Logger logger = Logger.getLogger("LemmaEditorWidget");
+
 	@UiField
 	FlowPanel finalBase = new FlowPanel();
 	@UiField
 	VerticalPanel languages = new VerticalPanel();
-	// @UiField
-	// ScrollPanel scrollContainer = new ScrollPanel();
 	@UiField
 	FlowPanel imagePanel = new FlowPanel();
 	@UiField
 	VerticalPanel langA = new VerticalPanel();
 	@UiField
 	VerticalPanel langB = new VerticalPanel();
+	@UiField
+	FlowPanel percentage = new FlowPanel();
 
 	private LemmaDescription description;
 
@@ -161,16 +165,12 @@ public class LemmaEditorWidget extends SimplePanel {
 				DOM.setElementAttribute(finalBase.getElement(), "id",
 						"finalBase");
 
-				// DOM.setElementAttribute(scrollContainer.getElement(), "id",
-				// "scrollContainer");
-
 				DOM.setElementAttribute(imagePanel.getElement(), "id",
 						"imagePanel");
 
-				// scrollContainer.setHeight("500px");
-
 				langA = textEdit();
 				langB = richEdit();
+
 				languages.add(langA);
 				languages.add(langB);
 
@@ -181,10 +181,12 @@ public class LemmaEditorWidget extends SimplePanel {
 
 				imagePanel.add(dictPage_1);
 				imagePanel.add(dictPage_2);
-				// scrollContainer.add(imagePanel);
 
-				// finalBase.add(scrollContainer);
+				percentage = modifyPercentage();
+
+				finalBase.add(imagePanel);
 				finalBase.add(languages);
+				finalBase.add(percentage);
 
 			}
 		});
@@ -197,7 +199,7 @@ public class LemmaEditorWidget extends SimplePanel {
 		DOM.setElementAttribute(rta_a.getElement(), "id", "rta_langA");
 		DOM.setElementAttribute(langA.getElement(), "id", "langA");
 
-		rta_a.setHeight("20px");
+		rta_a.setHeight("2em");
 		langA.add(rta_a);
 		fields.put("DStichwort", rta_a);
 
@@ -219,6 +221,16 @@ public class LemmaEditorWidget extends SimplePanel {
 		return langB;
 	}
 
+	private FlowPanel modifyPercentage() {
+		RichTextArea per = new RichTextArea();
+		per.setHeight("2em");
+		DOM.setElementAttribute(per.getElement(), "id", "per");
+		percentage.add(per);
+		fields.put("correction", per);
+
+		return percentage;
+	}
+
 	/**
 	 * Copies the data from the given {@link LemmaVersion} into the editor and
 	 * updates the ui.
@@ -231,6 +243,10 @@ public class LemmaEditorWidget extends SimplePanel {
 		toSet.addAll(description.getEditorFields(true));
 		// second language
 		toSet.addAll(description.getEditorFields(false));
+
+		// Add correction
+		toSet.add("correction");
+
 		if (lemma == null) {
 			for (String key : toSet) {
 				HasText field = fields.get(key);
@@ -271,6 +287,10 @@ public class LemmaEditorWidget extends SimplePanel {
 		toSet.addAll(description.getEditorFields(true));
 		// second language
 		toSet.addAll(description.getEditorFields(false));
+
+		// Add correction
+		toSet.add("correction");
+
 		for (String key : toSet) {
 			HasHTML field = fields.get(key);
 			if (field != null) {
@@ -278,10 +298,33 @@ public class LemmaEditorWidget extends SimplePanel {
 				String text = field.getHTML();
 
 				if (text != null && text.trim().length() > 0) {
-					lemma.putEntryValue(key, text.trim());
+
+					//logger.log(Level.INFO, "UPDATE: " + key + " " + text);
+
+					//
+
+					if (key.equals("correction")) {
+						//lemma.putEntryValue(key, text.trim());
+						int correction = Integer.parseInt(text);
+						logger.log(Level.INFO, "CORRECTION " + correction);
+
+						if (correction > 100 || correction < 15) {
+
+							Window.alert("VDFVDF");
+							
+
+						} else if (correction > 15 && correction <= 100) {
+							lemma.putEntryValue(key, text.trim());
+						}
+
+					} else {
+						lemma.putEntryValue(key, text.trim());
+					}
+
 				} else {
 					lemma.removeEntryValue(key);
 				}
+
 			}
 		}
 	}

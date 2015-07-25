@@ -11,6 +11,8 @@
 			<g:VerticalPanel ui:field="langA" />
 			<g:VerticalPanel ui:field="langB" />
 		</g:VerticalPanel>
+		
+		<g:FlowPanel ui:field="percentage" />
 
 
 	</g:FlowPanel>
