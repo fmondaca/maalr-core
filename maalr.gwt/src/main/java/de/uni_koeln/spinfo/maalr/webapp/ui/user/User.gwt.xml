@@ -6,7 +6,8 @@
 	<inherits name='de.uni_koeln.spinfo.maalr.webapp.ui.common.Common' />
 	<inherits name='de.uni_koeln.spinfo.maalr.antlr.Antlr4Maalr' />
 	<inherits name='de.uni_koeln.spinfo.maalr.lucene.Lucene' />
-	<inherits name='de.uni_koeln.spinfo.maalr.services.user.UserServices'/>
+	<inherits name='de.uni_koeln.spinfo.maalr.services.user.UserServices' />
+	<inherits name="com.google.gwt.logging.Logging" />
 
 	<!-- Specify the app entry point class. -->
 	<entry-point class='de.uni_koeln.spinfo.maalr.webapp.ui.user.client.User' />

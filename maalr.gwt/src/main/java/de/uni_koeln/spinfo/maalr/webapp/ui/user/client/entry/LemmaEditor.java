@@ -166,7 +166,7 @@ public class LemmaEditor {
 		});
 		popup.add(popupEditor);
 		popup.add(footer);
-		int customWidth = 850;
+		int customWidth = 1100;
 		popup.setWidth(customWidth + "px");
 		popup.show();
 		double customMargin = -1*(customWidth/2);
