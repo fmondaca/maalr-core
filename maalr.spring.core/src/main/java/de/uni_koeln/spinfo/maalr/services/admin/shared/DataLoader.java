@@ -106,7 +106,7 @@ public class DataLoader {
 
 				line = line.replace("<en>", "").replace("</en>", "");
 
-				version.setValue("DStichwort", line);
+				version.setValue("Lemma", line);
 
 				StringBuffer content = new StringBuffer();
 
@@ -118,16 +118,16 @@ public class DataLoader {
 						content.append(line);
 						content.append("\n");
 					} else {
-						version.setValue("RStichwort", content.toString());
+						version.setValue("Content", content.toString());
 						break;
 					}
 
 				}
 
 				if (counter <= 1000) {
-					version.setValue("correction", "95");
+					version.setValue("Correction", "95");
 				} else {
-					version.setValue("correction", "15");
+					version.setValue("Correction", "15");
 				}
 
 				LexEntry entry = new LexEntry(version);

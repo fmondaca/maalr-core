@@ -201,7 +201,7 @@ public class LemmaEditorWidget extends SimplePanel {
 
 		rta_a.setHeight("2em");
 		langA.add(rta_a);
-		fields.put("DStichwort", rta_a);
+		fields.put("Lemma", rta_a);
 
 		return langA;
 	}
@@ -216,7 +216,7 @@ public class LemmaEditorWidget extends SimplePanel {
 		langB.add(toolbar);
 		langB.add(rta_b);
 
-		fields.put("RStichwort", rta_b);
+		fields.put("Content", rta_b);
 
 		return langB;
 	}
@@ -226,7 +226,7 @@ public class LemmaEditorWidget extends SimplePanel {
 		per.setHeight("2em");
 		DOM.setElementAttribute(per.getElement(), "id", "per");
 		percentage.add(per);
-		fields.put("correction", per);
+		fields.put("Correction", per);
 
 		return percentage;
 	}
@@ -245,7 +245,7 @@ public class LemmaEditorWidget extends SimplePanel {
 		toSet.addAll(description.getEditorFields(false));
 
 		// Add correction
-		toSet.add("correction");
+		toSet.add("Correction");
 
 		if (lemma == null) {
 			for (String key : toSet) {
@@ -289,7 +289,7 @@ public class LemmaEditorWidget extends SimplePanel {
 		toSet.addAll(description.getEditorFields(false));
 
 		// Add correction
-		toSet.add("correction");
+		toSet.add("Correction");
 
 		for (String key : toSet) {
 			HasHTML field = fields.get(key);
@@ -303,7 +303,7 @@ public class LemmaEditorWidget extends SimplePanel {
 
 					//
 
-					if (key.equals("correction")) {
+					if (key.equals("Correction")) {
 						//lemma.putEntryValue(key, text.trim());
 						int correction = Integer.parseInt(text);
 						logger.log(Level.INFO, "CORRECTION " + correction);

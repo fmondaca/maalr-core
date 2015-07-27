@@ -298,9 +298,9 @@ public class ResultCellTable extends Composite {
 
 					// Workaround not to open the editor, because setEnabled
 					// does not appear to block this call
-					if (!selected.getEntryValue("Correction").equals("95")) {
-						onButtonClicked(selected);
-					}
+					// if (!selected.getEntryValue("Correction").equals("95")) {
+					onButtonClicked(selected);
+					// }
 
 				}
 			}

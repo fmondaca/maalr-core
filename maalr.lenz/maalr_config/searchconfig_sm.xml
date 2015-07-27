@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <dictionaryConfiguration>
 	<databaseColumns>
-		<column name="DStichwort" />
-		<column name="RStichwort" />
-		<column name="correction" />
+		<column name="Lemma" />
+		<column name="Content" />
+		<column name="Correction" />
 
 	</databaseColumns>
 
@@ -21,18 +21,18 @@
 			<options>
 				<option id="both" default="true">
 					<columns>
-						<column reference="DStichwort" />
-						<column reference="RStichwort" />
+						<column reference="Lemma" />
+						<column reference="Content" />
 					</columns>
 				</option>
-				<option id="surmiran">
+				<option id="lemma">
 					<columns>
-						<column reference="RStichwort" />
+						<column reference="Lemma" />
 					</columns>
 				</option>
-				<option id="german">
+				<option id="content">
 					<columns>
-						<column reference="DStichwort" />
+						<column reference="Content" />
 					</columns>
 				</option>
 			</options>
@@ -55,48 +55,48 @@
 	</queryBuilders>
 	<!-- Lemma description -->
 	<languages>
-		<language id="german" mainColumn="DStichwort">
+		<language id="lemma" mainColumn="Lemma">
 			<editors>
 				<frontend_editor>
 					<fields>
-						<field column="DStichwort"></field>
-						<field column="correction"></field>
+						<field column="Lemma"></field>
+						<field column="Correction"></field>
 					</fields>
 				</frontend_editor>
 				<backend_editor>
 					<fields>
 						<!-- Editors must ensure that this field is not empty (visitors don't 
 							have to) -->
-						<field column="DStichwort" allowsNull="false"></field>
+						<field column="Lemma" allowsNull="false"></field>
 
 					</fields>
 				</backend_editor>
 			</editors>
 			<results>
 				<fields>
-					<field column="DStichwort" format="{0}"></field>
+					<field column="Lemma" format="{0}"></field>
 
 				</fields>
 			</results>
 		</language>
-		<language id="surmiran" mainColumn="RStichwort">
+		<language id="content" mainColumn="Content">
 			<editors>
 				<frontend_editor>
 					<fields>
-						<field column="RStichwort"></field>
-						<field column="correction"></field>
+						<field column="Content"></field>
+						<field column="Correction"></field>
 					</fields>
 				</frontend_editor>
 				<backend_editor>
 					<fields>
-						<field column="RStichwort" allowsNull="false"></field>
+						<field column="Content" allowsNull="false"></field>
 
 					</fields>
 				</backend_editor>
 			</editors>
 			<results>
 				<fields>
-					<field column="RStichwort" format="{0}"></field>
+					<field column="Content" format="{0}"></field>
 
 				</fields>
 			</results>
