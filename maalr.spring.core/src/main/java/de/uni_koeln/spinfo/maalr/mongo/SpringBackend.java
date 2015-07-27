@@ -127,8 +127,8 @@ public class SpringBackend {
 						throw new MaalrException("dialog.failure.comment");
 					}
 				} else {
-					if(value.length() > 200) {
-						//	throw new MaalrException("A field cannot contain more than 200 characters.");
+					if(value.length() > 20000) {
+						//	throw new MaalrException("A field cannot contain more than 2000 characters.");
 						//workaround for i18n
 						throw new MaalrException("dialog.failure.lemma");
 					}
