@@ -325,6 +325,10 @@ public class ResultCellTable extends Composite {
 
 					cell.setEnabled(false);
 
+				} else {
+
+					cell.setEnabled(true);
+
 				}
 
 				return modify;
@@ -346,7 +350,7 @@ public class ResultCellTable extends Composite {
 			public String getValue(LemmaVersion object) {
 
 				String toReturn = object.getEntryValue("Correction");
-				//logger.log(Level.INFO, "CORRECTION " + toReturn);
+				// logger.log(Level.INFO, "CORRECTION " + toReturn);
 				return toReturn + "%";
 			}
 
