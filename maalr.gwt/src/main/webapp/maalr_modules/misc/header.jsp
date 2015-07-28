@@ -12,15 +12,17 @@
 	</div>
 	<%-- MAIN MENU --%>
     <ul class="left">
+     <li> <jsp:include page="/maalr_modules/misc/login_widget.jsp" /></li>
         <li><a id="navTemplate" title="template" href="${dictContext}/template.html"><fmt:message key="maalr.navi.template" /></a></li>
         <li><a id="navHilfe" title="help" href='#'><fmt:message key="maalr.navi.help" /></a></li>
+       
     </ul>
 	<%-- LANGUAGE SELECTION --%>	
 	<ul class="right">
 		<li><a href="?pl=es" class="<%=(session.getAttribute("pl").equals("es"))?"lang_select active":"lang_select"%>"><fmt:message key="maalr.langSelect.spanish" /></a></li>
 		<li><a href="?pl=en" class="<%=(session.getAttribute("pl").equals("en"))?"lang_select active":"lang_select"%>"><fmt:message key="maalr.langSelect.english" /></a></li>
 	</ul>
-	<jsp:include page="/maalr_modules/misc/login_widget.jsp" />
+	
 </div>
 
 
