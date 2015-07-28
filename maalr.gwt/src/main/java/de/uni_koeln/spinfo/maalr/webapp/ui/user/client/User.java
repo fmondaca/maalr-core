@@ -65,31 +65,35 @@ public class User implements EntryPoint {
 		this.service = GWT.create(SearchService.class);
 		search = new Search();
 		resultCellTable = new ResultCellTable();
-		AsyncLemmaDescriptionLoader.afterLemmaDescriptionLoaded(new AsyncCallback<LemmaDescription>() {
+		AsyncLemmaDescriptionLoader
+				.afterLemmaDescriptionLoaded(new AsyncCallback<LemmaDescription>() {
 
-			@Override
-			public void onFailure(Throwable caught) {
-			}
+					@Override
+					public void onFailure(Throwable caught) {
+					}
 
-			@Override
-			public void onSuccess(LemmaDescription result) {
-//				HiJax.hijackAnchor("propose_navi", new Command() {
-//
-//					@Override
-//					public void execute() {
-//						openEditor();
-//					}
-//				});
-				try {
-					initializeMainPanel();
-				} catch (Exception e) {
-					logger.error("Error!", e);
-					Window.alert("Please check log file: " + e);
-				}
-			}
-		});
+					@Override
+					public void onSuccess(LemmaDescription result) {
+
+						// Propose new entry: disabled
+						
+						// HiJax.hijackAnchor("propose_navi", new Command() {
+						//
+						// @Override
+						// public void execute() {
+						// openEditor();
+						// }
+						// });
+						try {
+							initializeMainPanel();
+						} catch (Exception e) {
+							logger.error("Error!", e);
+							Window.alert("Please check log file: " + e);
+						}
+					}
+				});
 		Element element = DOM.getElementById("languages-widget");
-		if(element != null) {
+		if (element != null) {
 			updateLanguageLinks(element);
 		}
 	}
@@ -101,19 +105,21 @@ public class User implements EntryPoint {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		if(attribute != null && attribute.contains("lang_select")) {
+		if (attribute != null && attribute.contains("lang_select")) {
 			final Anchor anchor = Anchor.wrap(element);
-			final String langParam = anchor.getHref().substring(anchor.getHref().lastIndexOf('?'));
+			final String langParam = anchor.getHref().substring(
+					anchor.getHref().lastIndexOf('?'));
 			HiJax.hijackAnchor(anchor, new Command() {
-				
+
 				@Override
 				public void execute() {
-					String url = Window.Location.getPath() + langParam + "#"+History.getToken();
+					String url = Window.Location.getPath() + langParam + "#"
+							+ History.getToken();
 					Window.Location.assign(url);
 				}
 			});
 		} else {
-			for(int i = 0; i < element.getChildCount(); i++) {
+			for (int i = 0; i < element.getChildCount(); i++) {
 				Node child = element.getChild(i);
 				Element e = child.cast();
 				updateLanguageLinks(e);
@@ -122,15 +128,15 @@ public class User implements EntryPoint {
 	}
 
 	private void initializeMainPanel() {
-		
+
 		Element js_not_active = DOM.getElementById("js_not_active");
-		if(js_not_active != null) {
+		if (js_not_active != null) {
 			for (int i = 0; i < js_not_active.getChildCount(); i++) {
 				js_not_active.removeChild(js_not_active.getChild(i));
 			}
 			js_not_active.removeFromParent();
 		}
-		
+
 		Element element = DOM.getElementById("head_search");
 		if (element != null) {
 			for (int i = 0; i < element.getChildCount(); i++) {
@@ -179,17 +185,19 @@ public class User implements EntryPoint {
 		});
 
 		if (History.getToken() != null) {
-			//Logger.getLogger(getClass()).info("History.getToken(): " + History.getToken());
+			// Logger.getLogger(getClass()).info("History.getToken(): " +
+			// History.getToken());
 			History.fireCurrentHistoryState();
 		}
 		search.setFocus(true);
 	}
 
 	private void doSearch(final MaalrQuery maalrQuery) {
-		if(maalrQuery.getValues().size() == 0) {
+		if (maalrQuery.getValues().size() == 0) {
 			return;
 		}
-		if(SearchHelper.getLastQuery() != null && SearchHelper.getLastQuery().equals(maalrQuery)) {
+		if (SearchHelper.getLastQuery() != null
+				&& SearchHelper.getLastQuery().equals(maalrQuery)) {
 			return;
 		}
 		service.search(maalrQuery, new AsyncCallback<QueryResult>() {
