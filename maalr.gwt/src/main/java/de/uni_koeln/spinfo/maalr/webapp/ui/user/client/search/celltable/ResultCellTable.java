@@ -212,7 +212,13 @@ public class ResultCellTable extends Composite {
 					toDisplay = "<span class=\"unverified\">" + toDisplay
 							+ "</span>";
 				}
-				sb.appendHtmlConstant(toDisplay);
+				
+				
+				// Render HTML properly
+				HTML html = new HTML(toDisplay);
+				sb.appendHtmlConstant(html.getText());
+
+				//sb.appendHtmlConstant(toDisplay);
 				return sb.toSafeHtml();
 			}
 		};
@@ -274,8 +280,7 @@ public class ResultCellTable extends Composite {
 								+ "</span>").toSafeHtml());
 	}
 
-	private void addOptionsColumn(TranslationMap translationMap,
-			final List<LemmaVersion> dataList) {
+	private void addOptionsColumn(TranslationMap translationMap) {
 
 		final TextButtonCell cell = new TextButtonCell() {
 
@@ -459,7 +464,7 @@ public class ResultCellTable extends Composite {
 						.getLanguageName(defaultOrder)), defaultOrder);
 				addColumnB(translationMap.get(description
 						.getLanguageName(!defaultOrder)), !defaultOrder);
-				addOptionsColumn(translationMap, dataList);
+				addOptionsColumn(translationMap);
 				addPercentageColumn();
 
 			}
