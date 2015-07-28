@@ -17,8 +17,8 @@
     </ul>
 	<%-- LANGUAGE SELECTION --%>	
 	<ul class="right">
-		<li><a href="?pl=ru" class="<%=(session.getAttribute("pl").equals("ru"))?"lang_select active":"lang_select"%>"><fmt:message key="maalr.langSelect.russian" /></a></li>
-		<li><a href="?pl=de" class="<%=(session.getAttribute("pl").equals("de"))?"lang_select active":"lang_select"%>"><fmt:message key="maalr.langSelect.german" /></a></li>
+		<li><a href="?pl=es" class="<%=(session.getAttribute("pl").equals("es"))?"lang_select active":"lang_select"%>"><fmt:message key="maalr.langSelect.spanish" /></a></li>
+		<li><a href="?pl=en" class="<%=(session.getAttribute("pl").equals("en"))?"lang_select active":"lang_select"%>"><fmt:message key="maalr.langSelect.english" /></a></li>
 	</ul>
 	<jsp:include page="/maalr_modules/misc/login_widget.jsp" />
 </div>

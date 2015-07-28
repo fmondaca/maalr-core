@@ -8,7 +8,7 @@
 <%-- LANGUAGE SELECTION --%>
 <div id="languages-widget">
 	<ul>
-		<li><a href="?pl=de" class="<%=(session.getAttribute("pl").equals("de"))?"lang_select active":"lang_select"%>"><fmt:message key="maalr.langSelect.german" /></a></li>
+		<li><a href="?pl=es" class="<%=(session.getAttribute("pl").equals("es"))?"lang_select active":"lang_select"%>"><fmt:message key="maalr.langSelect.spanish" /></a></li>
 		<li><a href="?pl=en" class="<%=(session.getAttribute("pl").equals("en"))?"lang_select active":"lang_select"%>"><fmt:message key="maalr.langSelect.english" /></a></li>
 	</ul>
 </div>
