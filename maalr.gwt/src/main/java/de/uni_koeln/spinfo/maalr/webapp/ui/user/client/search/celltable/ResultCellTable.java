@@ -18,6 +18,7 @@ package de.uni_koeln.spinfo.maalr.webapp.ui.user.client.search.celltable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.github.gwtbootstrap.client.ui.Button;
@@ -298,9 +299,9 @@ public class ResultCellTable extends Composite {
 
 					// Workaround not to open the editor, because setEnabled
 					// does not appear to block this call
-					// if (!selected.getEntryValue("Correction").equals("95")) {
-					onButtonClicked(selected);
-					// }
+					if (!selected.getEntryValue("Correction").equals("95")) {
+						onButtonClicked(selected);
+					}
 
 				}
 			}
@@ -345,6 +346,7 @@ public class ResultCellTable extends Composite {
 			public String getValue(LemmaVersion object) {
 
 				String toReturn = object.getEntryValue("Correction");
+				//logger.log(Level.INFO, "CORRECTION " + toReturn);
 				return toReturn + "%";
 			}
 
