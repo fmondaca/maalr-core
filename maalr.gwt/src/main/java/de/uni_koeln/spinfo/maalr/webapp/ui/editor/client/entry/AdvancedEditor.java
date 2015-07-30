@@ -117,7 +117,8 @@ public class AdvancedEditor {
 		popup.add(content);
 		popup.setPopupPosition(50, 50);
 		popup.setPixelSize(Window.getClientWidth() - 100, Window.getClientHeight() - 100);
-		final LemmaEditorWidget editorWidget = new LemmaEditorWidget(AsyncLemmaDescriptionLoader.getDescription(), UseCase.FIELDS_FOR_ADVANCED_EDITOR, 2, true, null);
+		//final LemmaEditorWidget editorWidget = new LemmaEditorWidget(AsyncLemmaDescriptionLoader.getDescription(), UseCase.FIELDS_FOR_ADVANCED_EDITOR, 2, true, null);
+		final LemmaEditorWidget editorWidget = new LemmaEditorWidget(AsyncLemmaDescriptionLoader.getDescription(), UseCase.FIELDS_FOR_SIMPLE_EDITOR, 1, false, null);
 		editorWidget.setData(lv);
 		content.add(editorWidget);
 		final boolean withComment = true;
