@@ -217,7 +217,6 @@ public class ResultCellTable extends Composite {
 				HTML html = new HTML(toDisplay);
 				sb.appendHtmlConstant(html.getText());
 
-				//sb.appendHtmlConstant(toDisplay);
 				return sb.toSafeHtml();
 			}
 		};
