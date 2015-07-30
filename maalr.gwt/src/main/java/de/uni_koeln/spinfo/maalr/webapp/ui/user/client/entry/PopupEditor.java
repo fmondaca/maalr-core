@@ -21,6 +21,7 @@ import com.github.gwtbootstrap.client.ui.ControlGroup;
 import com.github.gwtbootstrap.client.ui.ControlLabel;
 import com.github.gwtbootstrap.client.ui.Fieldset;
 import com.github.gwtbootstrap.client.ui.HelpInline;
+import com.github.gwtbootstrap.client.ui.Modal;
 import com.github.gwtbootstrap.client.ui.PageHeader;
 import com.github.gwtbootstrap.client.ui.TextArea;
 import com.github.gwtbootstrap.client.ui.TextBox;
@@ -40,7 +41,7 @@ import de.uni_koeln.spinfo.maalr.webapp.ui.common.client.CommonServiceAsync;
 import de.uni_koeln.spinfo.maalr.webapp.ui.common.client.LemmaEditorWidget;
 
 public class PopupEditor extends VerticalPanel {
-	
+
 	private TextArea comment;
 	private AntlrEditorWidget antlr;
 	private LemmaEditorWidget content;
@@ -49,7 +50,9 @@ public class PopupEditor extends VerticalPanel {
 	private HelpInline commentFeedback;
 	private ControlGroup commentGroup;
 
-	public PopupEditor(String header, String sub, String description, final LemmaEditorWidget content, TranslationMap translation, boolean withComment, boolean withEmail, Button...buttons) {
+	public PopupEditor(String header, String sub, String description,
+			final LemmaEditorWidget content, TranslationMap translation,
+			boolean withComment, boolean withEmail, Button... buttons) {
 		this.content = content;
 		PageHeader ph = new PageHeader();
 		ph.setText(header);
@@ -57,34 +60,37 @@ public class PopupEditor extends VerticalPanel {
 		add(ph);
 		introText = new HTML(description);
 		add(introText);
-		
-//		Well editorWell = new Well();
-//		editorWell.add(content);
-//		add(editorWell);
 
-		//without surrounding well:
-		add(new HTML("<br>")); //<br> for vertical spacing
+		// Well editorWell = new Well();
+		// editorWell.add(content);
+		// add(editorWell);
+
+		// without surrounding well:
+		add(new HTML("<br>")); // <br> for vertical spacing
 		add(content);
-	
+
 		Fieldset set = null;
-		if(withComment) {
+		if (withComment) {
 			set = new Fieldset();
 			commentGroup = new ControlGroup();
-			commentGroup.add(new ControlLabel(translation.get("dialog.comment.header")));
+			commentGroup.add(new ControlLabel(translation
+					.get("dialog.comment.header")));
 			comment = new TextArea();
-			//uncomment this to restrict max input size (current solution is a MaalrException, see SpringBackend.java)
-			//comment.getElement().setAttribute("maxlength", "500");
+			// uncomment this to restrict max input size (current solution is a
+			// MaalrException, see SpringBackend.java)
+			// comment.getElement().setAttribute("maxlength", "500");
 			comment.getElement().getStyle().setWidth(100, Unit.PCT);
 			comment.getElement().getStyle().setProperty("resize", "none");
 			comment.setVisibleLines(3);
-			comment.setPlaceholder(translation.get("dialog.comment.placeholder"));
+			comment.setPlaceholder(translation
+					.get("dialog.comment.placeholder"));
 			commentGroup.add(comment);
 			commentFeedback = new HelpInline();
 			commentGroup.add(commentFeedback);
 			set.add(commentGroup);
 		}
-		if(withEmail) {
-			if(set == null) {
+		if (withEmail) {
+			if (set == null) {
 				set = new Fieldset();
 			}
 			ControlGroup group = new ControlGroup();
@@ -94,9 +100,9 @@ public class PopupEditor extends VerticalPanel {
 			email.getElement().getStyle().setWidth(100, Unit.PCT);
 			group.add(email);
 			set.add(group);
-			
+
 		}
-		if(set != null) {
+		if (set != null) {
 			add(set);
 		}
 		checkUserLoggedIn();
@@ -110,58 +116,57 @@ public class PopupEditor extends VerticalPanel {
 	private void checkUserLoggedIn() {
 		CommonServiceAsync service = GWT.create(CommonService.class);
 		service.getCurrentUser(new AsyncCallback<LightUserInfo>() {
-			
+
 			@Override
 			public void onSuccess(LightUserInfo result) {
-				if(result == null) {
+				if (result == null) {
 					email.setText(null);
 				} else {
 					email.setText(result.getEmail());
 				}
 			}
-			
+
 			@Override
 			public void onFailure(Throwable caught) {
-				
+
 			}
 		});
 	}
 
 	public void reset() {
-		if(antlr != null) {
+		if (antlr != null) {
 			antlr.reset();
 		}
-		if(comment != null) {
+		if (comment != null) {
 			comment.setText("");
 		}
 	}
 
-	public void updateFromEditor(LemmaVersion lemma) {
-		content.updateFromEditor(lemma);
-		if(comment != null && comment.getText().trim().length() != 0) {
+	public void updateFromEditor(LemmaVersion lemma, Button ok, Modal popup) {
+		content.updateFromEditor(lemma, ok, popup);
+		if (comment != null && comment.getText().trim().length() != 0) {
 			lemma.putEntryValue(LemmaVersion.COMMENT, comment.getText().trim());
 		} else {
 			lemma.removeEntryValue(LemmaVersion.COMMENT);
 		}
-		if(email != null && email.getText().trim().length() != 0) {
+		if (email != null && email.getText().trim().length() != 0) {
 			lemma.putMaalrValue("", "");
 			lemma.putEntryValue(LemmaVersion.EMAIL, email.getText().trim());
 		}
 	}
 
-	
-
 	public boolean isValid() {
 		boolean contentValid = content.isValid(false, false);
 		boolean commentValid = true;
-		if(comment != null) {
-			if(comment.getText().trim().length() == 0) {
+		if (comment != null) {
+			if (comment.getText().trim().length() == 0) {
 				commentValid = false;
 			}
 		}
-		if(!commentValid && !contentValid) {
+		if (!commentValid && !contentValid) {
 			content.isValid(false, true);
-			commentFeedback.setText("Please leave a comment/question or fill out the fields above.");
+			commentFeedback
+					.setText("Please leave a comment/question or fill out the fields above.");
 			commentGroup.setType(ControlGroupType.ERROR);
 		} else {
 			commentFeedback.setText("");
@@ -169,6 +174,5 @@ public class PopupEditor extends VerticalPanel {
 		}
 		return contentValid || commentValid;
 	}
-
 
 }

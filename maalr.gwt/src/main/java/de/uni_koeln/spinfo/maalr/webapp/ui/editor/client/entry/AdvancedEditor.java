@@ -81,11 +81,11 @@ import de.uni_koeln.spinfo.maalr.webapp.ui.editor.client.EditorService;
 import de.uni_koeln.spinfo.maalr.webapp.ui.editor.client.EditorServiceAsync;
 
 public class AdvancedEditor {
-	
 
 	public static PopupPanel openEditor(AsyncCallback<LexEntry> afterSave,
 			EditorConstants constants, EditorMessages messages) {
-		return openEditor(null, new LemmaVersion(), afterSave, constants, messages);
+		return openEditor(null, new LemmaVersion(), afterSave, constants,
+				messages);
 	}
 
 	private static EditorServiceAsync service = GWT.create(EditorService.class);
@@ -94,8 +94,10 @@ public class AdvancedEditor {
 	private static ListBox langAOverlay;
 	private static ListBox langBOverlay;
 
-	public static PopupPanel openEditor(final LexEntry entry, final LemmaVersion lv, final AsyncCallback<LexEntry> afterClose, final EditorConstants constants, final EditorMessages messages) {
-		
+	public static PopupPanel openEditor(final LexEntry entry,
+			final LemmaVersion lv, final AsyncCallback<LexEntry> afterClose,
+			final EditorConstants constants, final EditorMessages messages) {
+
 		final PopupPanel popup = new PopupPanel(false, false);
 		final AsyncCallback<LexEntry> callback = new AsyncCallback<LexEntry>() {
 
@@ -116,9 +118,14 @@ public class AdvancedEditor {
 		final VerticalPanel content = new VerticalPanel();
 		popup.add(content);
 		popup.setPopupPosition(50, 50);
-		popup.setPixelSize(Window.getClientWidth() - 100, Window.getClientHeight() - 100);
-		//final LemmaEditorWidget editorWidget = new LemmaEditorWidget(AsyncLemmaDescriptionLoader.getDescription(), UseCase.FIELDS_FOR_ADVANCED_EDITOR, 2, true, null);
-		final LemmaEditorWidget editorWidget = new LemmaEditorWidget(AsyncLemmaDescriptionLoader.getDescription(), UseCase.FIELDS_FOR_SIMPLE_EDITOR, 1, false, null);
+		popup.setPixelSize(Window.getClientWidth() - 100,
+				Window.getClientHeight() - 100);
+		// final LemmaEditorWidget editorWidget = new
+		// LemmaEditorWidget(AsyncLemmaDescriptionLoader.getDescription(),
+		// UseCase.FIELDS_FOR_ADVANCED_EDITOR, 2, true, null);
+		final LemmaEditorWidget editorWidget = new LemmaEditorWidget(
+				AsyncLemmaDescriptionLoader.getDescription(),
+				UseCase.FIELDS_FOR_ADVANCED_EDITOR, 1, false, null);
 		editorWidget.setData(lv);
 		content.add(editorWidget);
 		final boolean withComment = true;
@@ -156,47 +163,60 @@ public class AdvancedEditor {
 								}
 								FlowPanel group = new FlowPanel();
 								langAOverlay = new ListBox(false);
-								langAOverlay.addItem(constants.none(), (String) null);
+								langAOverlay.addItem(constants.none(),
+										(String) null);
 								for (final String type : result) {
 									langAOverlay.addItem(type, type);
 								}
 								group.add(langAOverlay);
 								final Button edit = new Button(constants.edit());
-								langAOverlay.addChangeHandler(new ChangeHandler() {
+								langAOverlay
+										.addChangeHandler(new ChangeHandler() {
 
-									@Override
-									public void onChange(ChangeEvent event) {
-										edit.setEnabled(langAOverlay.getSelectedIndex() != 0);
-									}
-								});
-								
-								edit.getElement().getStyle().setMarginLeft(10, Unit.PX);
+											@Override
+											public void onChange(
+													ChangeEvent event) {
+												edit.setEnabled(langAOverlay
+														.getSelectedIndex() != 0);
+											}
+										});
+
+								edit.getElement().getStyle()
+										.setMarginLeft(10, Unit.PX);
 								edit.addClickHandler(new ClickHandler() {
 
 									@Override
 									public void onClick(ClickEvent event) {
-										showOverlayEditor(lv, langAOverlay.getValue(), localizedStrings, constants, messages);
+										showOverlayEditor(lv,
+												langAOverlay.getValue(),
+												localizedStrings, constants,
+												messages);
 									}
 								});
 								group.add(edit);
-//								left.add(new ControlLabel(messages.controlLabelOverlay(AsyncLemmaDescriptionLoader.getDescription().getLanguageName(true))));
-								left.add(new ControlLabel(messages.controlLabelOverlay()));
+								// left.add(new
+								// ControlLabel(messages.controlLabelOverlay(AsyncLemmaDescriptionLoader.getDescription().getLanguageName(true))));
+								left.add(new ControlLabel(messages
+										.controlLabelOverlay()));
 								Controls controls = new Controls();
 								controls.add(group);
 								left.add(controls);
 								edit.setEnabled(false);
-								String overlay = lv.getEntryValue(LemmaVersion.OVERLAY_LANG1);
+								String overlay = lv
+										.getEntryValue(LemmaVersion.OVERLAY_LANG1);
 								for (int i = 0; i < result.size(); i++) {
 									if (result.get(i).equals(overlay)) {
-										langAOverlay.setItemSelected(i + 1, true);
+										langAOverlay.setItemSelected(i + 1,
+												true);
 										edit.setEnabled(true);
 										break;
 									}
 								}
 							}
 						});
-				service.getOverlayTypes(false, new AsyncCallback<ArrayList<String>>() {
-					
+				service.getOverlayTypes(false,
+						new AsyncCallback<ArrayList<String>>() {
+
 							@Override
 							public void onFailure(Throwable caught) {
 							}
@@ -208,38 +228,50 @@ public class AdvancedEditor {
 								}
 								FlowPanel group = new FlowPanel();
 								langBOverlay = new ListBox(false);
-								langBOverlay.addItem(constants.none(), (String) null);
+								langBOverlay.addItem(constants.none(),
+										(String) null);
 								for (final String type : result) {
 									langBOverlay.addItem(type, type);
 								}
 								group.add(langBOverlay);
 								final Button edit = new Button(constants.edit());
-								langBOverlay.addChangeHandler(new ChangeHandler() {
-									
-									@Override
-									public void onChange(ChangeEvent event) {
-										edit.setEnabled(langBOverlay.getSelectedIndex() != 0);
-									}
-								});
-								edit.getElement().getStyle().setMarginLeft(10, Unit.PX);
+								langBOverlay
+										.addChangeHandler(new ChangeHandler() {
+
+											@Override
+											public void onChange(
+													ChangeEvent event) {
+												edit.setEnabled(langBOverlay
+														.getSelectedIndex() != 0);
+											}
+										});
+								edit.getElement().getStyle()
+										.setMarginLeft(10, Unit.PX);
 								edit.addClickHandler(new ClickHandler() {
 
 									@Override
 									public void onClick(ClickEvent event) {
-										showOverlayEditor(lv, langBOverlay.getValue(), localizedStrings, constants, messages);
+										showOverlayEditor(lv,
+												langBOverlay.getValue(),
+												localizedStrings, constants,
+												messages);
 									}
 								});
 								group.add(edit);
-//								right.add(new ControlLabel(messages.controlLabelOverlay(AsyncLemmaDescriptionLoader.getDescription().getLanguageName(false))));
-								right.add(new ControlLabel(messages.controlLabelOverlay()));
+								// right.add(new
+								// ControlLabel(messages.controlLabelOverlay(AsyncLemmaDescriptionLoader.getDescription().getLanguageName(false))));
+								right.add(new ControlLabel(messages
+										.controlLabelOverlay()));
 								Controls controls = new Controls();
 								controls.add(group);
 								right.add(controls);
 								edit.setEnabled(false);
-								String overlay = lv.getEntryValue(LemmaVersion.OVERLAY_LANG2);
+								String overlay = lv
+										.getEntryValue(LemmaVersion.OVERLAY_LANG2);
 								for (int i = 0; i < result.size(); i++) {
 									if (result.get(i).equals(overlay)) {
-										langBOverlay.setItemSelected(i + 1, true);
+										langBOverlay.setItemSelected(i + 1,
+												true);
 										edit.setEnabled(true);
 										break;
 									}
@@ -251,10 +283,12 @@ public class AdvancedEditor {
 				if (withComment) {
 					set = new Fieldset();
 					ControlGroup commentGroup = new ControlGroup();
-					commentGroup.add(new ControlLabel(localizedStrings.get("dialog.comment.header")));
+					commentGroup.add(new ControlLabel(localizedStrings
+							.get("dialog.comment.header")));
 					comment = new TextArea();
 					comment.getElement().getStyle().setWidth(100, Unit.PCT);
-					comment.getElement().getStyle().setProperty("resize", "none");
+					comment.getElement().getStyle()
+							.setProperty("resize", "none");
 					comment.setVisibleLines(8);
 					commentGroup.add(comment);
 					set.add(commentGroup);
@@ -263,7 +297,8 @@ public class AdvancedEditor {
 				if (withEmail) {
 					set = set == null ? new Fieldset() : set;
 					ControlGroup group = new ControlGroup();
-					group.add(new ControlLabel(localizedStrings.get("dialog.email.header")));
+					group.add(new ControlLabel(localizedStrings
+							.get("dialog.email.header")));
 					HorizontalPanel hp = new HorizontalPanel();
 					group.add(hp);
 					email = new TextBox();
@@ -272,40 +307,69 @@ public class AdvancedEditor {
 					hp.add(email);
 
 					Button sendButton = new Button(constants.reply());
-					sendButton.getElement().getStyle().setMarginLeft(10, Unit.PX);
+					sendButton.getElement().getStyle()
+							.setMarginLeft(10, Unit.PX);
 					sendButton.addClickHandler(new ClickHandler() {
-						
+
 						@Override
 						public void onClick(ClickEvent event) {
-							AsyncLemmaDescriptionLoader.afterLemmaDescriptionLoaded(new AsyncCallback<LemmaDescription>() {
+							AsyncLemmaDescriptionLoader
+									.afterLemmaDescriptionLoaded(new AsyncCallback<LemmaDescription>() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									// TODO Auto-generated method stub
-								}
+										@Override
+										public void onFailure(Throwable caught) {
+											// TODO Auto-generated method stub
+										}
 
-								@Override
-								public void onSuccess(LemmaDescription ld) {
-									String firstLanguageId = ld.getLanguage(true).getId();
-									String secondLanguageId = ld.getLanguage(false).getId();
-									String first = localizedStrings.get(firstLanguageId);
-									String second = localizedStrings.get(secondLanguageId);
-									String lemma1st = ld.toUnescapedString(lv, UseCase.RESULT_LIST, true);
-									String lemma2nd = ld.toUnescapedString(lv, UseCase.RESULT_LIST, false);
-									String german = first + "%20%3D%20" + lemma1st;
-									String romansh = second + "%20%3D%20" + lemma2nd;
-									String remartg = localizedStrings.get("mail.comment") + "%0A" + URL.encode(comment.getText());
-									
-									String subject = "?subject=" + URL.encode(localizedStrings.get("mail.subject"));
-									String body = "&body=" + german + "%0A"+ romansh + "%0A%0A" + remartg;
-									String cc = "";
-									if(localizedStrings.get("mail.cc") != null) {
-										cc = "&cc=" + localizedStrings.get("mail.cc");	
-									}
-									Window.Location.assign("mailto:" + email.getText() + subject + cc + body);
-								}
-							});
-							
+										@Override
+										public void onSuccess(
+												LemmaDescription ld) {
+											String firstLanguageId = ld
+													.getLanguage(true).getId();
+											String secondLanguageId = ld
+													.getLanguage(false).getId();
+											String first = localizedStrings
+													.get(firstLanguageId);
+											String second = localizedStrings
+													.get(secondLanguageId);
+											String lemma1st = ld
+													.toUnescapedString(
+															lv,
+															UseCase.RESULT_LIST,
+															true);
+											String lemma2nd = ld
+													.toUnescapedString(
+															lv,
+															UseCase.RESULT_LIST,
+															false);
+											String german = first + "%20%3D%20"
+													+ lemma1st;
+											String romansh = second
+													+ "%20%3D%20" + lemma2nd;
+											String remartg = localizedStrings
+													.get("mail.comment")
+													+ "%0A"
+													+ URL.encode(comment
+															.getText());
+
+											String subject = "?subject="
+													+ URL.encode(localizedStrings
+															.get("mail.subject"));
+											String body = "&body=" + german
+													+ "%0A" + romansh
+													+ "%0A%0A" + remartg;
+											String cc = "";
+											if (localizedStrings.get("mail.cc") != null) {
+												cc = "&cc="
+														+ localizedStrings
+																.get("mail.cc");
+											}
+											Window.Location.assign("mailto:"
+													+ email.getText() + subject
+													+ cc + body);
+										}
+									});
+
 						}
 					});
 					hp.add(sendButton);
@@ -315,7 +379,8 @@ public class AdvancedEditor {
 				if (set != null) {
 					set.getElement().getStyle().setPaddingLeft(15, Unit.PC);
 					set.getElement().getStyle().setPaddingRight(15, Unit.PC);
-					HTML html = new HTML(new SafeHtmlBuilder().appendHtmlConstant("<hr/>").toSafeHtml());
+					HTML html = new HTML(new SafeHtmlBuilder()
+							.appendHtmlConstant("<hr/>").toSafeHtml());
 					html.getElement().getStyle().setMarginLeft(20, Unit.PX);
 					html.getElement().getStyle().setMarginRight(20, Unit.PX);
 					content.add(html);
@@ -340,7 +405,7 @@ public class AdvancedEditor {
 				editorWidget.setData(lv);
 			}
 		});
-		Button ok = new Button(constants.ok());
+		final Button ok = new Button(constants.ok());
 		ok.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -350,8 +415,8 @@ public class AdvancedEditor {
 					fromEditor.getEntryValues().putAll(lv.getEntryValues());
 					fromEditor.getMaalrValues().putAll(lv.getMaalrValues());
 					transferSpecialValues(lv, fromEditor);
-					editorWidget.updateFromEditor(fromEditor);
-					if(editorWidget.isValid(true, true)) {
+					editorWidget.updateFromAdvancedEditor(fromEditor);
+					if (editorWidget.isValid(true, true)) {
 						LexEntry entry = new LexEntry(fromEditor);
 						service.insert(entry, callback);
 					}
@@ -360,25 +425,29 @@ public class AdvancedEditor {
 					fromEditor.getEntryValues().putAll(lv.getEntryValues());
 					fromEditor.getMaalrValues().putAll(lv.getMaalrValues());
 					transferSpecialValues(lv, fromEditor);
-					editorWidget.updateFromEditor(fromEditor);
-					if(editorWidget.isValid(true, true)) {
-						service.acceptAfterUpdate(entry, lv, fromEditor, callback);
+					editorWidget.updateFromAdvancedEditor(fromEditor);
+					if (editorWidget.isValid(true, true)) {
+						service.acceptAfterUpdate(entry, lv, fromEditor,
+								callback);
 					}
 				}
-				editorWidget.updateFromEditor(lv);
+				editorWidget.updateFromAdvancedEditor(lv);
 			}
 
-			private void transferSpecialValues(final LemmaVersion lv, LemmaVersion fromEditor) {
-				
+			private void transferSpecialValues(final LemmaVersion lv,
+					LemmaVersion fromEditor) {
+
 				if (langAOverlay != null) {
 					int index = langAOverlay.getSelectedIndex();
-					String value = index <= 0 ? null : langAOverlay.getValue(index);
+					String value = index <= 0 ? null : langAOverlay
+							.getValue(index);
 					fromEditor.setValue(LemmaVersion.OVERLAY_LANG1, value);
 					lv.setValue(LemmaVersion.OVERLAY_LANG1, value);
 				}
 				if (langBOverlay != null) {
 					int index = langBOverlay.getSelectedIndex();
-					String value = index <= 0 ? null : langBOverlay.getValue(index);
+					String value = index <= 0 ? null : langBOverlay
+							.getValue(index);
 					fromEditor.setValue(LemmaVersion.OVERLAY_LANG2, value);
 					lv.setValue(LemmaVersion.OVERLAY_LANG2, value);
 				}
@@ -395,13 +464,15 @@ public class AdvancedEditor {
 		ok.setType(ButtonType.PRIMARY);
 		content.add(new ModalFooter(cancel, reset, ok));
 		popup.show();
-		final HandlerRegistration handler = Window.addResizeHandler(new ResizeHandler() {
+		final HandlerRegistration handler = Window
+				.addResizeHandler(new ResizeHandler() {
 
-			@Override
-			public void onResize(ResizeEvent event) {
-				popup.setSize(Window.getClientWidth() - 100 + "px", Window.getClientHeight() - 100 + "px");
-			}
-		});
+					@Override
+					public void onResize(ResizeEvent event) {
+						popup.setSize(Window.getClientWidth() - 100 + "px",
+								Window.getClientHeight() - 100 + "px");
+					}
+				});
 		popup.addCloseHandler(new CloseHandler<PopupPanel>() {
 
 			@Override
@@ -412,8 +483,10 @@ public class AdvancedEditor {
 		return popup;
 	}
 
-	private static void showOverlayEditor(final LemmaVersion lv, final String type, final TranslationMap localizedStrings, final EditorConstants constants, final EditorMessages messages) {
-		
+	private static void showOverlayEditor(final LemmaVersion lv,
+			final String type, final TranslationMap localizedStrings,
+			final EditorConstants constants, final EditorMessages messages) {
+
 		service.getOverlayEditor(type, new AsyncCallback<OverlayEditor>() {
 
 			@Override
@@ -428,7 +501,8 @@ public class AdvancedEditor {
 				final PopupPanel modal = new PopupPanel();
 				modal.setStyleName("editor-modal");
 				modal.setPopupPosition(50, 50);
-				modal.setPixelSize(Window.getClientWidth() - 100, Window.getClientHeight() - 100);
+				modal.setPixelSize(Window.getClientWidth() - 100,
+						Window.getClientHeight() - 100);
 				List<OverlayEditorRow> rows = result.getRows();
 				VerticalPanel content = new VerticalPanel();
 				FluidContainer container = new FluidContainer();
@@ -454,7 +528,8 @@ public class AdvancedEditor {
 						Fieldset set = new Fieldset();
 						set.setStyleName("form-horizontal");
 						ControlGroup group = new ControlGroup();
-						group.add(new ControlLabel(getLabel(base, localizedStrings)));
+						group.add(new ControlLabel(getLabel(base,
+								localizedStrings)));
 						Controls controls = new Controls();
 						field.setWidth("180px");
 						field.setValue(lv.getEntryValue(base));
@@ -465,14 +540,16 @@ public class AdvancedEditor {
 						panel.add(set);
 					}
 					final String id = presetChooser.getId();
-					final List<OverlayOption> options = presetChooser.getOptions();
+					final List<OverlayOption> options = presetChooser
+							.getOptions();
 					final ListBox list = new ListBox(false);
 					final ControlGroup group = new ControlGroup();
 					final HelpInline listTypeFeedback = new HelpInline();
 					if (options != null) {
 						Fieldset set = new Fieldset();
 						set.setStyleName("form-horizontal");
-						group.add(new ControlLabel(getLabel(id, localizedStrings)));
+						group.add(new ControlLabel(getLabel(id,
+								localizedStrings)));
 						final Controls controls = new Controls();
 						list.addItem(constants.none(), (String) null);
 						int selected = -1;
@@ -491,7 +568,7 @@ public class AdvancedEditor {
 						set.add(group);
 						panel.add(set);
 					}
-					Button apply = new Button(constants.generate()); 
+					Button apply = new Button(constants.generate());
 					apply.getElement().getStyle().setMarginLeft(10, Unit.PX);
 					panel.add(apply);
 					panel.add(listTypeFeedback);
@@ -499,36 +576,54 @@ public class AdvancedEditor {
 
 						@Override
 						public void onClick(ClickEvent event) {
-							final String base = field.getValue().trim().length() == 0 ? null : field.getValue();
+							final String base = field.getValue().trim()
+									.length() == 0 ? null : field.getValue();
 							int index = list.getSelectedIndex();
 
-							final String option = (index <= 0 ? null : list.getValue(index));
-							service.getOverlayEditorPreset(type, option, base, new AsyncCallback<HashMap<String, String>>() {
+							final String option = (index <= 0 ? null : list
+									.getValue(index));
+							service.getOverlayEditorPreset(
+									type,
+									option,
+									base,
+									new AsyncCallback<HashMap<String, String>>() {
 
 										@Override
 										public void onFailure(Throwable caught) {
-											// FIXME: There seems to be a bug in gwt-bootstrap: Under some
-											// circumstances(multiple modal dialogs), the clickhandler will not be called.
+											// FIXME: There seems to be a bug in
+											// gwt-bootstrap: Under some
+											// circumstances(multiple modal
+											// dialogs), the clickhandler will
+											// not be called.
 											// Dialog.showError("Failed to get preset",caught);
 											if (group != null) {
-												listTypeFeedback.setText(messages.selectType(options.size()));
+												listTypeFeedback.setText(messages
+														.selectType(options
+																.size()));
 												group.setType(ControlGroupType.ERROR);
 											}
 										}
 
 										@Override
-										public void onSuccess(HashMap<String, String> result) {
+										public void onSuccess(
+												HashMap<String, String> result) {
 											listTypeFeedback.setText("");
 											group.setType(ControlGroupType.NONE);
-											presetValues.put(base, lv.getEntryValue(base));
+											presetValues.put(base,
+													lv.getEntryValue(base));
 											presetValues.put(id, option);
-											Set<Entry<String, String>> entries = result.entrySet();
+											Set<Entry<String, String>> entries = result
+													.entrySet();
 											for (Entry<String, String> entry : entries) {
-												TextBox box = fields.get(entry.getKey());
+												TextBox box = fields.get(entry
+														.getKey());
 												if (box != null) {
-													box.setValue(entry.getValue());
+													box.setValue(entry
+															.getValue());
 												} else {
-													Logger.getLogger(getClass()).warn("No TextBox found for key " + entry.getKey());
+													Logger.getLogger(getClass())
+															.warn("No TextBox found for key "
+																	+ entry.getKey());
 												}
 											}
 										}
@@ -545,9 +640,11 @@ public class AdvancedEditor {
 					int rest = Math.max(12 - columns.size() * size, 0);
 					for (int i = 0; i < columns.size(); i++) {
 						OverlayEditorColumn column = columns.get(i);
-						Column uiColumn = new Column(size + (i == columns.size() - 1 ? rest : 0));
+						Column uiColumn = new Column(size
+								+ (i == columns.size() - 1 ? rest : 0));
 						uiRow.add(uiColumn);
-						uiColumn.add(new Legend(getLabel(column.getId(), localizedStrings)));
+						uiColumn.add(new Legend(getLabel(column.getId(),
+								localizedStrings)));
 						List<OverlayEditorItem> items = column.getItems();
 						if (items == null)
 							continue;
@@ -555,7 +652,8 @@ public class AdvancedEditor {
 							Fieldset set = new Fieldset();
 							set.setStyleName("form-horizontal");
 							ControlGroup group = new ControlGroup();
-							group.add(new ControlLabel(getLabel(item.getId(), localizedStrings)));
+							group.add(new ControlLabel(getLabel(item.getId(),
+									localizedStrings)));
 							Controls controls = new Controls();
 							TextBox field = new TextBox();
 							field.setWidth("180px");
@@ -599,7 +697,8 @@ public class AdvancedEditor {
 							lv.setValue(entry.getKey(), entry.getValue()
 									.getValue());
 						}
-						Set<Entry<String, String>> chooserValues = presetValues.entrySet();
+						Set<Entry<String, String>> chooserValues = presetValues
+								.entrySet();
 						for (Entry<String, String> chooserValue : chooserValues) {
 							lv.setValue(chooserValue.getKey(),
 									chooserValue.getValue());
@@ -612,12 +711,10 @@ public class AdvancedEditor {
 				modal.show();
 			}
 
-			private String getLabel(String key,
-					TranslationMap localizedStrings) {
+			private String getLabel(String key, TranslationMap localizedStrings) {
 				return localizedStrings.get(key);
 			}
 		});
 	}
-	
 
 }

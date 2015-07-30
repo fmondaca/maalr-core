@@ -15,7 +15,6 @@
  ******************************************************************************/
 package de.uni_koeln.spinfo.maalr.webapp.ui.common.client;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +27,7 @@ import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.ControlGroup;
 import com.github.gwtbootstrap.client.ui.HelpInline;
 import com.github.gwtbootstrap.client.ui.ListBox;
+import com.github.gwtbootstrap.client.ui.Modal;
 import com.github.gwtbootstrap.client.ui.TextBox;
 import com.github.gwtbootstrap.client.ui.constants.ControlGroupType;
 import com.google.gwt.core.client.GWT;
@@ -290,7 +290,52 @@ public class LemmaEditorWidget extends SimplePanel {
 	 * @param lemma
 	 *            must not be <code>null</code>.
 	 */
-	public void updateFromEditor(LemmaVersion lemma) {
+	public void updateFromEditor(LemmaVersion lemma, Button ok, Modal popup) {
+		List<String> toSet = new ArrayList<String>();
+
+		// first language
+		toSet.addAll(description.getEditorFields(true));
+		// second language
+		toSet.addAll(description.getEditorFields(false));
+
+		// Add correction
+		toSet.add("Correction");
+
+		String corr = fields.get("Correction").getHTML().trim();
+		int correction = Integer.parseInt(corr);
+
+		if (correction > 100 || correction < 15) {
+			logger.log(Level.INFO, "CORRECTION IN" + correction);
+			// TODO: get values from i18n
+			Window.alert("Wrong correction value...");
+			ok.setEnabled(false);
+			popup.hide();
+			return;
+
+		} else {
+
+			for (String key : toSet) {
+				HasHTML field = fields.get(key);
+				if (field != null) {
+
+					String text = field.getHTML();
+
+					if (text != null && text.trim().length() > 0) {
+
+						lemma.putEntryValue(key, text.trim());
+
+					}
+
+					else {
+						lemma.removeEntryValue(key);
+
+					}
+				}
+			}
+		}
+	}
+
+	public void updateFromAdvancedEditor(LemmaVersion lemma) {
 		List<String> toSet = new ArrayList<String>();
 
 		// first language
@@ -309,29 +354,13 @@ public class LemmaEditorWidget extends SimplePanel {
 
 				if (text != null && text.trim().length() > 0) {
 
-					// logger.log(Level.INFO, "UPDATE: " + key + " " + text);
+					lemma.putEntryValue(key, text.trim());
 
-					//
+				}
 
-					if (key.equals("Correction")) {
-						// lemma.putEntryValue(key, text.trim());
-						int correction = Integer.parseInt(text);
-						logger.log(Level.INFO, "CORRECTION " + correction);
-
-						if (correction > 100 || correction < 15) {
-							// TODO: Need improvement...
-							Window.alert("VDFVDF");
-
-						} else if (correction > 15 && correction <= 100) {
-							lemma.putEntryValue(key, text.trim());
-						}
-
-					} else {
-						lemma.putEntryValue(key, text.trim());
-					}
-
-				} else {
+				else {
 					lemma.removeEntryValue(key);
+
 				}
 
 			}
