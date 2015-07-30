@@ -15,6 +15,7 @@
  ******************************************************************************/
 package de.uni_koeln.spinfo.maalr.webapp.ui.common.client;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -174,10 +175,19 @@ public class LemmaEditorWidget extends SimplePanel {
 				languages.add(langA);
 				languages.add(langB);
 
+				String baseURL = GWT.getHostPageBaseURL();
+
+				// Workaround to get the right path for the images being in
+				// editor-modus
+				if (GWT.getModuleName().endsWith("editor")) {
+					baseURL = baseURL.replace("editor/", "");
+
+				}
+
 				Image dictPage_1 = new Image();
-				dictPage_1.setUrl(GWT.getModuleBaseURL() + "/images/page-1.jpg");
+				dictPage_1.setUrl(baseURL + "images/page-1.jpg");
 				Image dictPage_2 = new Image();
-				dictPage_2.setUrl(GWT.getModuleBaseURL() + "/images/page-2.jpg");
+				dictPage_2.setUrl(baseURL + "images/page-2.jpg");
 
 				imagePanel.add(dictPage_1);
 				imagePanel.add(dictPage_2);
@@ -299,19 +309,18 @@ public class LemmaEditorWidget extends SimplePanel {
 
 				if (text != null && text.trim().length() > 0) {
 
-					//logger.log(Level.INFO, "UPDATE: " + key + " " + text);
+					// logger.log(Level.INFO, "UPDATE: " + key + " " + text);
 
 					//
 
 					if (key.equals("Correction")) {
-						//lemma.putEntryValue(key, text.trim());
+						// lemma.putEntryValue(key, text.trim());
 						int correction = Integer.parseInt(text);
 						logger.log(Level.INFO, "CORRECTION " + correction);
 
 						if (correction > 100 || correction < 15) {
-
+							// TODO: Need improvement...
 							Window.alert("VDFVDF");
-							
 
 						} else if (correction > 15 && correction <= 100) {
 							lemma.putEntryValue(key, text.trim());

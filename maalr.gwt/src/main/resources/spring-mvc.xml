@@ -20,6 +20,8 @@
 		will not be delegated to spring. -->
 	<mvc:resources mapping="/assets/**" location="/assets/"
 		cache-period="31556926" />
+	<mvc:resources mapping="images/**" location="/images/"
+		cache-period="31556926" />
 	<mvc:resources mapping="/de.uni_koeln.spinfo.maalr/**"
 		location="/de.uni_koeln.spinfo.maalr/" />
 	<mvc:resources mapping="/de.uni_koeln.spinfo.maalr.admin/**"
