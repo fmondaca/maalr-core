@@ -211,8 +211,7 @@ public class ResultCellTable extends Composite {
 					toDisplay = "<span class=\"unverified\">" + toDisplay
 							+ "</span>";
 				}
-				
-				
+
 				// Render HTML properly
 				HTML html = new HTML(toDisplay);
 				sb.appendHtmlConstant(html.getText());
@@ -353,8 +352,11 @@ public class ResultCellTable extends Composite {
 			public String getValue(LemmaVersion object) {
 
 				String toReturn = object.getEntryValue("Correction");
-				// logger.log(Level.INFO, "CORRECTION " + toReturn);
-				return toReturn + "%";
+				StringBuffer buffer = new StringBuffer();
+				buffer.append(toReturn);
+				buffer.append("%");
+
+				return buffer.toString();
 			}
 
 		};
