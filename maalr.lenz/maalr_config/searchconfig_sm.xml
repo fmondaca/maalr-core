@@ -3,6 +3,8 @@
 	<databaseColumns>
 		<column name="Lemma" />
 		<column name="Content" />
+		<column name="Lemma_txt" />
+		<column name="Content_txt" />
 		<column name="Correction" />
 
 	</databaseColumns>
@@ -21,18 +23,18 @@
 			<options>
 				<option id="both" default="true">
 					<columns>
-						<column reference="Lemma" />
-						<column reference="Content" />
+						<column reference="Lemma_txt" />
+						<column reference="Content_txt" />
 					</columns>
 				</option>
 				<option id="lemma">
 					<columns>
-						<column reference="Lemma" />
+						<column reference="Lemma_txt" />
 					</columns>
 				</option>
 				<option id="content">
 					<columns>
-						<column reference="Content" />
+						<column reference="Content_txt" />
 					</columns>
 				</option>
 			</options>
@@ -55,11 +57,12 @@
 	</queryBuilders>
 	<!-- Lemma description -->
 	<languages>
-		<language id="lemma" mainColumn="Content">
+		<language id="lemma" mainColumn="Lemma">
 			<editors>
 				<frontend_editor>
 					<fields>
 						<field column="Lemma"></field>
+						<field column="Lemma_txt"></field>
 						<field column="Correction"></field>
 					</fields>
 				</frontend_editor>
@@ -84,6 +87,7 @@
 				<frontend_editor>
 					<fields>
 						<field column="Content"></field>
+						<field column="Content_txt"></field>
 						<field column="Correction"></field>
 					</fields>
 				</frontend_editor>
