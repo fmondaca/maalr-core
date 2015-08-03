@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+
 
 import de.uni_koeln.spinfo.maalr.common.shared.Constants;
 import de.uni_koeln.spinfo.maalr.common.shared.DatabaseException;
@@ -76,7 +78,7 @@ public class AdminService {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
-	public void importDatabase() throws NoDatabaseAvailableException, IndexException, InvalidEntryException, DatabaseIOException, ZipException, IOException {
+	public void importDatabase() throws NoDatabaseAvailableException, IndexException, InvalidEntryException, DatabaseIOException, ZipException, IOException{
 		dbCreator.createFromSQLDump(environment.getLexFile(), -1);
 			rebuildIndex();
 	}
@@ -96,7 +98,7 @@ public class AdminService {
 		}
 	}
 
-	public String reloadDatabase() throws DatabaseException, IndexException {
+	public String reloadDatabase() throws DatabaseException, IndexException{
 		dropDatabase();
 		try {
 			dbCreator.createFromSQLDump(environment.getLexFile(), -1);
