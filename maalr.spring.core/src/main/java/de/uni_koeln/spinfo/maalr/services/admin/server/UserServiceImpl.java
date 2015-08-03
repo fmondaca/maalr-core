@@ -15,11 +15,20 @@
  ******************************************************************************/
 package de.uni_koeln.spinfo.maalr.services.admin.server;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.html.HtmlParser;
+import org.apache.tika.sax.BodyContentHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.xml.sax.SAXException;
 
 import de.uni_koeln.spinfo.maalr.common.shared.LightUserInfo;
 import de.uni_koeln.spinfo.maalr.common.shared.Role;
@@ -33,11 +42,11 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserInfoBackend userInfos;
-	
+
 	@Override
 	public LightUserInfo getUserInfo(String login) {
 		MaalrUserInfo user = userInfos.getByLogin(login);
-		if(user == null) {
+		if (user == null) {
 			return null;
 		}
 		return user.toLightUser();
@@ -46,12 +55,14 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void updateRole(String login, Role role) throws InvalidUserException {
 		MaalrUserInfo maalrUser = userInfos.getByLogin(login);
-		if(maalrUser.getRole().equals(role)) return;
+		if (maalrUser.getRole().equals(role))
+			return;
 		userInfos.updateUserRole(maalrUser, role);
 	}
 
 	@Override
-	public void updateUserFields(LightUserInfo user) throws InvalidUserException {
+	public void updateUserFields(LightUserInfo user)
+			throws InvalidUserException {
 		MaalrUserInfo maalrUser = userInfos.getByLogin(user.getLogin());
 		maalrUser.setEmail(user.getEmail());
 		maalrUser.setFirstname(user.getFirstName());
@@ -65,8 +76,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<LightUserInfo> getAllUsers(Role role, String text, String sortColumn, boolean sortAscending, int from, int length) {
-		List<MaalrUserInfo> users = userInfos.getAllUsers(role, text, sortColumn, sortAscending, from, length);
+	public List<LightUserInfo> getAllUsers(Role role, String text,
+			String sortColumn, boolean sortAscending, int from, int length) {
+		List<MaalrUserInfo> users = userInfos.getAllUsers(role, text,
+				sortColumn, sortAscending, from, length);
 		List<LightUserInfo> toReturn = new ArrayList<LightUserInfo>();
 		for (MaalrUserInfo maalrUser : users) {
 			toReturn.add(maalrUser.toLightUser());
@@ -75,7 +88,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public LightUserInfo insertNewUser(LightUserInfo user) throws InvalidUserException {
+	public LightUserInfo insertNewUser(LightUserInfo user)
+			throws InvalidUserException {
 		MaalrUserInfo maalrUser = new MaalrUserInfo();
 		maalrUser.setEmail(user.getEmail());
 		maalrUser.setFirstname(user.getFirstName());
@@ -94,6 +108,25 @@ public class UserServiceImpl implements UserService {
 	public boolean deleteUser(LightUserInfo user) {
 		return userInfos.deleteUser(user);
 	}
-	
-	
+
+	public String getTextFromHTML(String stringWithHTML) throws IOException {
+
+		InputStream is = new ByteArrayInputStream(stringWithHTML.getBytes());
+		BodyContentHandler handler = new BodyContentHandler();
+		Metadata metadata = new Metadata();
+		try {
+			new HtmlParser().parse(is, handler, metadata, new ParseContext());
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TikaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String plainText = handler.toString();
+
+		return plainText;
+
+	}
+
 }
