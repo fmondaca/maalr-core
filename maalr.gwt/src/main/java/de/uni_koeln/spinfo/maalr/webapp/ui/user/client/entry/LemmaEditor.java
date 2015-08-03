@@ -15,6 +15,7 @@
  ******************************************************************************/
 package de.uni_koeln.spinfo.maalr.webapp.ui.user.client.entry;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.github.gwtbootstrap.client.ui.Button;
@@ -88,6 +89,7 @@ public class LemmaEditor {
 	private static LemmaEditorWidget internalOpenEditor(
 			final LemmaVersion lemma, String title, String subTitle,
 			final boolean modify) {
+
 		final LemmaEditorWidget editor = new LemmaEditorWidget(
 				AsyncLemmaDescriptionLoader.getDescription(),
 				UseCase.FIELDS_FOR_SIMPLE_EDITOR, 1, false, null);
@@ -143,10 +145,6 @@ public class LemmaEditor {
 					return;
 				}
 
-				// int correction = Integer.parseInt(lemma
-				// .getEntryValue("Correction"));
-				// logger.log(Level.INFO, "CORRECTION OUT " + correction);
-
 				cancel.setEnabled(false);
 				reset.setEnabled(false);
 				ok.setText(translation.get("dialog.saving"));
@@ -178,14 +176,22 @@ public class LemmaEditor {
 										popup.hide();
 										return false;
 									}
-								}, 800);
+								}, 2000);
 
 					}
 
 				};
 				if (modify) {
+				
+					
+					logger.log(
+							Level.INFO,
+							"Content_txt preSuggest"
+									+ lemma.getEntryValue("Content_txt"));
 					lexService.suggestModification(lemma, callback);
-				} else {
+				}
+
+				else {
 					lexService.suggestNewEntry(lemma, callback);
 				}
 			}
@@ -200,5 +206,4 @@ public class LemmaEditor {
 		popup.getElement().getStyle().setMarginRight(customMargin, Unit.PX);
 		return editor;
 	}
-
 }
