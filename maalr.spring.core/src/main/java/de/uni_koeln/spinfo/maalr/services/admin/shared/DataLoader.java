@@ -16,9 +16,11 @@
 package de.uni_koeln.spinfo.maalr.services.admin.shared;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,10 +28,16 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.html.HtmlParser;
+import org.apache.tika.sax.BodyContentHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.xml.sax.SAXException;
 
 import com.mongodb.DBObject;
 
@@ -107,6 +115,7 @@ public class DataLoader {
 				line = line.replace("<en>", "").replace("</en>", "");
 
 				version.setValue("Lemma", line);
+				version.setValue("Lemma_txt", getTextFromHTML(line));
 
 				StringBuffer content = new StringBuffer();
 
@@ -119,6 +128,9 @@ public class DataLoader {
 						content.append("\n");
 					} else {
 						version.setValue("Content", content.toString());
+						version.setValue("Content_txt",
+								getTextFromHTML(content.toString()));
+
 						break;
 					}
 
@@ -180,6 +192,26 @@ public class DataLoader {
 		}
 		// loginManager.logout();
 		logger.info("Dataloader initialized.");
+	}
+
+	public String getTextFromHTML(String stringWithHTML) throws IOException{
+
+		InputStream is = new ByteArrayInputStream(stringWithHTML.getBytes());
+		BodyContentHandler handler = new BodyContentHandler();
+		Metadata metadata = new Metadata();
+		try {
+			new HtmlParser().parse(is, handler, metadata, new ParseContext());
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TikaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String plainText = handler.toString();
+
+		return plainText;
+
 	}
 
 }
