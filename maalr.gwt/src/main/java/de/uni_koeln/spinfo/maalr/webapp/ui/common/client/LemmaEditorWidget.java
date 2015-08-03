@@ -75,6 +75,8 @@ public class LemmaEditorWidget extends SimplePanel {
 
 	Logger logger = Logger.getLogger("LemmaEditorWidget");
 
+	private static CommonServiceAsync service = GWT.create(CommonService.class);
+
 	@UiField
 	FlowPanel finalBase = new FlowPanel();
 	@UiField
@@ -89,6 +91,9 @@ public class LemmaEditorWidget extends SimplePanel {
 	FlowPanel percentage = new FlowPanel();
 
 	private LemmaDescription description;
+
+	private String lemma_txt;
+	private String ctn_txt;
 
 	/**
 	 * Contains a mapping of field-ids to ui-elements (such as {@link TextBox},
@@ -319,10 +324,42 @@ public class LemmaEditorWidget extends SimplePanel {
 				if (field != null) {
 
 					String text = field.getHTML();
+					logger.log(Level.INFO, "KEY " + key);
 
 					if (text != null && text.trim().length() > 0) {
 
-						lemma.putEntryValue(key, text.trim());
+						if (key.equals("Lemma")) {
+							// Save html
+							lemma.putEntryValue(key, text.trim());
+
+							// Save txt
+							String target = text.trim().replaceAll("<[^>]*>",
+									"");
+
+							lemma.putEntryValue("Lemma_txt", target);
+
+							logger.log(Level.INFO, "Lemma_txt updateFromEditor"
+									+ lemma.getEntryValue("Lemma_txt"));
+
+						} else if (key.equals("Content")) {
+
+							// Save html
+							lemma.putEntryValue(key, text.trim());
+
+							// Save txt
+							String target = text.trim().replaceAll("<[^>]*>",
+									"");
+
+							lemma.setValue("Content_txt", target);
+
+							logger.log(
+									Level.INFO,
+									"Content_txt updateFromEditor"
+											+ lemma.getEntryValue("Content_txt"));
+
+						} else if (key.equals("Correction")) {
+							lemma.putEntryValue(key, text.trim());
+						}
 
 					}
 
@@ -418,5 +455,26 @@ public class LemmaEditorWidget extends SimplePanel {
 			groups.get(field).setType(ControlGroupType.WARNING);
 		}
 	}
+
+	// private String getTextFromHTML(String stringWithHTML) throws IOException
+	// {
+	//
+	// InputStream is = new ByteArrayInputStream(stringWithHTML.getBytes());
+	// BodyContentHandler handler = new BodyContentHandler();
+	// Metadata metadata = new Metadata();
+	// try {
+	// new HtmlParser().parse(is, handler, metadata, new ParseContext());
+	// } catch (SAXException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// } catch (TikaException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// String plainText = handler.toString();
+	//
+	// return plainText;
+	//
+	// }
 
 }
