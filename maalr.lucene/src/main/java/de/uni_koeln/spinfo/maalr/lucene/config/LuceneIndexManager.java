@@ -15,9 +15,7 @@
  ******************************************************************************/
 package de.uni_koeln.spinfo.maalr.lucene.config;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -32,20 +30,13 @@ import java.util.TreeSet;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
-import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.util.Version;
 import org.apache.tika.exception.TikaException;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.html.HtmlParser;
-import org.apache.tika.sax.BodyContentHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -325,8 +316,7 @@ public class LuceneIndexManager {
 				columnSelectorOption = selected;
 			}
 			String queryString = maalrQuery.get(config.queryKey);
-			
-			
+
 			if (queryString == null)
 				return null;
 
@@ -432,6 +422,7 @@ public class LuceneIndexManager {
 		Set<String> columnNames = new TreeSet<String>();
 		for (IndexedColumn item : finalItems) {
 			columnNames.add(item.getSource());
+			logger.info("column: " + item.getSource());
 		}
 		if (!columnNames.contains(firstLanguageMain)) {
 			errors.add("Main column '" + firstLanguageMain
@@ -788,20 +779,12 @@ public class LuceneIndexManager {
 				continue;
 			BooleanQuery part = new BooleanQuery(true);
 			for (Query tf : queryParts) {
-				
-				if(tf.toString().contains("RStichwort")){
-					logger.info(tf+" contains RStichwort");
-					
-					//TODO: replace RStichwort with plaintext - hier oder schon in builderRegistry.getQuery???
-				
-				}
+
 				part.add(tf, Occur.SHOULD);
 			}
 			bq.add(part, Occur.MUST);
 		}
-		
-		//TODO: die query muss wissen, dass sie im plaintext gesetzt werden soll ...
-		
+
 		Query query = bq;
 		// Unless a user wants to see unverified suggestions, each item returned
 		// must be verified.
@@ -821,25 +804,19 @@ public class LuceneIndexManager {
 	}
 
 	public Document getDocument(LexEntry lexEntry, LemmaVersion lemmaVersion)
-			throws IOException, SAXException, TikaException {
+			throws IOException {
 		Document doc = new Document();
-		
+
 		Set<Entry<String, String>> entries = lemmaVersion.getEntryValues()
 				.entrySet();
 		for (Entry<String, String> entry : entries) {
-			
-			logger.info("adding field: "+entry);
-			
+
+			logger.info("adding field: " + entry);
+
 			if (ignored.contains(entry.getKey()))
 				continue;
 
 			String entryValue = entry.getValue();
-			if(entry.getKey().equals("RStichwort")){
-				logger.info("extracting plaintext from field RStichwort: ");
-				String plainText = getTextFromHTML(entry.getValue());
-				doc.add(new TextField("plaintext", plainText,
-						Field.Store.YES));
-			}
 
 			List<IndexableField> fields = toField(entry.getKey(), entryValue);
 
@@ -853,25 +830,9 @@ public class LuceneIndexManager {
 				doc.add(field);
 			}
 		}
-		
-//		logger.info("html: "+ doc.get("RStichwort"));
-//		logger.info("plaintext: "+ doc.get("plaintext"));
-		
+
 		addMaalrFieldsToDocument(lexEntry, lemmaVersion, doc);
 		return doc;
-	}
-
-	private String getTextFromHTML(String stringWithHTML) throws IOException,
-			SAXException, TikaException {
-
-		InputStream is = new ByteArrayInputStream(stringWithHTML.getBytes());
-		BodyContentHandler handler = new BodyContentHandler();
-		Metadata metadata = new Metadata();
-		new HtmlParser().parse(is, handler, metadata, new ParseContext());
-		String plainText = handler.toString();
-
-		return plainText;
-
 	}
 
 	private List<IndexableField> toField(String key, String value) {
@@ -919,8 +880,7 @@ public class LuceneIndexManager {
 	 * @throws IOException
 	 */
 	private void addMaalrFieldsToDocument(LexEntry lexEntry,
-			LemmaVersion version, Document document) throws IOException,
-			SAXException, TikaException {
+			LemmaVersion version, Document document) throws IOException {
 		document.add(new StringField(LexEntry.ID, lexEntry.getId(),
 				Field.Store.YES));
 		document.add(new StringField(LemmaVersion.LEXENTRY_ID,
@@ -929,43 +889,7 @@ public class LuceneIndexManager {
 				+ "", Field.Store.YES));
 		document.add(new StringField(LemmaVersion.VERIFICATION, version
 				.getVerification().toString(), Field.Store.YES));
-		
-		if (version.getEntryValue(LemmaVersion.OVERLAY_LANG1) != null) {
 
-			// Get Only the Text from HTML
-
-			String entryValue = version
-					.getEntryValue(LemmaVersion.OVERLAY_LANG1);
-
-			InputStream is = new ByteArrayInputStream(entryValue.getBytes());
-			BodyContentHandler handler = new BodyContentHandler();
-			Metadata metadata = new Metadata();
-			new HtmlParser().parse(is, handler, metadata, new ParseContext());
-			String plainText = handler.toString();
-
-			document.add(new StringField(LemmaVersion.OVERLAY_LANG1, plainText,
-					Field.Store.NO));
-
-			
-		}
-		if (version.getEntryValue(LemmaVersion.OVERLAY_LANG2) != null) {
-
-			// Get Only the Text from HTML
-
-			String entryValue = version
-					.getEntryValue(LemmaVersion.OVERLAY_LANG2);
-
-			InputStream is = new ByteArrayInputStream(entryValue.getBytes());
-			BodyContentHandler handler = new BodyContentHandler();
-			Metadata metadata = new Metadata();
-			new HtmlParser().parse(is, handler, metadata, new ParseContext());
-			String plainText = handler.toString();
-
-			document.add(new StringField(LemmaVersion.OVERLAY_LANG2, plainText,
-					Field.Store.YES));
-
-			
-		}
 	}
 
 	/**
@@ -984,10 +908,6 @@ public class LuceneIndexManager {
 				document.get(LemmaVersion.ID));
 		lemmaVersion.putMaalrValue(LemmaVersion.VERIFICATION,
 				document.get(LemmaVersion.VERIFICATION));
-		lemmaVersion.putEntryValue(LemmaVersion.OVERLAY_LANG1,
-				document.get(LemmaVersion.OVERLAY_LANG1));
-		lemmaVersion.putEntryValue(LemmaVersion.OVERLAY_LANG2,
-				document.get(LemmaVersion.OVERLAY_LANG2));
 
 	}
 
