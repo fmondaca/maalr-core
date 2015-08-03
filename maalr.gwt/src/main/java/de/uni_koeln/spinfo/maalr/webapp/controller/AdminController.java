@@ -37,6 +37,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import de.uni_koeln.spinfo.maalr.common.shared.DatabaseException;
 import de.uni_koeln.spinfo.maalr.common.shared.NoDatabaseAvailableException;
+import de.uni_koeln.spinfo.maalr.common.shared.SAXException;
+import de.uni_koeln.spinfo.maalr.common.shared.TikaException;
 import de.uni_koeln.spinfo.maalr.common.shared.statistics.SystemSummary;
 import de.uni_koeln.spinfo.maalr.lucene.exceptions.IndexException;
 import de.uni_koeln.spinfo.maalr.lucene.exceptions.NoIndexAvailableException;
@@ -109,7 +111,7 @@ public class AdminController implements BackendService {
 
 	
 	@RequestMapping(value = "/admin/importDatabase", method = RequestMethod.GET)
-	public ModelAndView importDatabase() throws NoDatabaseAvailableException, InvalidEntryException, DatabaseIOException, ZipException, IndexException, IOException {
+	public ModelAndView importDatabase() throws NoDatabaseAvailableException, InvalidEntryException, DatabaseIOException, ZipException, IndexException, IOException, SAXException, TikaException {
 		service.importDatabase();
 		return new ModelAndView("admin/admin");
 	}
