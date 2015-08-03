@@ -145,7 +145,7 @@ class DictionaryLoader {
 	}
 
 	private List<Document> createDocument(Set<String> keys, LexEntry lexEntry)
-			throws IOException, SAXException, TikaException {
+			throws IOException {
 		List<Document> docs = new ArrayList<Document>();
 		Set<LemmaVersion> versions = new HashSet<LemmaVersion>();
 		if (lexEntry.getCurrent() != null) {
