@@ -16,6 +16,7 @@
 package de.uni_koeln.spinfo.maalr.webapp.ui.common.client;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -32,11 +33,12 @@ public interface CommonServiceAsync {
 			AsyncCallback<ArrayList<String>> asyncCallback);
 
 	void getCurrentUser(AsyncCallback<LightUserInfo> callback);
-	
+
 	void getClientOptions(AsyncCallback<ClientOptions> callback);
-	
+
 	void getEditorTranslation(String locale,
 			AsyncCallback<TranslationMap> asyncCallback);
 
+	void getWhiteList(AsyncCallback<Set<String>> callback);
 
 }

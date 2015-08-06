@@ -16,6 +16,7 @@
 package de.uni_koeln.spinfo.maalr.webapp.ui.common.client;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -27,16 +28,19 @@ import de.uni_koeln.spinfo.maalr.common.shared.searchconfig.TranslationMap;
 
 @RemoteServiceRelativePath("rpc/common")
 public interface CommonService extends RemoteService {
-	
+
 	public LemmaDescription getLemmaDescription();
 
 	ArrayList<String> getSuggestionsForField(String internalName, String query,
 			int limit);
-	
+
 	LightUserInfo getCurrentUser();
 
 	ClientOptions getClientOptions();
 
 	TranslationMap getEditorTranslation(String locale);
+
+	Set<String> getWhiteList();
+
 
 }
