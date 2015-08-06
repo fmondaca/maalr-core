@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.CellTable;
 import com.github.gwtbootstrap.client.ui.LabelCell;
-import com.github.gwtbootstrap.client.ui.constants.IconType;
 import com.github.gwtbootstrap.client.ui.constants.LabelType;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.cell.client.TextButtonCell;
@@ -33,8 +32,6 @@ import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -126,6 +123,7 @@ public class ResultCellTable extends Composite {
 						description = result;
 					}
 				});
+
 		cellTable = new CellTable<LemmaVersion>(KEY_PROVIDER);
 		cellTable.addStyleName("resultlist");
 		cellTable.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
@@ -163,20 +161,21 @@ public class ResultCellTable extends Composite {
 		});
 	}
 
-	private void openEditor() {
-		GWT.runAsync(new RunAsyncCallback() {
-
-			@Override
-			public void onSuccess() {
-				LemmaEditor.openEditor();
-			}
-
-			@Override
-			public void onFailure(Throwable reason) {
-				Window.alert("Code download failed");
-			}
-		});
-	}
+	// New entries disabled in LENZ
+	// private void openEditor() {
+	// GWT.runAsync(new RunAsyncCallback() {
+	//
+	// @Override
+	// public void onSuccess() {
+	// LemmaEditor.openEditor();
+	// }
+	//
+	// @Override
+	// public void onFailure(Throwable reason) {
+	// Window.alert("Code download failed");
+	// }
+	// });
+	// }
 
 	private void addColumnA(String langA, final boolean b) {
 
@@ -312,6 +311,7 @@ public class ResultCellTable extends Composite {
 				final LemmaVersion lemma = new LemmaVersion();
 				lemma.setEntryValues(selected.getEntryValues());
 				lemma.setMaalrValues(selected.getMaalrValues());
+
 				openModifyEditor(lemma);
 			}
 		};
@@ -426,15 +426,17 @@ public class ResultCellTable extends Composite {
 			suggest.setVisible(visible);
 	}
 
-	private void initSuggestButton(TranslationMap result) {
-		suggest = new Button(result.get("suggest.button"), IconType.INFO_SIGN);
-		suggest.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				openEditor();
-			}
-		});
-	}
+	// New Entries disabled in LENZ
+
+	// private void initSuggestButton(TranslationMap result) {
+	// suggest = new Button(result.get("suggest.button"), IconType.INFO_SIGN);
+	// suggest.addClickHandler(new ClickHandler() {
+	// @Override
+	// public void onClick(ClickEvent event) {
+	// openEditor();
+	// }
+	// });
+	// }
 
 	private void removeColumns() {
 		while (cellTable.getColumnCount() > 0) {
