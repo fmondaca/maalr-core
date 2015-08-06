@@ -15,18 +15,19 @@
  ******************************************************************************/
 package de.uni_koeln.spinfo.maalr.services.admin.shared;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.UnsupportedEncodingException;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
@@ -74,43 +75,39 @@ public class DataLoader {
 			return;
 		}
 
-		BufferedReader br;
-		ZipFile zipFile = null;
-		if (file.getName().endsWith(".zip")) {
-			logger.info("Trying to read data from zip file=" + file.getName());
-			zipFile = new ZipFile(file);
-			String entryName = file.getName().replaceAll(".zip", "");
-			// ZipEntry entry = zipFile.getEntry(entryName+".tsv");
-			ZipEntry entry = zipFile.getEntry(entryName);
-			if (entry == null) {
-				logger.info("No file named " + entryName
-						+ " found in zip file - skipping import");
-				zipFile.close();
-				return;
-			}
-			br = new BufferedReader(new InputStreamReader(
-					zipFile.getInputStream(entry), "UTF-8"));
-		} else {
-			logger.info("Trying to read data from file " + file);
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(
-					file), "UTF-8"));
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		InputStreamReader isr = null;
+		try {
+			isr = new InputStreamReader(fis, "UTF8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
+		LineNumberReader reader = new LineNumberReader(isr);
+
 		String line;
-		// String[] keys = line.split("\t",-1);
 		Database db = Database.getInstance();
 		List<DBObject> entries = new ArrayList<DBObject>();
 		int counter = 0;
 		String userId = loginManager.getCurrentUserId();
 
-		while ((line = br.readLine()) != null) {
+		while ((line = reader.readLine()) != null) {
+
+			// Normalize text
+			line = Normalizer.normalize(line, Normalizer.Form.NFC);
+
 			LemmaVersion version = new LemmaVersion();
 
 			if (line.startsWith("<en>")) {
 
 				version = new LemmaVersion();
-
-				// String e = line;
 
 				line = line.replace("<en>", "").replace("</en>", "");
 
@@ -119,7 +116,10 @@ public class DataLoader {
 
 				StringBuffer content = new StringBuffer();
 
-				while ((line = br.readLine()) != null) {
+				while ((line = reader.readLine()) != null) {
+
+					// Normalize text
+					line = Normalizer.normalize(line, Normalizer.Form.NFC);
 
 					if (!line.startsWith("</c>")) {
 
@@ -186,15 +186,15 @@ public class DataLoader {
 		logger.info("Index has been created, swapping to RAM...");
 		index.reloadIndex();
 		logger.info("RAM-Index updated.");
-		br.close();
-		if (zipFile != null) {
-			zipFile.close();
-		}
+		reader.close();
+		// if (zipFile != null) {
+		// zipFile.close();
+		// }
 		// loginManager.logout();
 		logger.info("Dataloader initialized.");
 	}
 
-	public String getTextFromHTML(String stringWithHTML) throws IOException{
+	private String getTextFromHTML(String stringWithHTML) throws IOException {
 
 		InputStream is = new ByteArrayInputStream(stringWithHTML.getBytes());
 		BodyContentHandler handler = new BodyContentHandler();

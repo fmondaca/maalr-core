@@ -17,6 +17,7 @@ package de.uni_koeln.spinfo.maalr.webapp.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Set;
 
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.flexible.core.QueryNodeException;
@@ -39,17 +40,20 @@ public class CommonServiceController implements CommonService {
 
 	@Autowired
 	private LoginManager loginManager;
-	
+
 	@Autowired
 	private Index index;
 
 	private final LemmaDescription lemmaDescription;
 
 	private ClientOptions clientOptions;
-	
+
+	private Set<String> whiteList;
+
 	public CommonServiceController() {
 		lemmaDescription = Configuration.getInstance().getLemmaDescription();
 		clientOptions = Configuration.getInstance().getClientOptions();
+		whiteList = Configuration.getInstance().getWhiteList();
 	}
 
 	@Override
@@ -73,7 +77,7 @@ public class CommonServiceController implements CommonService {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public LightUserInfo getCurrentUser() {
 		LightUserInfo user = loginManager.getCurrentUser();
@@ -89,5 +93,11 @@ public class CommonServiceController implements CommonService {
 	public TranslationMap getEditorTranslation(String locale) {
 		return Localizer.getEditorTranslations(locale);
 	}
+
+	@Override
+	public Set<String> getWhiteList() {
+		return whiteList;
+	}
+
 
 }

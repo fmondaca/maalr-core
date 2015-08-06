@@ -17,10 +17,17 @@ package de.uni_koeln.spinfo.maalr.common.server.util;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.io.UnsupportedEncodingException;
+import java.text.Normalizer;
+import java.util.LinkedHashSet;
 import java.util.Properties;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -43,7 +50,7 @@ public class Configuration {
 	private static final String MAALR_DEFAULT_CONFIG_DIR = "maalr_config";
 
 	private static final String MAALR_SEARCH_CONFIG = "maalr.search.config";
-	
+
 	private static final String CONTEXT_PATH = "maalr.context.path";
 
 	private static final String LUCENE_DIR = "maalr.lucene.dir";
@@ -65,6 +72,8 @@ public class Configuration {
 	private static final String BACKUP_TRIGGER_TIME = "backup.trigger.time";
 
 	private static final String BACKUP_NUMS = "backup.nums";
+
+	private Set<String> whiteList = new LinkedHashSet<>();
 
 	private Properties properties;
 
@@ -115,11 +124,13 @@ public class Configuration {
 							+ " does not exist!");
 		}
 		properties = new Properties();
+	
 		try (InputStreamReader input = getConfiguration(MAALR_PROPERTIES)) {
 			properties.load(input);
 			clientOptions = new ClientOptions();
 			clientOptions.setShortAppName(getShortName());
 			clientOptions.setLongAppName(getLongName());
+
 		} catch (IOException e) {
 			throw e;
 		}
@@ -134,6 +145,9 @@ public class Configuration {
 			throw new IOException("Failed to parse search configuration files",
 					e);
 		}
+
+		whiteList = readWhiteList(getForWhiteList());
+
 	}
 
 	public synchronized static Configuration getInstance() {
@@ -182,6 +196,10 @@ public class Configuration {
 
 	public String getDictContext() {
 		return properties.getProperty(CONTEXT_PATH);
+	}
+
+	public String getForWhiteList() {
+		return properties.getProperty(LEX_FILE);
 	}
 
 	public ClientOptions getClientOptions() {
@@ -258,4 +276,62 @@ public class Configuration {
 	public String getDbName() {
 		return properties.getProperty(MONGODB_NAME);
 	}
+
+	public Set<String> getWhiteList() {
+		return whiteList;
+	}
+
+	private Set<String> readWhiteList(String file) {
+
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		InputStreamReader isr = null;
+		try {
+			isr = new InputStreamReader(fis, "UTF8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		LineNumberReader reader = new LineNumberReader(isr);
+
+		String HTML_TAG_PATTERN = "<(\"[^\"]*\"|'[^']*'|[^'\">])*>";
+		Pattern pattern = Pattern.compile(HTML_TAG_PATTERN);
+
+		String currentLine;
+
+		try {
+			while ((currentLine = reader.readLine()) != null) {
+
+				// Normalize text
+				currentLine = Normalizer.normalize(currentLine,
+						Normalizer.Form.NFC);
+
+				Matcher matcher = pattern.matcher(currentLine);
+
+				while (matcher.find()) {
+					whiteList.add(matcher.group());
+				}
+
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// Close the stream
+		try {
+			reader.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return whiteList;
+	}
+
 }
