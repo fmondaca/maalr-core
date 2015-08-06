@@ -15,6 +15,9 @@
  ******************************************************************************/
 package de.uni_koeln.spinfo.maalr.services.user.shared;
 
+import java.util.Map;
+import java.util.Set;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -25,7 +28,7 @@ public interface LexService extends RemoteService {
 
 	public String suggestNewEntry(LemmaVersion entry) throws Exception;
 
-	public String suggestModification(LemmaVersion entry) throws Exception;
-
+	public String suggestModification(LemmaVersion entry,
+			Map<String, String> toUpdate) throws Exception;
 
 }

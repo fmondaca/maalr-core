@@ -142,8 +142,8 @@ public class PopupEditor extends VerticalPanel {
 		}
 	}
 
-	public void updateFromEditor(LemmaVersion lemma, Button ok, Modal popup) {
-		content.updateFromEditor(lemma, ok, popup);
+	public void updateFromEditor(LemmaVersion lemma, Button ok, Modal popup, Button cancel, Button reset, TranslationMap translation) {
+		content.updateFromEditor(lemma, ok, popup, cancel, reset, translation);
 		if (comment != null && comment.getText().trim().length() != 0) {
 			lemma.putEntryValue(LemmaVersion.COMMENT, comment.getText().trim());
 		} else {

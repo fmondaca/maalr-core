@@ -29,8 +29,11 @@ import com.github.gwtbootstrap.client.ui.HelpInline;
 import com.github.gwtbootstrap.client.ui.ListBox;
 import com.github.gwtbootstrap.client.ui.Modal;
 import com.github.gwtbootstrap.client.ui.TextBox;
+import com.github.gwtbootstrap.client.ui.constants.ButtonType;
 import com.github.gwtbootstrap.client.ui.constants.ControlGroupType;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiField;
@@ -54,6 +57,8 @@ import de.uni_koeln.spinfo.maalr.common.shared.description.UseCase;
 import de.uni_koeln.spinfo.maalr.common.shared.description.ValueSpecification;
 import de.uni_koeln.spinfo.maalr.common.shared.description.ValueValidator;
 import de.uni_koeln.spinfo.maalr.common.shared.searchconfig.TranslationMap;
+import de.uni_koeln.spinfo.maalr.services.user.shared.LexService;
+import de.uni_koeln.spinfo.maalr.services.user.shared.LexServiceAsync;
 import de.uni_koeln.spinfo.maalr.webapp.ui.common.client.i18n.LocalizedStrings;
 import de.uni_koeln.spinfo.maalr.webapp.ui.common.client.toolbar.RichTextToolbar;
 
@@ -70,12 +75,12 @@ public class LemmaEditorWidget extends SimplePanel {
 	interface LemmaEditorBinder extends UiBinder<Widget, LemmaEditorWidget> {
 	}
 
+	private static LexServiceAsync lexService = GWT.create(LexService.class);
+
 	private static LemmaEditorBinder uiBinder = GWT
 			.create(LemmaEditorBinder.class);
 
 	Logger logger = Logger.getLogger("LemmaEditorWidget");
-
-	private static CommonServiceAsync service = GWT.create(CommonService.class);
 
 	@UiField
 	FlowPanel finalBase = new FlowPanel();
@@ -91,9 +96,6 @@ public class LemmaEditorWidget extends SimplePanel {
 	FlowPanel percentage = new FlowPanel();
 
 	private LemmaDescription description;
-
-	private String lemma_txt;
-	private String ctn_txt;
 
 	/**
 	 * Contains a mapping of field-ids to ui-elements (such as {@link TextBox},
@@ -274,7 +276,6 @@ public class LemmaEditorWidget extends SimplePanel {
 				HasHTML field = fields.get(key);
 
 				if (field != null) {
-
 					HTML html = new HTML(lemma.getEntryValue(key));
 					field.setHTML(html.getHTML());
 
@@ -295,18 +296,23 @@ public class LemmaEditorWidget extends SimplePanel {
 	 * @param lemma
 	 *            must not be <code>null</code>.
 	 */
-	public void updateFromEditor(LemmaVersion lemma, Button ok, Modal popup) {
-		List<String> toSet = new ArrayList<String>();
+	public void updateFromEditor(final LemmaVersion lemma, final Button ok,
+			final Modal popup, final Button cancel, final Button reset,
+			final TranslationMap translation) {
 
-		// first language
-		toSet.addAll(description.getEditorFields(true));
-		// second language
-		toSet.addAll(description.getEditorFields(false));
+		String lem = fields.get("Lemma").getHTML().trim();
 
-		// Add correction
-		toSet.add("Correction");
+		String con = fields.get("Content").getHTML().trim();
 
 		String corr = fields.get("Correction").getHTML().trim();
+
+		Map<String, String> toUpdate = new HashMap<>();
+		toUpdate.put("Lemma", lem);
+
+		toUpdate.put("Content", con);
+
+		toUpdate.put("Correction", corr);
+
 		int correction = Integer.parseInt(corr);
 
 		if (correction > 100 || correction < 15) {
@@ -319,56 +325,44 @@ public class LemmaEditorWidget extends SimplePanel {
 
 		} else {
 
-			for (String key : toSet) {
-				HasHTML field = fields.get(key);
-				if (field != null) {
+			AsyncCallback<String> callback = new AsyncCallback<String>() {
 
-					String text = field.getHTML();
-					logger.log(Level.INFO, "KEY " + key);
+				@Override
+				public void onFailure(Throwable caught) {
+					cancel.setEnabled(true);
+					reset.setEnabled(true);
+					ok.setText(translation.get("button.ok"));
+					ok.setType(ButtonType.DANGER);
+					ok.setEnabled(false);
+					Dialog.showError(translation.get("dialog.failure"),
+							translation.get(caught.getMessage())); // exception
+																	// from
+																	// SpringBackend
 
-					if (text != null && text.trim().length() > 0) {
+					popup.hide();
+					return;
 
-						if (key.equals("Lemma")) {
-							// Save html
-							lemma.putEntryValue(key, text.trim());
-
-							// Save txt
-							String target = text.trim().replaceAll("<[^>]*>",
-									"");
-
-							lemma.putEntryValue("Lemma_txt", target);
-
-							logger.log(Level.INFO, "Lemma_txt updateFromEditor"
-									+ lemma.getEntryValue("Lemma_txt"));
-
-						} else if (key.equals("Content")) {
-
-							// Save html
-							lemma.putEntryValue(key, text.trim());
-
-							// Save txt
-							String target = text.trim().replaceAll("<[^>]*>",
-									"");
-
-							lemma.setValue("Content_txt", target);
-
-							logger.log(
-									Level.INFO,
-									"Content_txt updateFromEditor"
-											+ lemma.getEntryValue("Content_txt"));
-
-						} else if (key.equals("Correction")) {
-							lemma.putEntryValue(key, text.trim());
-						}
-
-					}
-
-					else {
-						lemma.removeEntryValue(key);
-
-					}
 				}
-			}
+
+				@Override
+				public void onSuccess(String result) {
+					ok.setText(translation.get("dialog.success"));
+					ok.setType(ButtonType.SUCCESS);
+					Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
+
+						@Override
+						public boolean execute() {
+							popup.hide();
+							return false;
+						}
+					}, 2000);
+
+				}
+
+			};
+
+			lexService.suggestModification(lemma, toUpdate, callback);
+
 		}
 	}
 
@@ -455,26 +449,5 @@ public class LemmaEditorWidget extends SimplePanel {
 			groups.get(field).setType(ControlGroupType.WARNING);
 		}
 	}
-
-	// private String getTextFromHTML(String stringWithHTML) throws IOException
-	// {
-	//
-	// InputStream is = new ByteArrayInputStream(stringWithHTML.getBytes());
-	// BodyContentHandler handler = new BodyContentHandler();
-	// Metadata metadata = new Metadata();
-	// try {
-	// new HtmlParser().parse(is, handler, metadata, new ParseContext());
-	// } catch (SAXException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// } catch (TikaException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// String plainText = handler.toString();
-	//
-	// return plainText;
-	//
-	// }
 
 }

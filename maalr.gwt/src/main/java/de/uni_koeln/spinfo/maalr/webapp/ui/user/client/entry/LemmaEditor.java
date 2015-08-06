@@ -15,7 +15,6 @@
  ******************************************************************************/
 package de.uni_koeln.spinfo.maalr.webapp.ui.user.client.entry;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.github.gwtbootstrap.client.ui.Button;
@@ -23,9 +22,6 @@ import com.github.gwtbootstrap.client.ui.Modal;
 import com.github.gwtbootstrap.client.ui.ModalFooter;
 import com.github.gwtbootstrap.client.ui.constants.BackdropType;
 import com.github.gwtbootstrap.client.ui.constants.ButtonType;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.RepeatingCommand;
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -34,39 +30,38 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import de.uni_koeln.spinfo.maalr.common.shared.LemmaVersion;
 import de.uni_koeln.spinfo.maalr.common.shared.description.UseCase;
 import de.uni_koeln.spinfo.maalr.common.shared.searchconfig.TranslationMap;
-import de.uni_koeln.spinfo.maalr.services.user.shared.LexService;
-import de.uni_koeln.spinfo.maalr.services.user.shared.LexServiceAsync;
 import de.uni_koeln.spinfo.maalr.webapp.ui.common.client.AsyncLemmaDescriptionLoader;
-import de.uni_koeln.spinfo.maalr.webapp.ui.common.client.Dialog;
 import de.uni_koeln.spinfo.maalr.webapp.ui.common.client.LemmaEditorWidget;
 import de.uni_koeln.spinfo.maalr.webapp.ui.common.client.i18n.LocalizedStrings;
 
 public class LemmaEditor {
 
-	private static LexServiceAsync lexService = GWT.create(LexService.class);
 
 	private static TranslationMap translation = null;
 
+
 	static Logger logger = Logger.getLogger("LemmaEditor");
 
-	public static void openEditor() {
-		LocalizedStrings.afterLoad(new AsyncCallback<TranslationMap>() {
+	// New entry disabled in LENZ
+	// public static void openEditor() {
+	// LocalizedStrings.afterLoad(new AsyncCallback<TranslationMap>() {
+	//
+	// @Override
+	// public void onFailure(Throwable caught) {
+	// // TODO Auto-generated method stub
+	// }
+	//
+	// @Override
+	// public void onSuccess(TranslationMap result) {
+	// translation = result;
+	// internalOpenEditor(new LemmaVersion(),
+	// translation.get("suggest.title"),
+	// translation.get("suggest.subtext"), false);
+	// }
+	// });
+	// }
 
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void onSuccess(TranslationMap result) {
-				translation = result;
-				internalOpenEditor(new LemmaVersion(),
-						translation.get("suggest.title"),
-						translation.get("suggest.subtext"), false);
-			}
-		});
-	}
-
+	// Modify Entry
 	public static void openEditor(final LemmaVersion toModify) {
 		LocalizedStrings.afterLoad(new AsyncCallback<TranslationMap>() {
 
@@ -126,6 +121,7 @@ public class LemmaEditor {
 			}
 		});
 		ok.setType(ButtonType.PRIMARY);
+
 		ok.addClickHandler(new ClickHandler() {
 
 			boolean clicked = false;
@@ -139,63 +135,11 @@ public class LemmaEditor {
 				}
 				clicked = true;
 
-				popupEditor.updateFromEditor(lemma, ok, popup);
-
-				if (ok.isEnabled() == false) {
-					return;
-				}
-
-				cancel.setEnabled(false);
-				reset.setEnabled(false);
-				ok.setText(translation.get("dialog.saving"));
-				ok.setType(ButtonType.INVERSE);
-				AsyncCallback<String> callback = new AsyncCallback<String>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						cancel.setEnabled(true);
-						reset.setEnabled(true);
-						ok.setText(translation.get("button.ok"));
-						ok.setType(ButtonType.DANGER);
-						clicked = false;
-						Dialog.showError(translation.get("dialog.failure"),
-								translation.get(caught.getMessage())); // exception
-																		// from
-																		// SpringBackend
-					}
-
-					@Override
-					public void onSuccess(String result) {
-						ok.setText(translation.get("dialog.success"));
-						ok.setType(ButtonType.SUCCESS);
-						Scheduler.get().scheduleFixedDelay(
-								new RepeatingCommand() {
-
-									@Override
-									public boolean execute() {
-										popup.hide();
-										return false;
-									}
-								}, 2000);
-
-					}
-
-				};
-				if (modify) {
-				
-					
-					logger.log(
-							Level.INFO,
-							"Content_txt preSuggest"
-									+ lemma.getEntryValue("Content_txt"));
-					lexService.suggestModification(lemma, callback);
-				}
-
-				else {
-					lexService.suggestNewEntry(lemma, callback);
-				}
+				popupEditor.updateFromEditor(lemma, ok, popup, cancel, reset,
+						translation);
 			}
 		});
+
 		popup.add(popupEditor);
 		popup.add(footer);
 		int customWidth = 1100;

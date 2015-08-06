@@ -15,6 +15,9 @@
  ******************************************************************************/
 package de.uni_koeln.spinfo.maalr.services.user.shared;
 
+import java.util.Map;
+import java.util.Set;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import de.uni_koeln.spinfo.maalr.common.shared.LemmaVersion;
@@ -23,6 +26,7 @@ public interface LexServiceAsync {
 
 	void suggestNewEntry(LemmaVersion entry, AsyncCallback<String> callback);
 	
-	void suggestModification(LemmaVersion entry, AsyncCallback<String> callback);
+	void suggestModification(LemmaVersion entry, Map<String, String> toUpdate,
+			AsyncCallback<String> callback);
 
 }
