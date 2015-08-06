@@ -76,7 +76,7 @@ public class User implements EntryPoint {
 					public void onSuccess(LemmaDescription result) {
 
 						// Propose new entry: disabled
-						
+
 						// HiJax.hijackAnchor("propose_navi", new Command() {
 						//
 						// @Override
@@ -216,26 +216,28 @@ public class User implements EntryPoint {
 		});
 	}
 
-	private void openEditor() {
-		/**
-		 * Instead of executing the command directly, the call is wrapped into
-		 * an async callback. This results in a "code split": GWT will lazy-load
-		 * the javascript required to show the editor. Thus, the initial page
-		 * download is smaller and faster. See
-		 * https://developers.google.com/web-
-		 * toolkit/doc/latest/DevGuideCodeSplitting?
-		 */
-		GWT.runAsync(new RunAsyncCallback() {
+	// New entries disabled ion LENZ
 
-			public void onFailure(Throwable caught) {
-				Window.alert("Code download failed");
-			}
-
-			public void onSuccess() {
-				LemmaEditor.openEditor();
-			}
-
-		});
-	}
+	// private void openEditor() {
+	// /**
+	// * Instead of executing the command directly, the call is wrapped into
+	// * an async callback. This results in a "code split": GWT will lazy-load
+	// * the javascript required to show the editor. Thus, the initial page
+	// * download is smaller and faster. See
+	// * https://developers.google.com/web-
+	// * toolkit/doc/latest/DevGuideCodeSplitting?
+	// */
+	// GWT.runAsync(new RunAsyncCallback() {
+	//
+	// public void onFailure(Throwable caught) {
+	// Window.alert("Code download failed");
+	// }
+	//
+	// public void onSuccess() {
+	// LemmaEditor.openEditor();
+	// }
+	//
+	// });
+	// }
 
 }
