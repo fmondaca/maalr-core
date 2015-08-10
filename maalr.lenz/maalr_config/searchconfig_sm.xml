@@ -6,6 +6,7 @@
 		<column name="Lemma_txt" />
 		<column name="Content_txt" />
 		<column name="Correction" />
+		<column name="Pages" />
 
 	</databaseColumns>
 

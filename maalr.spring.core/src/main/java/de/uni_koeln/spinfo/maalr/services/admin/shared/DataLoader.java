@@ -131,6 +131,15 @@ public class DataLoader {
 						version.setValue("Content_txt",
 								getTextFromHTML(content.toString()));
 
+						// getPages
+
+						line = reader.readLine();
+						line = Normalizer.normalize(line, Normalizer.Form.NFC);
+						line = line.replace("<p>", "").replace("</p>", "");
+						line = line.replace("[", "").replace("]", "");
+
+						version.setValue("Pages", line);
+
 						break;
 					}
 

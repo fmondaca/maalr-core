@@ -85,7 +85,7 @@ public class LemmaEditor {
 			final LemmaVersion lemma, String title, String subTitle,
 			final boolean modify) {
 
-		final LemmaEditorWidget editor = new LemmaEditorWidget(
+		final LemmaEditorWidget editor = new LemmaEditorWidget(lemma, 
 				AsyncLemmaDescriptionLoader.getDescription(),
 				UseCase.FIELDS_FOR_SIMPLE_EDITOR, 1, false, null);
 		final Modal popup = new Modal(true);

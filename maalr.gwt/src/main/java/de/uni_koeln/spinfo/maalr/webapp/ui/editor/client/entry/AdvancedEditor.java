@@ -123,7 +123,7 @@ public class AdvancedEditor {
 		// final LemmaEditorWidget editorWidget = new
 		// LemmaEditorWidget(AsyncLemmaDescriptionLoader.getDescription(),
 		// UseCase.FIELDS_FOR_ADVANCED_EDITOR, 2, true, null);
-		final LemmaEditorWidget editorWidget = new LemmaEditorWidget(
+		final LemmaEditorWidget editorWidget = new LemmaEditorWidget(lv,
 				AsyncLemmaDescriptionLoader.getDescription(),
 				UseCase.FIELDS_FOR_ADVANCED_EDITOR, 1, false, null);
 		editorWidget.setData(lv);
