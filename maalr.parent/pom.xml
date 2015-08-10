@@ -12,6 +12,7 @@
 		<module>../maalr.lucene</module>
 		<module>../maalr.spring.core</module>
 		<module>../maalr.gwt</module>
+		<module>../maalr.html.parser</module>
 	</modules>
 
 	<properties>
