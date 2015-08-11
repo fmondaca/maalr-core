@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.UnsupportedEncodingException;
 import java.text.Normalizer;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -56,6 +57,8 @@ public class Configuration {
 	private static final String LUCENE_DIR = "maalr.lucene.dir";
 
 	private static final String LEX_FILE = "lex.file";
+
+	private static final String TOOLBAR = "toolbar";
 
 	private static final String MONGODB_PORT = "mongodb.port";
 
@@ -124,7 +127,7 @@ public class Configuration {
 							+ " does not exist!");
 		}
 		properties = new Properties();
-	
+
 		try (InputStreamReader input = getConfiguration(MAALR_PROPERTIES)) {
 			properties.load(input);
 			clientOptions = new ClientOptions();
@@ -200,6 +203,10 @@ public class Configuration {
 
 	public String getForWhiteList() {
 		return properties.getProperty(LEX_FILE);
+	}
+	
+	public String getToolBar() {
+		return properties.getProperty(TOOLBAR);
 	}
 
 	public ClientOptions getClientOptions() {
@@ -331,7 +338,44 @@ public class Configuration {
 			e.printStackTrace();
 		}
 
+		try {
+			for (String s : addTagsFromToolbar(getToolBar())) {
+
+				whiteList.add(s);
+
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		return whiteList;
+	}
+
+	private Set<String> addTagsFromToolbar(String path) throws IOException {
+
+		Set<String> tagstb = new HashSet<String>();
+
+		File toRead = new File(path);
+		FileInputStream inputStream = new FileInputStream(toRead);
+		InputStreamReader inputStreamReader = new InputStreamReader(
+				inputStream, "UTF8");
+		LineNumberReader reader = new LineNumberReader(inputStreamReader);
+
+		String currentLine;
+
+		while ((currentLine = reader.readLine()) != null) {
+
+			// Normalize text
+			currentLine = Normalizer
+					.normalize(currentLine, Normalizer.Form.NFC);
+
+			tagstb.add(currentLine);
+
+		}
+
+		reader.close();
+		return tagstb;
 	}
 
 }
