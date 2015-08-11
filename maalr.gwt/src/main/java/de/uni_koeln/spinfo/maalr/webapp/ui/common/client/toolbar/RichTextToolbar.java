@@ -265,10 +265,11 @@ public class RichTextToolbar extends Composite {
 	}
 
 	private static final RichTextArea.FontSize[] fontSizesConstants = new RichTextArea.FontSize[] {
-			RichTextArea.FontSize.XX_SMALL, RichTextArea.FontSize.X_SMALL,
+			// RichTextArea.FontSize.XX_SMALL, RichTextArea.FontSize.X_SMALL,
 			RichTextArea.FontSize.SMALL, RichTextArea.FontSize.MEDIUM,
-			RichTextArea.FontSize.LARGE, RichTextArea.FontSize.X_LARGE,
-			RichTextArea.FontSize.XX_LARGE };
+	// RichTextArea.FontSize.LARGE, RichTextArea.FontSize.X_LARGE,
+	// RichTextArea.FontSize.XX_LARGE
+	};
 
 	private Images images = (Images) GWT.create(Images.class);
 	private Strings strings = (Strings) GWT.create(Strings.class);
@@ -330,8 +331,8 @@ public class RichTextToolbar extends Composite {
 					strings.bold()));
 			topPanel.add(italic = createToggleButton(images.italic(),
 					strings.italic()));
-			topPanel.add(underline = createToggleButton(images.underline(),
-					strings.underline()));
+			// topPanel.add(underline = createToggleButton(images.underline(),
+			// strings.underline()));
 			topPanel.add(subscript = createToggleButton(images.subscript(),
 					strings.subscript()));
 			topPanel.add(superscript = createToggleButton(images.superscript(),
@@ -345,28 +346,28 @@ public class RichTextToolbar extends Composite {
 		}
 
 		if (extended != null) {
-			topPanel.add(strikethrough = createToggleButton(
-					images.strikeThrough(), strings.strikeThrough()));
-			topPanel.add(indent = createPushButton(images.indent(),
-					strings.indent()));
-			topPanel.add(outdent = createPushButton(images.outdent(),
-					strings.outdent()));
-			topPanel.add(hr = createPushButton(images.hr(), strings.hr()));
-			topPanel.add(ol = createPushButton(images.ol(), strings.ol()));
-			topPanel.add(ul = createPushButton(images.ul(), strings.ul()));
-			topPanel.add(insertImage = createPushButton(images.insertImage(),
-					strings.insertImage()));
-			topPanel.add(createLink = createPushButton(images.createLink(),
-					strings.createLink()));
-			topPanel.add(removeLink = createPushButton(images.removeLink(),
-					strings.removeLink()));
+			// topPanel.add(strikethrough = createToggleButton(
+			// images.strikeThrough(), strings.strikeThrough()));
+			// topPanel.add(indent = createPushButton(images.indent(),
+			// strings.indent()));
+			// topPanel.add(outdent = createPushButton(images.outdent(),
+			// strings.outdent()));
+			// topPanel.add(hr = createPushButton(images.hr(), strings.hr()));
+			// topPanel.add(ol = createPushButton(images.ol(), strings.ol()));
+			// topPanel.add(ul = createPushButton(images.ul(), strings.ul()));
+			// topPanel.add(insertImage = createPushButton(images.insertImage(),
+			// strings.insertImage()));
+			// topPanel.add(createLink = createPushButton(images.createLink(),
+			// strings.createLink()));
+			// topPanel.add(removeLink = createPushButton(images.removeLink(),
+			// strings.removeLink()));
 			topPanel.add(removeFormat = createPushButton(images.removeFormat(),
 					strings.removeFormat()));
 		}
 
 		if (basic != null) {
-			bottomPanel.add(backColors = createColorList("Background"));
-			bottomPanel.add(foreColors = createColorList("Foreground"));
+			// bottomPanel.add(backColors = createColorList("Background"));
+			// bottomPanel.add(foreColors = createColorList("Foreground"));
 			bottomPanel.add(fonts = createFontList());
 			bottomPanel.add(fontSizes = createFontSizes());
 
@@ -399,7 +400,7 @@ public class RichTextToolbar extends Composite {
 		lb.setVisibleItemCount(1);
 		// Only constantia as Option
 		lb.addItem(strings.font(), "");
-		lb.addItem(strings.normal(), "");
+		// lb.addItem(strings.normal(), "");
 		// lb.addItem("Times New Roman", "Times New Roman");
 		// lb.addItem("Arial", "Arial");
 		// lb.addItem("Courier New", "Courier New");
@@ -407,6 +408,8 @@ public class RichTextToolbar extends Composite {
 		// lb.addItem("Trebuchet", "Trebuchet");
 		// lb.addItem("Verdana", "Verdana");
 		lb.addItem("Constantia", "Constantia");
+		lb.addItem("Doulos SIL", "Doulos SIL");
+
 		return lb;
 	}
 
@@ -416,13 +419,13 @@ public class RichTextToolbar extends Composite {
 		lb.setVisibleItemCount(1);
 
 		lb.addItem(strings.size());
-		lb.addItem(strings.xxsmall());
-		lb.addItem(strings.xsmall());
+
+		// lb.addItem(strings.xsmall());
 		lb.addItem(strings.small());
 		lb.addItem(strings.medium());
-		lb.addItem(strings.large());
-		lb.addItem(strings.xlarge());
-		lb.addItem(strings.xxlarge());
+		// lb.addItem(strings.large());
+		// lb.addItem(strings.xlarge());
+		// lb.addItem(strings.xxlarge());
 		return lb;
 	}
 
