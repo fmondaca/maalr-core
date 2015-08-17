@@ -9,3 +9,4 @@ bin/
 *.jar
 
 embedmongo.log
+/lenz/
