@@ -89,7 +89,7 @@ public class LexServiceImpl implements LexService {
 					entry.putEntryValue(ftu, vtu);
 					// txt
 					String txt = vtu.replaceAll("<[^>]*>", "");
-					entry.putEntryValue("Lemma_txt", txt);
+					entry.putEntryValue("Content_txt", txt);
 
 				}
 
