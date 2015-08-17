@@ -94,9 +94,9 @@ public class ParseHtml {
 
 	public List<String> addEntryTagsfromList(List<String> toProcess)
 			throws IOException {
-
+		List<String> lemmas = new ArrayList<>();
 		List<String> list = new ArrayList<String>();
-
+		int counter = 0;
 		for (String s : toProcess) {
 
 			final Pattern pattern = Pattern
@@ -116,7 +116,7 @@ public class ParseHtml {
 
 				// if it's the start of an entry
 				if (Character.isDigit(found.charAt(0))) {
-
+					counter++;
 					StringBuffer buffer = new StringBuffer();
 					buffer.append("\n");
 					buffer.append("<en>");
@@ -124,6 +124,7 @@ public class ParseHtml {
 					buffer.append("</en>");
 					// buffer.append("\n");
 					list.add(buffer.toString());
+					lemmas.add(found);
 
 				} else {
 					StringBuffer buffer = new StringBuffer();
@@ -143,6 +144,10 @@ public class ParseHtml {
 			}
 
 		}
+
+		System.out.println(counter);
+
+		FileUtils.printList(lemmas, ParseHtml.output_dir, "lemmata", "txt");
 
 		return list;
 	}
