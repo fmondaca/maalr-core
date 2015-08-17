@@ -1,4 +1,4 @@
-package de.spinfo.uni_koeln.html_parser.run;
+package de.spinfo.uni_koeln.html_parser.parser;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,8 +37,8 @@ public class ParseHtml {
 
 	private static String pathToReplace = "../maalr.lenz/toReplace.tab";
 
-	public static String output_dir = "../maalr.html.data/output/";
-	public static String input_dir = "../maalr.html.data/input/";
+	public static String output_dir = "data/output/";
+	public static String input_dir = "data/input/";
 
 	private String bold = "<font style=\"font-size:medium;font-family:Constantia;font-weight:bold;\">";
 	private String bold_serif = "<font style=\"font-size:medium;font-family:Constantia, serif;font-weight:bold;\">";
