@@ -32,7 +32,7 @@ public class ParseHtml {
 
 	public static String doc = "lenz-20150625.htm";
 	public static String addenda = "lenz-20150625_addenda.html";
-	public static String markedLemmata = "markedEntries_2015-08-10T23:43:45Z.html";
+	public static String markedLemmata = "markedEntries_2015-08-18T16:08:30Z.html";
 	public static String markedLemmata_add = "markedEntries_2015-08-07T16:32:04Z.html";
 
 	private static String pathToReplace = "../maalr.lenz/toReplace.tab";
@@ -92,139 +92,9 @@ public class ParseHtml {
 		return tags;
 	}
 
-	public List<String> addEntryTagsfromList(List<String> toProcess)
+	public List<String> markUncorrectedEntries(String fileToParse)
 			throws IOException {
-		List<String> lemmas = new ArrayList<>();
-		List<String> list = new ArrayList<String>();
-		int counter = 0;
-		for (String s : toProcess) {
-
-			final Pattern pattern = Pattern
-					.compile("<font style=\"font-size:large;font-family:Constantia, serif;font-weight:bold;\">(.+?)</font>");
-			final Matcher matcher = pattern.matcher(s);
-
-			if (matcher.find()) {
-				String found = matcher.group(1);
-				found = found
-						.replaceAll(
-								"<font style=\"font-size:large;font-family:Constantia, serif;font-weight:bold;\">",
-								"").replaceAll("&nbsp;", "")
-						.replaceAll("<a name=\"bookmark(.+?)\"></a>", "")
-						.replaceAll("<a name=\"bookmark(.+?)\">", "")
-						.replaceAll("</a>", "").replaceAll("<h3>", "")
-						.replaceAll("</h3>", "");
-
-				// if it's the start of an entry
-				if (Character.isDigit(found.charAt(0))) {
-					counter++;
-					StringBuffer buffer = new StringBuffer();
-					buffer.append("\n");
-					buffer.append("<en>");
-					buffer.append(found);
-					buffer.append("</en>");
-					// buffer.append("\n");
-					list.add(buffer.toString());
-					lemmas.add(found);
-
-				} else {
-					StringBuffer buffer = new StringBuffer();
-					buffer.append(s);
-					buffer.append("\t");
-					// buffer.append("\n");
-					list.add(buffer.toString());
-
-				}
-
-			} else {
-				StringBuffer buffer = new StringBuffer();
-				buffer.append(s);
-				buffer.append("\t");
-				// buffer.append("\n");
-				list.add(buffer.toString());
-			}
-
-		}
-
-		System.out.println(counter);
-
-		FileUtils.printList(lemmas, ParseHtml.output_dir, "lemmata", "txt");
-
-		return list;
-	}
-
-	public void addEntryTags(String fileToParse) throws IOException {
-
-		// List<String> list = new ArrayList<String>();
-		File toRead = new File(fileToParse);
-		FileInputStream inputStream = new FileInputStream(toRead);
-		InputStreamReader inputStreamReader = new InputStreamReader(
-				inputStream, "UTF8");
-
-		File toWrite = new File(input_dir + "markedEntries_"
-				+ FileUtils.getISO8601StringForCurrentDate() + ".html");
-		FileOutputStream fileOutputStream = new FileOutputStream(toWrite);
-		OutputStreamWriter writer = new OutputStreamWriter(fileOutputStream,
-				"UTF8");
-
-		LineNumberReader reader = new LineNumberReader(inputStreamReader);
-		String line;
-
-		while ((line = reader.readLine()) != null) {
-
-			final Pattern pattern = Pattern
-					.compile("<font style=\"font-size:large;font-family:Constantia, serif;font-weight:bold;\">(.+?)</font>");
-			final Matcher matcher = pattern.matcher(line);
-
-			if (matcher.find()) {
-				String found = matcher.group(1);
-				found = found
-						.replaceAll(
-								"<font style=\"font-size:large;font-family:Constantia, serif;font-weight:bold;\">",
-								"").replaceAll("&nbsp;", "")
-						.replaceAll("<a name=\"bookmark(.+?)\"></a>", "")
-						.replaceAll("<a name=\"bookmark(.+?)\">", "")
-						.replaceAll("</a>", "").replaceAll("<h3>", "")
-						.replaceAll("</h3>", "");
-
-				// TODO add h4 und h5
-
-				// if it's the start of an entry
-				if (Character.isDigit(found.charAt(0))) {
-
-					StringBuffer buffer = new StringBuffer();
-					buffer.append("\n");
-					buffer.append("<en>");
-					buffer.append(found);
-					buffer.append("</en>");
-					buffer.append("\n");
-					writer.write(buffer.toString());
-
-				} else {
-					StringBuffer buffer = new StringBuffer();
-					buffer.append(line);
-					buffer.append("\t");
-					buffer.append("\n");
-					writer.write(buffer.toString());
-
-				}
-
-			} else {
-				StringBuffer buffer = new StringBuffer();
-				buffer.append(line);
-				buffer.append("\t");
-				buffer.append("\n");
-				writer.write(buffer.toString());
-			}
-
-		}
-		reader.close();
-		writer.close();
-
-	}
-
-	public List<String> modifyTags(String fileToParse) throws IOException {
-
-		List<String> lines = new ArrayList<>();
+		List<String> list = new ArrayList<>();
 
 		File toRead = new File(fileToParse);
 		FileInputStream inputStream = new FileInputStream(toRead);
@@ -234,14 +104,46 @@ public class ParseHtml {
 		LineNumberReader reader = new LineNumberReader(inputStreamReader);
 		String line;
 
-		Set<String> fonts = getAllFontTypes(input_dir + doc);
-		fonts.remove("Constantia");
-		fonts.remove("Doulos SIL");
+		final Pattern pattern = Pattern
+				.compile("<h4>(.+?)</h4>|<h5>(.+?)</h5>");
 
 		while ((line = reader.readLine()) != null) {
 
 			// Normalize input
 			line = Normalizer.normalize(line, Normalizer.Form.NFC);
+
+			final Matcher matcher = pattern.matcher(line);
+
+			if (matcher.find()) {
+				// delete founded string from line
+				line = line.replace(matcher.group(), "");
+				// add to the list
+				list.add(line);
+				// add founded string
+				list.add(matcher.group());
+
+			} else {
+
+				list.add(line);
+			}
+
+		}
+
+		reader.close();
+
+		return list;
+
+	}
+
+	public List<String> modifyTags(List<String> lines) throws IOException {
+
+		List<String> modified = new ArrayList<>();
+
+		Set<String> fonts = getAllFontTypes(input_dir + doc);
+		fonts.remove("Constantia");
+		fonts.remove("Doulos SIL");
+
+		for (String line : lines) {
 
 			// change 85% to small
 			line = line.replace("85%", "medium");
@@ -297,15 +199,68 @@ public class ParseHtml {
 						"<font face=\"Constantia\" size=\"3\">");
 
 			}
-
-			lines.add(line);
+			//System.out.println(line);
+			modified.add(line);
 
 		}
 
-		reader.close();
+		return modified;
 
-		return lines;
+	}
 
+	public List<String> addEntryTags(List<String> toProcess) throws IOException {
+		List<String> lemmas = new ArrayList<>();
+		List<String> list = new ArrayList<String>();
+		int counter = 0;
+		for (String s : toProcess) {
+
+			final Pattern pattern = Pattern
+					.compile("<font style=\"font-size:large;font-family:Constantia, serif;font-weight:bold;\">(.+?)</font>");
+			final Matcher matcher = pattern.matcher(s);
+
+			if (matcher.find()) {
+				String found = matcher.group(1);
+				found = found
+						.replaceAll(
+								"<font style=\"font-size:large;font-family:Constantia, serif;font-weight:bold;\">",
+								"").replaceAll("&nbsp;", "");
+
+				// if it's the start of an entry
+				if (Character.isDigit(found.charAt(0))) {
+					counter++;
+					StringBuffer buffer = new StringBuffer();
+					buffer.append("\n");
+					buffer.append("<en>");
+					buffer.append(found);
+					buffer.append("</en>");
+					// buffer.append("\n");
+					list.add(buffer.toString());
+					lemmas.add(found);
+
+				} else {
+					StringBuffer buffer = new StringBuffer();
+					buffer.append(s);
+					buffer.append("\t");
+					// buffer.append("\n");
+					list.add(buffer.toString());
+
+				}
+
+			} else {
+				StringBuffer buffer = new StringBuffer();
+				buffer.append(s);
+				buffer.append("\t");
+				// buffer.append("\n");
+				list.add(buffer.toString());
+			}
+
+		}
+
+		System.out.println(counter);
+
+		FileUtils.printList(lemmas, ParseHtml.output_dir, "lemmata", "txt");
+
+		return list;
 	}
 
 	public Map<String, List<Integer>> getPageMapping(String file)
