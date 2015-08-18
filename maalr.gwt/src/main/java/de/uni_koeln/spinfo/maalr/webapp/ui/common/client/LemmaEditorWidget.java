@@ -61,7 +61,6 @@ import de.uni_koeln.spinfo.maalr.services.user.shared.LexService;
 import de.uni_koeln.spinfo.maalr.services.user.shared.LexServiceAsync;
 import de.uni_koeln.spinfo.maalr.webapp.ui.common.client.i18n.LocalizedStrings;
 import de.uni_koeln.spinfo.maalr.webapp.ui.common.client.toolbar.RichTextToolbar;
-import de.uni_koeln.spinfo.maalr.webapp.ui.common.client.toolbar.RichTextToolbar.Images;
 
 /**
  * A dynamic form to edit or create entries. It is used within the editor area
@@ -195,16 +194,11 @@ public class LemmaEditorWidget extends SimplePanel {
 
 				}
 
-//				Image dictPage_1 = new Image();
-//				dictPage_1.setUrl(baseURL + "images/page-1.jpg");
-//				Image dictPage_2 = new Image();
-//				dictPage_2.setUrl(baseURL + "images/page-2.jpg");
-//
-
 				String[] pfl = lemma.getEntryValue("Pages").split(",");
 
 				List<Image> images = new ArrayList<>();
 
+				// Add page-mapping
 				for (String i : pfl) {
 					Image page = new Image();
 					StringBuffer buffer = new StringBuffer();
@@ -214,16 +208,12 @@ public class LemmaEditorWidget extends SimplePanel {
 					buffer.append(".jpg");
 					page.setUrl(buffer.toString());
 					images.add(page);
-					logger.log(Level.INFO, "IMAGE IN" + buffer.toString());
 				}
 
 				for (Image i : images) {
 					imagePanel.add(i);
 
 				}
-
-				// imagePanel.add(dictPage_1);
-				// imagePanel.add(dictPage_2);
 
 				percentage = modifyPercentage();
 
