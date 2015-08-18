@@ -323,7 +323,7 @@ public class ResultCellTable extends Composite {
 			@Override
 			public String getValue(LemmaVersion object) {
 
-				if (object.getEntryValue("Correction").equals("95")) {
+				if (object.getEntryValue("Correction").equals("100")) {
 
 					cell.setEnabled(false);
 
