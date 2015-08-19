@@ -79,12 +79,12 @@ public class AdminService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	public void importDatabase() throws NoDatabaseAvailableException, IndexException, InvalidEntryException, DatabaseIOException, ZipException, IOException{
-		dbCreator.createFromSQLDump(environment.getLexFile(), -1);
+		dbCreator.parseEntries(environment.getLexFile(), -1);
 			rebuildIndex();
 	}
 
 	public void importDatabase(int max) throws Exception {
-			dbCreator.createFromSQLDump(environment.getLexFile(), max);
+			dbCreator.parseEntries(environment.getLexFile(), max);
 			rebuildIndex();
 	}
 
@@ -101,7 +101,7 @@ public class AdminService {
 	public String reloadDatabase() throws DatabaseException, IndexException{
 		dropDatabase();
 		try {
-			dbCreator.createFromSQLDump(environment.getLexFile(), -1);
+			dbCreator.parseEntries(environment.getLexFile(), -1);
 		} catch (ZipException e) {
 			throw new DatabaseIOException(e);
 		} catch (IOException e) {

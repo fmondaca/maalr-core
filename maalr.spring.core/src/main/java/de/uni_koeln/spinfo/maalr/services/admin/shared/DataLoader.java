@@ -66,7 +66,7 @@ public class DataLoader {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	public void createFromSQLDump(File file, int maxEntries)
+	public void parseEntries(File file, int maxEntries)
 			throws IOException, NoDatabaseAvailableException,
 			InvalidEntryException, IndexException {
 
