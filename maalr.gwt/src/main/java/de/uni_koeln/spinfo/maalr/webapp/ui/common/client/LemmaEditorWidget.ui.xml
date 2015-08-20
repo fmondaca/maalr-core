@@ -1,18 +1,18 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-	  <ui:style src="le.css"/>
-
-
+	<ui:style src="le.css" />
+	
 	<g:FlowPanel ui:field="finalBase">
 
 		<g:FlowPanel ui:field="imagePanel" />
 
-		<g:VerticalPanel ui:field="languages">
+		<g:VerticalPanel ui:field="text_editor">
 			<g:VerticalPanel ui:field="langA" />
 			<g:VerticalPanel ui:field="langB" />
+			<g:VerticalPanel ui:field="percentage" />
+
 		</g:VerticalPanel>
-		
-		<g:FlowPanel ui:field="percentage" />
+
 
 
 	</g:FlowPanel>
