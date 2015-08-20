@@ -95,9 +95,7 @@ public class LexServiceImpl implements LexService {
 
 				else {
 					// Correction
-
-					vtu = vtu.replaceAll("[^\\d]", "");
-					entry.putEntryValue(ftu, vtu.trim());
+					entry.putEntryValue(ftu, vtu);
 				}
 
 			} else
