@@ -265,8 +265,9 @@ public class RichTextToolbar extends Composite {
 	}
 
 	private static final RichTextArea.FontSize[] fontSizesConstants = new RichTextArea.FontSize[] {
-			// RichTextArea.FontSize.XX_SMALL, RichTextArea.FontSize.X_SMALL,
-			RichTextArea.FontSize.SMALL, RichTextArea.FontSize.MEDIUM,
+			// RichTextArea.FontSize.XX_SMALL,
+			RichTextArea.FontSize.X_SMALL, RichTextArea.FontSize.SMALL,
+	// RichTextArea.FontSize.MEDIUM,
 	// RichTextArea.FontSize.LARGE, RichTextArea.FontSize.X_LARGE,
 	// RichTextArea.FontSize.XX_LARGE
 	};
@@ -420,9 +421,9 @@ public class RichTextToolbar extends Composite {
 
 		lb.addItem(strings.size());
 
-		// lb.addItem(strings.xsmall());
+		lb.addItem(strings.xsmall());
 		lb.addItem(strings.small());
-		lb.addItem(strings.medium());
+		// lb.addItem(strings.medium());
 		// lb.addItem(strings.large());
 		// lb.addItem(strings.xlarge());
 		// lb.addItem(strings.xxlarge());
