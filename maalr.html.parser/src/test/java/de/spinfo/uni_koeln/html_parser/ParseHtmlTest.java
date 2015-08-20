@@ -9,7 +9,7 @@ import java.util.Set;
 import org.junit.Test;
 
 import de.spinfo.uni_koeln.html_parser.data.RawEntry;
-import de.spinfo.uni_koeln.html_parser.run.ParseHtml;
+import de.spinfo.uni_koeln.html_parser.parser.ParseHtml;
 import de.spinfo.uni_koeln.html_parser.utils.FileUtils;
 
 public class ParseHtmlTest {
@@ -25,12 +25,15 @@ public class ParseHtmlTest {
 	@Test
 	public void doOneAndTwo() throws IOException {
 
-		List<String> modified = parser.modifyTags(ParseHtml.input_dir
-				+ ParseHtml.doc);
-		List<String> markedentries = parser.addEntryTagsfromList(modified);
-
-		FileUtils.printList(markedentries, ParseHtml.input_dir,
-				"markedEntries", "html");
+		List<String> firstIdentation = parser
+				.markUncorrectedEntries(ParseHtml.input_dir + ParseHtml.doc);
+		
+		 List<String> modified = parser.modifyTags(firstIdentation);
+		
+		 List<String> markedentries = parser.addEntryTags(modified);
+		
+		 FileUtils.printList(markedentries, ParseHtml.input_dir,
+		 "markedEntries", "html");
 
 	}
 
@@ -44,26 +47,16 @@ public class ParseHtmlTest {
 
 		List<RawEntry> rawEntries = parser.identateEntries(f);
 
-		for (RawEntry e : rawEntries) {
-
-			if (e.getPages() == null) {
-
-				System.out.println(e.getLemma());
-			}
-		}
+		// for (RawEntry e : rawEntries) {
+		//
+		// if (e.getPages() == null) {
+		//
+		// System.out.println(e.getLemma());
+		// }
+		// }
 
 		FileUtils.printList(rawEntries, ParseHtml.output_dir, "rawEntries_",
 				"txt");
-
-		// List<Entry> entries = parser.getEntries(rawEntries);
-
-	}
-
-	// @Ignore
-	@Test
-	public void testAddEntryTags() throws IOException {
-
-		parser.addEntryTags(ParseHtml.input_dir + ParseHtml.doc);
 
 	}
 
@@ -75,15 +68,6 @@ public class ParseHtmlTest {
 						+ "20150898_mappedentries.txt");
 
 		FileUtils.printMap(map, ParseHtml.output_dir, "mapping");
-
-	}
-
-	@Test
-	public void modifyTagsTest() throws IOException {
-
-		parser.modifyTags(ParseHtml.input_dir + ParseHtml.doc);
-
-		// FileUtils.printMap(map, ParseHtml.output_dir, "mapping");
 
 	}
 

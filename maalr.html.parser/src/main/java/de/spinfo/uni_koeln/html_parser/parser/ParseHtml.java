@@ -32,7 +32,7 @@ public class ParseHtml {
 
 	public static String doc = "lenz-20150625.htm";
 	public static String addenda = "lenz-20150625_addenda.html";
-	public static String markedLemmata = "markedEntries_2015-08-18T16:08:30Z.html";
+	public static String markedLemmata = "markedEntries_2015-08-20T17:57:47Z.html";
 	public static String markedLemmata_add = "markedEntries_2015-08-07T16:32:04Z.html";
 
 	private static String pathToReplace = "../maalr.lenz/toReplace.tab";
@@ -105,7 +105,7 @@ public class ParseHtml {
 		String line;
 
 		final Pattern pattern = Pattern
-				.compile("<h4>(.+?)</h4>|<h5>(.+?)</h5>");
+				.compile("<h2>(.+?)</h2>|<h3>(.+?)</h3>|<h4>(.+?)</h4>|<h5>(.+?)</h5>");
 
 		while ((line = reader.readLine()) != null) {
 
@@ -115,6 +115,16 @@ public class ParseHtml {
 			final Matcher matcher = pattern.matcher(line);
 
 			if (matcher.find()) {
+				// if already at the beginning of the line, do nothing
+				if (line.startsWith(matcher.group())) {
+
+					// add to the list
+					list.add(line);
+					// go to next line
+					continue;
+
+				}
+
 				// delete founded string from line
 				line = line.replace(matcher.group(), "");
 				// add to the list
@@ -145,10 +155,11 @@ public class ParseHtml {
 
 		for (String line : lines) {
 
+			// add a space between a colon ':'
+			line = line.replace(":", ": ");
 			// change 85% to small
-			line = line.replace("85%", "medium");
-			line = line.replace("small", "medium");
-			line = line.replace("medium", "large");
+			line = line.replace("85%", "small");
+			line = line.replace("large", "medium");
 
 			// delete unwanted tags
 			line = line.replaceAll("<a href=(.+?)\">", "").replaceAll("</a>",
@@ -160,46 +171,46 @@ public class ParseHtml {
 			line = line.replaceAll("<h4>", "").replaceAll("</h4>", "");
 			line = line.replaceAll("<h5>", "").replaceAll("</h5>", "");
 
-			// Weird line
-			line = line
-					.replaceAll(
-							"<font style=\"font-size:large;font-family:Constantia, serif;font-style:italic;font-variant:large-caps;\">",
-							"");
+			// font-variant: small-caps;
+			// font-variant: large-caps;
+
+			line = line.replace("font-variant: large-caps;", "");
+			line = line.replace("font-variant: small-caps;", "");
 
 			for (String s : fonts) {
 
 				line = line.replaceAll(
-						"<font style=\"font-size:medium;font-family:" + s
+						"<font style=\"font-size: medium;font-family: " + s
 								+ "(.+?)\">",
-						"<font face=\"Constantia\" size=\"4\">");
+						"<font face=\"Constantia\" size=\"3\">");
 				line = line.replaceAll(
-						"<font style=\"font-size:large;font-family:" + s
+						"<font style=\"font-size: large;font-family: " + s
 								+ "(.+?)\">",
-						"<font face=\"Constantia\" size=\"4\">");
+						"<font face=\"Constantia\" size=\"3\">");
 				line = line.replaceAll(
-						"<font style=\"font-size:x-large;font-family:" + s
+						"<font style=\"font-size: x-large;font-family: " + s
 								+ "(.+?)\">",
-						"<font face=\"Constantia\" size=\"4\">");
+						"<font face=\"Constantia\" size=\"3\">");
 				line = line.replaceAll(
-						"<font style=\"font-size:xx-large;font-family:" + s
+						"<font style=\"font-size: xx-large;font-family: " + s
 								+ "(.+?)\">",
-						"<font face=\"Constantia\" size=\"4\">");
+						"<font face=\"Constantia\" size=\"3\">");
 
 				line = line.replaceAll(
-						"<font style=\"font-size:xx-small;font-family:" + s
+						"<font style=\"font-size: xx-small;font-family: " + s
 								+ "(.+?)\">",
-						"<font face=\"Constantia\" size=\"3\">");
+						"<font face=\"Constantia\" size=\"2\">");
 				line = line.replaceAll(
-						"<font style=\"font-size:x-small;font-family:" + s
+						"<font style=\"font-size: x-small;font-family: " + s
 								+ "(.+?)\">",
-						"<font face=\"Constantia\" size=\"3\">");
+						"<font face=\"Constantia\" size=\"2\">");
 				line = line.replaceAll(
-						"<font style=\"font-size:small;font-family:" + s
+						"<font style=\"font-size: small;font-family: " + s
 								+ "(.+?)\">",
-						"<font face=\"Constantia\" size=\"3\">");
+						"<font face=\"Constantia\" size=\"2\">");
 
 			}
-			//System.out.println(line);
+			// System.out.println(line);
 			modified.add(line);
 
 		}
@@ -215,14 +226,14 @@ public class ParseHtml {
 		for (String s : toProcess) {
 
 			final Pattern pattern = Pattern
-					.compile("<font style=\"font-size:large;font-family:Constantia, serif;font-weight:bold;\">(.+?)</font>");
+					.compile("<font style=\"font-size: medium;font-family: Constantia, serif;font-weight: bold;\">(.+?)</font>");
 			final Matcher matcher = pattern.matcher(s);
 
 			if (matcher.find()) {
 				String found = matcher.group(1);
 				found = found
 						.replaceAll(
-								"<font style=\"font-size:large;font-family:Constantia, serif;font-weight:bold;\">",
+								"<font style=\"font-size: medium;font-family: Constantia, serif;font-weight: bold;\">",
 								"").replaceAll("&nbsp;", "");
 
 				// if it's the start of an entry
