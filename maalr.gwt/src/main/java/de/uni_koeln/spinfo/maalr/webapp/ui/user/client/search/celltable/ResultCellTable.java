@@ -15,6 +15,7 @@
  ******************************************************************************/
 package de.uni_koeln.spinfo.maalr.webapp.ui.user.client.search.celltable;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,15 +24,23 @@ import java.util.logging.Logger;
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.CellTable;
 import com.github.gwtbootstrap.client.ui.LabelCell;
+import com.github.gwtbootstrap.client.ui.Modal;
+import com.github.gwtbootstrap.client.ui.ModalFooter;
+import com.github.gwtbootstrap.client.ui.constants.BackdropType;
 import com.github.gwtbootstrap.client.ui.constants.LabelType;
+import com.google.gwt.cell.client.ImageCell;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.cell.client.TextButtonCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.dom.client.BrowserEvents;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -43,6 +52,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
@@ -98,7 +109,11 @@ public class ResultCellTable extends Composite {
 
 	private Column<LemmaVersion, String> optionsColumn;
 
-	private Column<LemmaVersion, String> percentageColumn;
+	private Column<LemmaVersion, String> correctionColumn;
+
+	private Column<LemmaVersion, String> imageColumn;
+
+	private VerticalPanel imagePanel = new VerticalPanel();
 
 	private int hoveredRow;
 
@@ -346,7 +361,7 @@ public class ResultCellTable extends Composite {
 
 		final LabelCell progressCell = new LabelCell(LabelType.WARNING);
 
-		percentageColumn = new Column<LemmaVersion, String>(progressCell) {
+		correctionColumn = new Column<LemmaVersion, String>(progressCell) {
 
 			@Override
 			public String getValue(LemmaVersion object) {
@@ -361,7 +376,94 @@ public class ResultCellTable extends Composite {
 
 		};
 
-		cellTable.addColumn(percentageColumn);
+		cellTable.addColumn(correctionColumn);
+
+	}
+
+	private void addImageColumn() {
+
+		imageColumn = new Column<LemmaVersion, String>(new ClickableImageCell()) {
+			@Override
+			public String getValue(LemmaVersion object) {
+				return "insertImage.gif";
+			}
+		};
+
+		cellTable.addColumn(imageColumn);
+
+	}
+
+	private class ClickableImageCell extends ImageCell {
+
+		final Modal popup = new Modal(true);
+
+		@Override
+		public Set<String> getConsumedEvents() {
+			Set<String> consumedEvents = new HashSet<String>();
+			consumedEvents.add(BrowserEvents.CLICK);
+			return consumedEvents;
+		}
+
+		@Override
+		public void onBrowserEvent(
+				com.google.gwt.cell.client.Cell.Context context,
+				Element parent, String value, NativeEvent event,
+				ValueUpdater<String> valueUpdater) {
+			super.onBrowserEvent(context, parent, value, event, valueUpdater);
+			if (event.getType().equals(BrowserEvents.CLICK)) {
+				LemmaVersion selected = dataProvider.getList().get(hoveredRow);
+				openModal(selected);
+			}
+		}
+	}
+
+	private void openModal(LemmaVersion selected) {
+		final Modal popup = new Modal(true);
+		popup.setBackdrop(BackdropType.STATIC);
+		popup.setCloseVisible(true);
+		final Button close = new Button("Close");
+		ModalFooter footer = new ModalFooter(close);
+		popup.add(footer);
+
+		close.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				popup.hide();
+			}
+		});
+
+		String baseURL = GWT.getHostPageBaseURL();
+
+		List<Image> images = new ArrayList<>();
+		String[] pfl = selected.getEntryValue("Pages").split(",");
+		// Add page-mapping
+		for (String i : pfl) {
+			Image page = new Image();
+			StringBuffer buffer = new StringBuffer();
+			buffer.append(baseURL);
+			buffer.append("images/page-");
+			buffer.append(i.trim());
+			buffer.append(".jpg");
+			page.setUrl(buffer.toString());
+			images.add(page);
+		}
+
+		for (Image i : images) {
+			imagePanel.add(i);
+
+		}
+
+		popup.add(imagePanel);
+
+		
+		int customWidth = 600;
+		popup.setWidth(customWidth + "px");
+		popup.show();
+		double customMargin = -1 * (customWidth / 2);
+		popup.getElement().getStyle().setMarginLeft(customMargin, Unit.PX);
+		popup.getElement().getStyle().setMarginRight(customMargin, Unit.PX);
+		
 
 	}
 
@@ -468,6 +570,7 @@ public class ResultCellTable extends Composite {
 						.getLanguageName(!defaultOrder)), !defaultOrder);
 				addOptionsColumn(translationMap);
 				addPercentageColumn();
+				addImageColumn();
 
 			}
 		});
