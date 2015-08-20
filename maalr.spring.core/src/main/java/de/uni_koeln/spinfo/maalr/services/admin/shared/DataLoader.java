@@ -66,9 +66,8 @@ public class DataLoader {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	public void parseEntries(File file, int maxEntries)
-			throws IOException, NoDatabaseAvailableException,
-			InvalidEntryException, IndexException {
+	public void parseEntries(File file, int maxEntries) throws IOException,
+			NoDatabaseAvailableException, InvalidEntryException, IndexException {
 
 		if (!file.exists()) {
 			logger.info("No data to import - file " + file + " does not exist.");
@@ -96,6 +95,7 @@ public class DataLoader {
 		Database db = Database.getInstance();
 		List<DBObject> entries = new ArrayList<DBObject>();
 		int counter = 0;
+		int ce = 0;
 		String userId = loginManager.getCurrentUserId();
 
 		while ((line = reader.readLine()) != null) {
@@ -106,7 +106,7 @@ public class DataLoader {
 			LemmaVersion version = new LemmaVersion();
 
 			if (line.startsWith("<en>")) {
-
+				ce++;
 				version = new LemmaVersion();
 
 				line = line.replace("<en>", "").replace("</en>", "");
@@ -145,7 +145,8 @@ public class DataLoader {
 
 				}
 
-				if (counter <= 1000) {
+				//Until 1000 Paltrahuan
+				if (ce <= 1001) {
 					version.setValue("Correction", "95");
 				} else {
 					version.setValue("Correction", "15");
