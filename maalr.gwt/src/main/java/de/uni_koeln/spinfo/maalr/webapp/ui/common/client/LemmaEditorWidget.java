@@ -176,7 +176,7 @@ public class LemmaEditorWidget extends SimplePanel {
 				// this.translations = translations;
 
 				DOM.setElementAttribute(languages.getElement(), "id",
-						"languages");
+						"text_editor");
 				DOM.setElementAttribute(finalBase.getElement(), "id",
 						"finalBase");
 
