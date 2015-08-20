@@ -54,10 +54,10 @@ public class PopupEditor extends VerticalPanel {
 			final LemmaEditorWidget content, TranslationMap translation,
 			boolean withComment, boolean withEmail, Button... buttons) {
 		this.content = content;
-		PageHeader ph = new PageHeader();
-		ph.setText(header);
-		ph.setSubtext(sub);
-		add(ph);
+		// PageHeader ph = new PageHeader();
+		// ph.setText(header);
+		// ph.setSubtext(sub);
+		// add(ph);
 		introText = new HTML(description);
 		add(introText);
 
