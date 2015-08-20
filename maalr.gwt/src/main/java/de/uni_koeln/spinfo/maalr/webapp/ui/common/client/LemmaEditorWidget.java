@@ -335,8 +335,10 @@ public class LemmaEditorWidget extends SimplePanel {
 
 		toUpdate.put("Content", con);
 
-		toUpdate.put("Correction", corr);
+		// clean correction
+		corr = corr.replaceAll("[^\\d]", "");
 
+		toUpdate.put("Correction", corr);
 		int correction = Integer.parseInt(corr);
 
 		if (correction > 100 || correction < 15) {
