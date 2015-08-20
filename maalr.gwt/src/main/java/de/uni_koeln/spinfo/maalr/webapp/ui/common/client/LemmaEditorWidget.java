@@ -85,7 +85,7 @@ public class LemmaEditorWidget extends SimplePanel {
 	@UiField
 	FlowPanel finalBase = new FlowPanel();
 	@UiField
-	VerticalPanel languages = new VerticalPanel();
+	VerticalPanel text_editor = new VerticalPanel();
 	@UiField
 	FlowPanel imagePanel = new FlowPanel();
 	@UiField
@@ -93,7 +93,7 @@ public class LemmaEditorWidget extends SimplePanel {
 	@UiField
 	VerticalPanel langB = new VerticalPanel();
 	@UiField
-	FlowPanel percentage = new FlowPanel();
+	VerticalPanel percentage = new VerticalPanel();
 
 	private LemmaDescription description;
 
@@ -175,7 +175,7 @@ public class LemmaEditorWidget extends SimplePanel {
 
 				// this.translations = translations;
 
-				DOM.setElementAttribute(languages.getElement(), "id",
+				DOM.setElementAttribute(text_editor.getElement(), "id",
 						"text_editor");
 				DOM.setElementAttribute(finalBase.getElement(), "id",
 						"finalBase");
@@ -186,8 +186,10 @@ public class LemmaEditorWidget extends SimplePanel {
 				langA = textEdit(translations);
 				langB = richEdit(translations);
 
-				languages.add(langA);
-				languages.add(langB);
+				text_editor.add(langA);
+				text_editor.add(langB);
+				percentage = modifyPercentage(translations);
+				text_editor.add(percentage);
 
 				String baseURL = GWT.getHostPageBaseURL();
 
@@ -219,11 +221,8 @@ public class LemmaEditorWidget extends SimplePanel {
 
 				}
 
-				percentage = modifyPercentage(translations);
-
 				finalBase.add(imagePanel);
-				finalBase.add(languages);
-				finalBase.add(percentage);
+				finalBase.add(text_editor);
 
 			}
 		});
@@ -259,12 +258,13 @@ public class LemmaEditorWidget extends SimplePanel {
 		return langB;
 	}
 
-	private FlowPanel modifyPercentage(TranslationMap translations) {
+	private VerticalPanel modifyPercentage(TranslationMap translations) {
 		Label lbl = new Label(translations.get("correction"));
 
 		RichTextArea per = new RichTextArea();
 		per.setHeight("2em");
 		DOM.setElementAttribute(per.getElement(), "id", "per");
+
 		percentage.add(lbl);
 		percentage.add(per);
 		fields.put("Correction", per);
