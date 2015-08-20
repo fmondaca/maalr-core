@@ -82,20 +82,22 @@ public class LexServiceImpl implements LexService {
 					entry.putEntryValue(ftu, vtu);
 					// txt
 					String txt = vtu.replaceAll("<[^>]*>", "");
-					entry.putEntryValue("Lemma_txt", txt);
+					entry.putEntryValue("Lemma_txt", txt.trim());
 
 				} else if (ftu.equals("Content")) {
 					// html
 					entry.putEntryValue(ftu, vtu);
 					// txt
 					String txt = vtu.replaceAll("<[^>]*>", "");
-					entry.putEntryValue("Content_txt", txt);
+					entry.putEntryValue("Content_txt", txt.trim());
 
 				}
 
 				else {
 					// Correction
-					entry.putEntryValue(ftu, vtu);
+
+					vtu = vtu.replaceAll("[^\\d]", "");
+					entry.putEntryValue(ftu, vtu.trim());
 				}
 
 			} else
@@ -129,7 +131,7 @@ public class LexServiceImpl implements LexService {
 
 		Matcher matcher = pattern.matcher(toCheck);
 
-		//Get all tags
+		// Get all tags
 		while (matcher.find()) {
 			tags.add(matcher.group());
 		}
@@ -139,7 +141,7 @@ public class LexServiceImpl implements LexService {
 		for (String s : tags) {
 
 			if (!whiteList.contains(s)) {
-
+				logger.info("NOT FOUND: " + s);
 				counter++;
 
 			}
