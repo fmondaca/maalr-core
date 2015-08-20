@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.ControlGroup;
 import com.github.gwtbootstrap.client.ui.HelpInline;
+import com.github.gwtbootstrap.client.ui.Label;
 import com.github.gwtbootstrap.client.ui.ListBox;
 import com.github.gwtbootstrap.client.ui.Modal;
 import com.github.gwtbootstrap.client.ui.TextBox;
@@ -76,7 +77,6 @@ public class LemmaEditorWidget extends SimplePanel {
 	}
 
 	private static LexServiceAsync lexService = GWT.create(LexService.class);
-
 	private static LemmaEditorBinder uiBinder = GWT
 			.create(LemmaEditorBinder.class);
 
@@ -126,6 +126,8 @@ public class LemmaEditorWidget extends SimplePanel {
 
 	private LemmaVersion initial;
 
+	private TranslationMap translations;
+
 	/**
 	 * Create a new {@link LemmaEditorWidget} for the given
 	 * {@link LemmaDescription}.
@@ -171,6 +173,8 @@ public class LemmaEditorWidget extends SimplePanel {
 			@Override
 			public void onSuccess(TranslationMap translations) {
 
+				// this.translations = translations;
+
 				DOM.setElementAttribute(languages.getElement(), "id",
 						"languages");
 				DOM.setElementAttribute(finalBase.getElement(), "id",
@@ -179,8 +183,8 @@ public class LemmaEditorWidget extends SimplePanel {
 				DOM.setElementAttribute(imagePanel.getElement(), "id",
 						"imagePanel");
 
-				langA = textEdit();
-				langB = richEdit();
+				langA = textEdit(translations);
+				langB = richEdit(translations);
 
 				languages.add(langA);
 				languages.add(langB);
@@ -215,7 +219,7 @@ public class LemmaEditorWidget extends SimplePanel {
 
 				}
 
-				percentage = modifyPercentage();
+				percentage = modifyPercentage(translations);
 
 				finalBase.add(imagePanel);
 				finalBase.add(languages);
@@ -226,26 +230,27 @@ public class LemmaEditorWidget extends SimplePanel {
 
 	}
 
-	private VerticalPanel textEdit() {
-
+	private VerticalPanel textEdit(TranslationMap translations) {
+		Label lbl = new Label(translations.get("lemma"));
 		RichTextArea rta_a = new RichTextArea();
 		DOM.setElementAttribute(rta_a.getElement(), "id", "rta_langA");
 		DOM.setElementAttribute(langA.getElement(), "id", "langA");
 
 		rta_a.setHeight("2em");
+		langA.add(lbl);
 		langA.add(rta_a);
 		fields.put("Lemma", rta_a);
 
 		return langA;
 	}
 
-	private VerticalPanel richEdit() {
-
+	private VerticalPanel richEdit(TranslationMap translations) {
+		Label lbl = new Label(translations.get("content"));
 		RichTextArea rta_b = new RichTextArea();
 		RichTextToolbar toolbar = new RichTextToolbar(rta_b);
 		DOM.setElementAttribute(langB.getElement(), "id", "langB");
 		DOM.setElementAttribute(rta_b.getElement(), "id", "rta_langB");
-
+		langB.add(lbl);
 		langB.add(toolbar);
 		langB.add(rta_b);
 
@@ -254,10 +259,13 @@ public class LemmaEditorWidget extends SimplePanel {
 		return langB;
 	}
 
-	private FlowPanel modifyPercentage() {
+	private FlowPanel modifyPercentage(TranslationMap translations) {
+		Label lbl = new Label(translations.get("correction"));
+
 		RichTextArea per = new RichTextArea();
 		per.setHeight("2em");
 		DOM.setElementAttribute(per.getElement(), "id", "per");
+		percentage.add(lbl);
 		percentage.add(per);
 		fields.put("Correction", per);
 
@@ -332,9 +340,8 @@ public class LemmaEditorWidget extends SimplePanel {
 		int correction = Integer.parseInt(corr);
 
 		if (correction > 100 || correction < 15) {
-			logger.log(Level.INFO, "CORRECTION IN" + correction);
-			// TODO: get values from i18n
-			Window.alert("Wrong correction value...");
+
+			Window.alert(translation.get("correction.wrongvalue"));
 			ok.setEnabled(false);
 			popup.hide();
 			return;
@@ -371,7 +378,7 @@ public class LemmaEditorWidget extends SimplePanel {
 							popup.hide();
 							return false;
 						}
-					}, 2000);
+					}, 1000);
 
 				}
 
