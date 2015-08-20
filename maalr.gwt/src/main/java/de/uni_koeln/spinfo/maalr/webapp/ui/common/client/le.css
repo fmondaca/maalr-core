@@ -6,7 +6,7 @@
 
 #imagePanel {
 	width: 48%;
-    margin: 1%;
+	margin: 1%;
 	float: left;
 	overflow: auto style;
 	display: inline-block;
@@ -21,6 +21,7 @@
 #langA {
 	width: auto;
 	float: left;
+	margin-top: 5px;
 }
 
 #rta_langA {
@@ -31,9 +32,14 @@
 #langB {
 	width: auto;
 	float: left;
+	margin-top: 5px;
 }
 
 #rta_langB {
 	width: 100%;
 	float: left;
+}
+
+#per {
+	margin-top: 5px;
 }
