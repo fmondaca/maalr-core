@@ -875,9 +875,7 @@ public class LuceneIndexManager {
 	 * @param lexEntry
 	 * @param version
 	 * @param document
-	 * @throws TikaException
-	 * @throws SAXException
-	 * @throws IOException
+
 	 */
 	private void addMaalrFieldsToDocument(LexEntry lexEntry,
 			LemmaVersion version, Document document) throws IOException {
