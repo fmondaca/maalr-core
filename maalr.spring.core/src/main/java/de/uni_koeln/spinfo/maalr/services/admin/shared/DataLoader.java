@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
@@ -121,6 +122,10 @@ public class DataLoader {
 					// Normalize text
 					line = Normalizer.normalize(line, Normalizer.Form.NFC);
 
+					// Unescape entities
+
+					line = StringEscapeUtils.unescapeHtml4(line);
+
 					if (!line.startsWith("</c>")) {
 
 						line = line.replace("<c>", "");
@@ -145,7 +150,7 @@ public class DataLoader {
 
 				}
 
-				//Until 1000 Paltrahuan
+				// Until 1000 Paltrahuan
 				if (ce <= 1001) {
 					version.setValue("Correction", "95");
 				} else {
