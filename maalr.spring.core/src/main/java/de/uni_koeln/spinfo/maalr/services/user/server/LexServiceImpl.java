@@ -67,13 +67,13 @@ public class LexServiceImpl implements LexService {
 			Map<String, String> toUpdate) throws MaalrException {
 
 		// Get text from source LemmaVersion for comparing with modified
-		String lemma_src = entry.getEntryValue("Lemma");
-		String content_src = entry.getEntryValue("Content");
-		String correction_src = entry.getEntryValue("Correction");
+		String lemma_src = entry.getEntryValue("Lemma").trim();
+		String content_src = entry.getEntryValue("Content").trim();
+		String correction_src = entry.getEntryValue("Correction").trim();
 
-		String lemma_new = toUpdate.get("Lemma");
-		String content_new = toUpdate.get("Content");
-		String correction_new = toUpdate.get("Correction");
+		String lemma_new = toUpdate.get("Lemma").trim();
+		String content_new = toUpdate.get("Content").trim();
+		String correction_new = toUpdate.get("Correction").trim();
 
 		// Clean input
 		lemma_new = cleanInput(lemma_new);
@@ -87,6 +87,11 @@ public class LexServiceImpl implements LexService {
 			if (lemma_src.equals(lemma_new) && content_new.equals(content_src)) {
 				throw new MaalrException("dialog.nochanges");
 			} else {
+
+				logger.info("lemma_src: " + lemma_src);
+				logger.info("lemma_new: " + lemma_new);
+				logger.info("content_src: " + content_src);
+				logger.info("content_new: " + content_new);
 
 				// is the correction value still the same?
 				if (correction_new.equals(correction_src)) {
@@ -102,20 +107,20 @@ public class LexServiceImpl implements LexService {
 
 					// Lemma
 					// html
-					entry.putEntryValue("Lemma", lemma_new.trim());
+					entry.putEntryValue("Lemma", lemma_new);
 					// txt
 					String lemma_txt = lemma_new.replaceAll("<[^>]*>", "");
-					entry.putEntryValue("Lemma_txt", lemma_txt.trim());
+					entry.putEntryValue("Lemma_txt", lemma_txt);
 
 					// Content
 					// html
-					entry.putEntryValue("Content", content_new.trim());
+					entry.putEntryValue("Content", content_new);
 					// txt
 					String content_txt = content_new.replaceAll("<[^>]*>", "");
-					entry.putEntryValue("Lemma_txt", content_txt.trim());
+					entry.putEntryValue("Lemma_txt", content_txt);
 
 					// Correction
-					entry.putEntryValue("Correction", correction_new.trim());
+					entry.putEntryValue("Correction", correction_new);
 
 				}
 
