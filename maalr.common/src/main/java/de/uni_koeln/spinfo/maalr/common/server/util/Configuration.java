@@ -34,6 +34,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.LoggerFactory;
 
 import de.uni_koeln.spinfo.maalr.common.server.searchconfig.DictionaryConfiguration;
@@ -204,7 +205,7 @@ public class Configuration {
 	public String getForWhiteList() {
 		return properties.getProperty(LEX_FILE);
 	}
-	
+
 	public String getToolBar() {
 		return properties.getProperty(TOOLBAR);
 	}
@@ -317,6 +318,9 @@ public class Configuration {
 				// Normalize text
 				currentLine = Normalizer.normalize(currentLine,
 						Normalizer.Form.NFC);
+
+				// Unescape entities
+				currentLine = StringEscapeUtils.unescapeHtml4(currentLine);
 
 				Matcher matcher = pattern.matcher(currentLine);
 
