@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,41 +66,63 @@ public class LexServiceImpl implements LexService {
 	public String suggestModification(LemmaVersion entry,
 			Map<String, String> toUpdate) throws MaalrException {
 
-		for (Map.Entry<String, String> field : toUpdate.entrySet()) {
+		// Get text from source LemmaVersion for comparing with modified
+		String lemma_src = entry.getEntryValue("Lemma");
+		String content_src = entry.getEntryValue("Content");
+		String correction_src = entry.getEntryValue("Correction");
 
-			String ftu = field.getKey();
-			String vtu = field.getValue();
+		String lemma_new = toUpdate.get("Lemma");
+		String content_new = toUpdate.get("Content");
+		String correction_new = toUpdate.get("Correction");
 
-			// CLEAN VALUE
-			vtu = cleanInput(vtu);
+		// Clean input
+		lemma_new = cleanInput(lemma_new);
+		content_new = cleanInput(content_new);
+		correction_new = cleanInput(correction_new);
 
-			if (vtu != null) {
+		// If all 3 variables are clean
+		if (lemma_new != null && content_new != null && correction_new != null) {
 
-				// We have to distinguish the fields in order to also update the
-				// text versions
-				if (ftu.equals("Lemma")) {
-					// html
-					entry.putEntryValue(ftu, vtu);
-					// txt
-					String txt = vtu.replaceAll("<[^>]*>", "");
-					entry.putEntryValue("Lemma_txt", txt.trim());
+			// If Lemma and Content have not been modified, go back
+			if (lemma_src.equals(lemma_new) && content_new.equals(content_src)) {
+				throw new MaalrException("dialog.nochanges");
+			} else {
 
-				} else if (ftu.equals("Content")) {
-					// html
-					entry.putEntryValue(ftu, vtu);
-					// txt
-					String txt = vtu.replaceAll("<[^>]*>", "");
-					entry.putEntryValue("Content_txt", txt.trim());
+				// is the correction value still the same?
+				if (correction_new.equals(correction_src)) {
+
+					throw new MaalrException("dialog.nocorrection");
 
 				}
+				// Put the new values into the LemmaVersion
 
 				else {
+
+					logger.info("new correction value, update values");
+
+					// Lemma
+					// html
+					entry.putEntryValue("Lemma", lemma_new.trim());
+					// txt
+					String lemma_txt = lemma_new.replaceAll("<[^>]*>", "");
+					entry.putEntryValue("Lemma_txt", lemma_txt.trim());
+
+					// Content
+					// html
+					entry.putEntryValue("Content", content_new.trim());
+					// txt
+					String content_txt = content_new.replaceAll("<[^>]*>", "");
+					entry.putEntryValue("Lemma_txt", content_txt.trim());
+
 					// Correction
-					entry.putEntryValue(ftu, vtu);
+					entry.putEntryValue("Correction", correction_new.trim());
+
 				}
 
-			} else
-				throw new MaalrException("dialog.bad");
+			}
+
+		} else {
+			throw new MaalrException("dialog.bad");
 
 		}
 
@@ -126,6 +149,8 @@ public class LexServiceImpl implements LexService {
 
 		// Normalize input
 		toCheck = Normalizer.normalize(toCheck, Normalizer.Form.NFC);
+		// Unescape entities
+		toCheck = StringEscapeUtils.unescapeHtml4(toCheck);
 
 		Matcher matcher = pattern.matcher(toCheck);
 
