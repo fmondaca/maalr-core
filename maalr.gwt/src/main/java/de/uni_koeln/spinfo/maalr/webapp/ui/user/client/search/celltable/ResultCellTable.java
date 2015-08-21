@@ -28,7 +28,7 @@ import com.github.gwtbootstrap.client.ui.Modal;
 import com.github.gwtbootstrap.client.ui.ModalFooter;
 import com.github.gwtbootstrap.client.ui.constants.BackdropType;
 import com.github.gwtbootstrap.client.ui.constants.LabelType;
-import com.google.gwt.cell.client.ImageResourceCell;
+import com.google.gwt.cell.client.ImageCell;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.cell.client.TextButtonCell;
 import com.google.gwt.cell.client.ValueUpdater;
@@ -40,7 +40,6 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -111,15 +110,13 @@ public class ResultCellTable extends Composite {
 
 	private Column<LemmaVersion, String> correctionColumn;
 
-	private Column<LemmaVersion, ImageResource> imageColumn;
+	private Column<LemmaVersion, String> imageColumn;
 
 	private VerticalPanel imagePanel = new VerticalPanel();
 
 	private int hoveredRow;
 
 	private MaalrQuery maalrQuery;
-
-	ImgResources imgResources = GWT.create(ImgResources.class);
 
 	private static final ProvidesKey<LemmaVersion> KEY_PROVIDER = new ProvidesKey<LemmaVersion>() {
 		public Object getKey(LemmaVersion item) {
@@ -384,12 +381,10 @@ public class ResultCellTable extends Composite {
 
 	private void addImageColumn() {
 
-		imageColumn = new Column<LemmaVersion, ImageResource>(new MyCell()) {
-
+		imageColumn = new Column<LemmaVersion, String>(new ClickableImageCell()) {
 			@Override
-			public ImageResource getValue(LemmaVersion object) {
-				// TODO Auto-generated method stub
-				return imgResources.book();
+			public String getValue(LemmaVersion object) {
+				return "insertImage.gif";
 			}
 		};
 
@@ -397,7 +392,8 @@ public class ResultCellTable extends Composite {
 
 	}
 
-	private class MyCell extends ImageResourceCell {
+	private class ClickableImageCell extends ImageCell {
+
 
 		@Override
 		public Set<String> getConsumedEvents() {
@@ -409,15 +405,14 @@ public class ResultCellTable extends Composite {
 		@Override
 		public void onBrowserEvent(
 				com.google.gwt.cell.client.Cell.Context context,
-				Element parent, ImageResource value, NativeEvent event,
-				ValueUpdater<ImageResource> valueUpdater) {
+				Element parent, String value, NativeEvent event,
+				ValueUpdater<String> valueUpdater) {
 			super.onBrowserEvent(context, parent, value, event, valueUpdater);
 			if (event.getType().equals(BrowserEvents.CLICK)) {
 				LemmaVersion selected = dataProvider.getList().get(hoveredRow);
 				openModal(selected);
 			}
 		}
-
 	}
 
 	private void openModal(LemmaVersion selected) {
@@ -459,12 +454,14 @@ public class ResultCellTable extends Composite {
 
 		popup.add(imagePanel);
 
+		
 		int customWidth = 600;
 		popup.setWidth(customWidth + "px");
 		popup.show();
 		double customMargin = -1 * (customWidth / 2);
 		popup.getElement().getStyle().setMarginLeft(customMargin, Unit.PX);
 		popup.getElement().getStyle().setMarginRight(customMargin, Unit.PX);
+		
 
 	}
 
