@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.github.gwtbootstrap.client.ui.Button;
@@ -125,8 +124,6 @@ public class LemmaEditorWidget extends SimplePanel {
 	private HashMap<String, ValueSpecification> valueSpecifications;
 
 	private LemmaVersion initial;
-
-	private TranslationMap translations;
 
 	/**
 	 * Create a new {@link LemmaEditorWidget} for the given
@@ -324,13 +321,14 @@ public class LemmaEditorWidget extends SimplePanel {
 			final Modal popup, final Button cancel, final Button reset,
 			final TranslationMap translation) {
 
-		String lem = fields.get("Lemma").getHTML().trim();
+		String lem = fields.get("Lemma").getHTML();
 
-		String con = fields.get("Content").getHTML().trim();
+		String con = fields.get("Content").getHTML();
 
-		String corr = fields.get("Correction").getHTML().trim();
+		String corr = fields.get("Correction").getHTML();
 
 		Map<String, String> toUpdate = new HashMap<>();
+
 		toUpdate.put("Lemma", lem);
 
 		toUpdate.put("Content", con);
