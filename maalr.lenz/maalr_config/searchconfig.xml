@@ -58,7 +58,7 @@
 	</queryBuilders>
 	<!-- Lemma description -->
 	<languages>
-		<language id="lemma" mainColumn="Lemma">
+		<language id="lemma" mainColumn="Lemma_txt">
 			<editors>
 				<frontend_editor>
 					<fields>
@@ -83,7 +83,7 @@
 				</fields>
 			</results>
 		</language>
-		<language id="content" mainColumn="Content">
+		<language id="content" mainColumn="Content_txt">
 			<editors>
 				<frontend_editor>
 					<fields>
