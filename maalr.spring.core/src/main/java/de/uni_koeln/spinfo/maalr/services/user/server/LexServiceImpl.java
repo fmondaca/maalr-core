@@ -88,11 +88,6 @@ public class LexServiceImpl implements LexService {
 				throw new MaalrException("dialog.nochanges");
 			} else {
 
-				logger.info("lemma_src: " + lemma_src);
-				logger.info("lemma_new: " + lemma_new);
-				logger.info("content_src: " + content_src);
-				logger.info("content_new: " + content_new);
-
 				// is the correction value still the same?
 				if (correction_new.equals(correction_src)) {
 
@@ -102,8 +97,6 @@ public class LexServiceImpl implements LexService {
 				// Put the new values into the LemmaVersion
 
 				else {
-
-					logger.info("new correction value, update values");
 
 					// Lemma
 					// html
@@ -117,7 +110,7 @@ public class LexServiceImpl implements LexService {
 					entry.putEntryValue("Content", content_new);
 					// txt
 					String content_txt = content_new.replaceAll("<[^>]*>", "");
-					entry.putEntryValue("Lemma_txt", content_txt);
+					entry.putEntryValue("Content_txt", content_txt);
 
 					// Correction
 					entry.putEntryValue("Correction", correction_new);
