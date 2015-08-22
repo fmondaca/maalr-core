@@ -379,12 +379,39 @@ public class ResultCellTable extends Composite {
 
 	}
 
-	private void addImageColumn() {
+	private void addImageColumn(TranslationMap translationMap) {
 
-		imageColumn = new Column<LemmaVersion, String>(new ClickableImageCell()) {
+		final TextButtonCell cell = new TextButtonCell() {
+
+			@Override
+			public Set<String> getConsumedEvents() {
+				Set<String> consumed = new HashSet<String>();
+				consumed.add(BrowserEvents.CLICK);
+				return consumed;
+			}
+
+			@Override
+			public void onBrowserEvent(
+					com.google.gwt.cell.client.Cell.Context context,
+					Element parent, String value, NativeEvent event,
+					ValueUpdater<String> valueUpdater) {
+				super.onBrowserEvent(context, parent, value, event,
+						valueUpdater);
+				if (event.getType().equals(BrowserEvents.CLICK)) {
+					LemmaVersion selected = dataProvider.getList().get(
+							hoveredRow);
+					openModal(selected);
+				}
+			}
+
+		};
+
+		final String label = translationMap.get("maalr.query.result_see_source");
+
+		imageColumn = new Column<LemmaVersion, String>(cell) {
 			@Override
 			public String getValue(LemmaVersion object) {
-				return "insertImage.gif";
+				return label;
 			}
 		};
 
@@ -393,7 +420,6 @@ public class ResultCellTable extends Composite {
 	}
 
 	private class ClickableImageCell extends ImageCell {
-
 
 		@Override
 		public Set<String> getConsumedEvents() {
@@ -454,14 +480,12 @@ public class ResultCellTable extends Composite {
 
 		popup.add(imagePanel);
 
-		
 		int customWidth = 600;
 		popup.setWidth(customWidth + "px");
 		popup.show();
 		double customMargin = -1 * (customWidth / 2);
 		popup.getElement().getStyle().setMarginLeft(customMargin, Unit.PX);
 		popup.getElement().getStyle().setMarginRight(customMargin, Unit.PX);
-		
 
 	}
 
@@ -566,9 +590,9 @@ public class ResultCellTable extends Composite {
 						.getLanguageName(defaultOrder)), defaultOrder);
 				addColumnB(translationMap.get(description
 						.getLanguageName(!defaultOrder)), !defaultOrder);
-				addOptionsColumn(translationMap);
 				addPercentageColumn();
-				addImageColumn();
+				addOptionsColumn(translationMap);
+				addImageColumn(translationMap);
 
 			}
 		});
