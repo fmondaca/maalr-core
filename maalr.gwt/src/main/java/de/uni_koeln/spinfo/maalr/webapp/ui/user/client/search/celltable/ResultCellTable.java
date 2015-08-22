@@ -22,13 +22,14 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.ButtonCell;
 import com.github.gwtbootstrap.client.ui.CellTable;
 import com.github.gwtbootstrap.client.ui.LabelCell;
 import com.github.gwtbootstrap.client.ui.Modal;
 import com.github.gwtbootstrap.client.ui.ModalFooter;
 import com.github.gwtbootstrap.client.ui.constants.BackdropType;
+import com.github.gwtbootstrap.client.ui.constants.IconType;
 import com.github.gwtbootstrap.client.ui.constants.LabelType;
-import com.google.gwt.cell.client.ImageCell;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.cell.client.TextButtonCell;
 import com.google.gwt.cell.client.ValueUpdater;
@@ -381,7 +382,7 @@ public class ResultCellTable extends Composite {
 
 	private void addImageColumn(TranslationMap translationMap) {
 
-		final TextButtonCell cell = new TextButtonCell() {
+		final ButtonCell cell = new ButtonCell(IconType.BOOK) {
 
 			@Override
 			public Set<String> getConsumedEvents() {
@@ -406,39 +407,15 @@ public class ResultCellTable extends Composite {
 
 		};
 
-		final String label = translationMap.get("maalr.query.result_see_source");
-
 		imageColumn = new Column<LemmaVersion, String>(cell) {
 			@Override
 			public String getValue(LemmaVersion object) {
-				return label;
+				return "";
 			}
 		};
 
 		cellTable.addColumn(imageColumn);
 
-	}
-
-	private class ClickableImageCell extends ImageCell {
-
-		@Override
-		public Set<String> getConsumedEvents() {
-			Set<String> consumedEvents = new HashSet<String>();
-			consumedEvents.add(BrowserEvents.CLICK);
-			return consumedEvents;
-		}
-
-		@Override
-		public void onBrowserEvent(
-				com.google.gwt.cell.client.Cell.Context context,
-				Element parent, String value, NativeEvent event,
-				ValueUpdater<String> valueUpdater) {
-			super.onBrowserEvent(context, parent, value, event, valueUpdater);
-			if (event.getType().equals(BrowserEvents.CLICK)) {
-				LemmaVersion selected = dataProvider.getList().get(hoveredRow);
-				openModal(selected);
-			}
-		}
 	}
 
 	private void openModal(LemmaVersion selected) {
