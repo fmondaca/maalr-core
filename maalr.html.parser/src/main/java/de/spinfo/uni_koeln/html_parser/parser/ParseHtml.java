@@ -32,7 +32,7 @@ public class ParseHtml {
 
 	public static String doc = "lenz-20150625.htm";
 	public static String addenda = "lenz-20150625_addenda.html";
-	public static String markedLemmata = "markedEntries_2015-08-20T17:57:47Z.html";
+	public static String markedLemmata = "markedEntries_2015-08-21T17:44:34Z.html";
 	public static String markedLemmata_add = "markedEntries_2015-08-07T16:32:04Z.html";
 
 	private static String pathToReplace = "../maalr.lenz/toReplace.tab";
@@ -176,6 +176,9 @@ public class ParseHtml {
 
 			line = line.replace("font-variant: large-caps;", "");
 			line = line.replace("font-variant: small-caps;", "");
+
+			// making it like breaks from the editor
+			line = line.replace("<br clear=\"all\"/>", "<br clear=\"all\">");
 
 			for (String s : fonts) {
 

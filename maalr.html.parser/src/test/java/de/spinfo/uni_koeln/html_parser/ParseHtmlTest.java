@@ -18,27 +18,27 @@ public class ParseHtmlTest {
 
 	// WORKFLOW
 
-	// 1. modifyTags
-	// 2. addEntryTags
-	// 3. identateEntries
+	// 1. mark uncorrected entries
+	// 2. modifyTags
+	// 3. addEntryTags
+	// 4. identateEntries
 
 	@Test
-	public void doOneAndTwo() throws IOException {
+	public void doTheFirstThreeSteps() throws IOException {
 
 		List<String> firstIdentation = parser
 				.markUncorrectedEntries(ParseHtml.input_dir + ParseHtml.doc);
-		
-		 List<String> modified = parser.modifyTags(firstIdentation);
-		
-		 List<String> markedentries = parser.addEntryTags(modified);
-		
-		 FileUtils.printList(markedentries, ParseHtml.input_dir,
-		 "markedEntries", "html");
+
+		List<String> modified = parser.modifyTags(firstIdentation);
+
+		List<String> markedentries = parser.addEntryTags(modified);
+
+		FileUtils.printList(markedentries, ParseHtml.input_dir,
+				"markedEntries", "html");
 
 	}
 
-	// THREE
-
+	// Do the final one
 	// @Ignore
 	@Test
 	public void testIdentateEntries() throws IOException {
@@ -46,14 +46,6 @@ public class ParseHtmlTest {
 		File f = new File(ParseHtml.input_dir + ParseHtml.markedLemmata);
 
 		List<RawEntry> rawEntries = parser.identateEntries(f);
-
-		// for (RawEntry e : rawEntries) {
-		//
-		// if (e.getPages() == null) {
-		//
-		// System.out.println(e.getLemma());
-		// }
-		// }
 
 		FileUtils.printList(rawEntries, ParseHtml.output_dir, "rawEntries_",
 				"txt");
