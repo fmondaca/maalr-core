@@ -201,7 +201,7 @@ public class WebMVCController {
 			} else {
 				key = "dict.title_lang2";
 			}
-			String title = Localizer.getTranslation(getLocale(session, request), key);
+			String title = Localizer.getEditorTranslation(getLocale(session, request), key);
 			title = title.replaceAll("\\{0\\}", query.getValue("searchPhrase"));
 			response.setCharacterEncoding("UTF-8");
 			ModelAndView mv = initModelView("dictionary", title, session, request);
@@ -238,10 +238,10 @@ public class WebMVCController {
 		}
 	}
 	
-	@RequestMapping("/template")
-	public ModelAndView templatePage(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+	@RequestMapping("/about")
+	public ModelAndView aboutPage(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		session.setAttribute("language", Configuration.getInstance().getLemmaDescription().getLanguageName(true));
-		return initModelView("template", null, session, request);
+		return initModelView("about", null, session, request);
 	}
 
 	private ModelAndView getErrorView(Exception e) {
@@ -293,12 +293,12 @@ public class WebMVCController {
 		String title = null;
 		if(result.getEntries().size() < 2 ) {
 			String template = getLocalizedString("maalr.dict_title", session, request);
-			title = template.replaceAll("\\{0\\}", Localizer.getTranslation(getLocale(session, request), (first ? "dict.lang1_lang2" : "dict.lang2_lang1")));
+			title = template.replaceAll("\\{0\\}", Localizer.getEditorTranslation(getLocale(session, request), (first ? "dict.lang1_lang2" : "dict.lang2_lang1")));
 		} else {
 			LemmaDescription desc = configuration.getLemmaDescription();
 			ValueFormat format = desc.getResultList(first).get(0);
 			String template = getLocalizedString("maalr.dict_title_ext", session, request);
-			String langPair = Localizer.getTranslation(getLocale(session, request), (first ? "dict.lang1_lang2" : "dict.lang2_lang1"));
+			String langPair = Localizer.getEditorTranslation(getLocale(session, request), (first ? "dict.lang1_lang2" : "dict.lang2_lang1"));
 			title = template.replaceAll("\\{0\\}", langPair);
 			String a = format.apply(result.getEntries().get(0), null);
 			String b = format.apply(result.getEntries().get(result.getEntries().size()-1), null);
