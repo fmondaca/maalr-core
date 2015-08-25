@@ -4,7 +4,7 @@
 <fmt:setBundle basename="de.uni_koeln.spinfo.maalr.webapp.i18n.text" />
 
 
-<%-- FALLBACK LOCALE: accept "ru", otherwise force to "de" --%>
+<%-- FALLBACK LOCALE: accept "es", otherwise force to "en" --%>
 	<%
 		if(!session.getAttribute("pl").equals("es")) { 
 			session.setAttribute("pl","en");
