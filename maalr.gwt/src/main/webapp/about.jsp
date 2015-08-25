@@ -33,7 +33,7 @@
 					
 					<h1 class="title"><fmt:message key="edit.title"/></h1>
 					<div >
-						<img class="img_dict" src="${dictContext}/assets/img/editor-img.png" alt="img-editor" width="850px" height="300px"/>
+						<img class="img_dict" src="${dictContext}/assets/img/ulmo-img.png" alt="img-editor" width="850px" height="300px"/>
 				     </div>
 					<div class="exp">
 						<fmt:message key="edit.explanation"/>
