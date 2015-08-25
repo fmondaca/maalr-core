@@ -115,7 +115,7 @@ public class Localizer {
 		return uiField;
 	}
 
-	public static String getTranslation(String locale, String key) {
+	public static String getEditorTranslation(String locale, String key) {
 		TranslationMap map = getEditorTranslations(locale);
 		return map.get(key);
 	}
