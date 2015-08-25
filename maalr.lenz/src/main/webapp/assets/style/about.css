@@ -1,0 +1,22 @@
+
+.title {
+text-align: left;
+padding: 10px;
+}
+
+
+
+.exp {
+text-align: left;
+font-size:medium;
+margin-left: 15px;
+margin-right: 20px;
+
+}
+
+.img_dict {
+display: block;
+margin-left: auto;
+margin-right: auto; 
+}
+
