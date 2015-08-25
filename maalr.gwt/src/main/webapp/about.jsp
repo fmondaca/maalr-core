@@ -4,6 +4,7 @@
 <%@ page import="de.uni_koeln.spinfo.maalr.common.shared.searchconfig.Localizer" %>
 
 <fmt:setLocale value="<%=session.getAttribute("pl")%>" />
+<fmt:setBundle basename="de.uni_koeln.spinfo.maalr.webapp.i18n.text" />
 
 
 <%-- HTML HEADER --%>
@@ -19,25 +20,23 @@
 			<%-- CONTENT AREA --%>
 			<div id="template_page">
                 <div class="container_full">
-		               <h1 class="title"><%=Localizer.getAboutTranslation((String)session.getAttribute("pl"),"main.title")%></h1>
-					<div class="exp">
-						<%=Localizer.getAboutTranslation((String)session.getAttribute("pl"),"main.content")%>
-					</div>
+		               <h1 class="title"><fmt:message key="main.title"/></h1>
+					<div class="exp"><fmt:message key="main.content"/></div>
 					
-					<h1 class="title"><%=Localizer.getAboutTranslation((String)session.getAttribute("pl"),"entry.title")%></h1>
+					<h1 class="title"><fmt:message key="entry.title"/></h1>
 					<div >
 						<img class="img_dict" src="${dictContext}/assets/img/cuico-img.png" alt="img-cuico" width="850px" height="300px"/>
 				     </div>
 					<div class="exp">
-						<%=Localizer.getAboutTranslation((String)session.getAttribute("pl"),"entry.explanation")%>
+						<fmt:message key="entry.explanation"/>
 					</div>
 					
-					<h1 class="title"><%=Localizer.getAboutTranslation((String)session.getAttribute("pl"),"edit.title")%></h1>
+					<h1 class="title"><fmt:message key="edit.title"/></h1>
 					<div >
 						<img class="img_dict" src="${dictContext}/assets/img/editor-img.png" alt="img-editor" width="850px" height="300px"/>
 				     </div>
 					<div class="exp">
-						<%=Localizer.getAboutTranslation((String)session.getAttribute("pl"),"edit.explanation")%>
+						<fmt:message key="edit.explanation"/>
 					</div>
 				</div>
 			</div>
