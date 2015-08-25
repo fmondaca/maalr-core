@@ -13,7 +13,7 @@
 	<%-- MAIN MENU --%>
     <ul class="left">
      <li> <jsp:include page="/maalr_modules/misc/login_widget.jsp" /></li>
-        <li><a id="navTemplate" title="template" href="${dictContext}/template.html"><fmt:message key="maalr.navi.template" /></a></li>
+        <li><a id="navTemplate" title="about" href="${dictContext}/about.html"><fmt:message key="maalr.navi.about" /></a></li>
       <%--  <li><a id="navHilfe" title="help" href='#'><fmt:message key="maalr.navi.help" /></a></li>--%>
        
     </ul>
