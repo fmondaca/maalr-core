@@ -82,7 +82,7 @@ public class JsonController {
 		}
 		JsonResult json = new JsonResult(toReturn);
 		if(toReturn.size() == 0) {
-			String message = Localizer.getTranslation(locale, "maalr.query.nothing_found.embedded");
+			String message = Localizer.getEditorTranslation(locale, "maalr.query.nothing_found.embedded");
 			json.setNothingFoundMessage(message.replace("{0}", query.getValue("searchPhrase")));
 		}
 		ObjectMapper om = new ObjectMapper();
