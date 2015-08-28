@@ -34,6 +34,7 @@ import com.github.gwtbootstrap.client.ui.constants.ControlGroupType;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiField;
@@ -41,12 +42,15 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RichTextArea;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -81,12 +85,19 @@ public class LemmaEditorWidget extends SimplePanel {
 
 	Logger logger = Logger.getLogger("LemmaEditorWidget");
 
+	// Base
 	@UiField
-	FlowPanel finalBase = new FlowPanel();
+	HorizontalPanel finalBase = new HorizontalPanel();
+
+	// Images
 	@UiField
-	VerticalPanel text_editor = new VerticalPanel();
+	ScrollPanel imageContainer = new ScrollPanel();
 	@UiField
 	FlowPanel imagePanel = new FlowPanel();
+
+	// Text
+	@UiField
+	VerticalPanel text_editor = new VerticalPanel();
 	@UiField
 	VerticalPanel langA = new VerticalPanel();
 	@UiField
@@ -176,16 +187,17 @@ public class LemmaEditorWidget extends SimplePanel {
 						"text_editor");
 				DOM.setElementAttribute(finalBase.getElement(), "id",
 						"finalBase");
-
+				DOM.setElementAttribute(imageContainer.getElement(), "id",
+						"imageContainer");
 				DOM.setElementAttribute(imagePanel.getElement(), "id",
 						"imagePanel");
 
-				langA = textEdit(translations);
-				langB = richEdit(translations);
+				langA = lemmaContainer(translations);
+				langB = contentContainer(translations);
 
 				text_editor.add(langA);
 				text_editor.add(langB);
-				percentage = modifyPercentage(translations);
+				percentage = correctionContainer(translations);
 				text_editor.add(percentage);
 
 				String baseURL = GWT.getHostPageBaseURL();
@@ -200,7 +212,10 @@ public class LemmaEditorWidget extends SimplePanel {
 				String[] pfl = lemma.getEntryValue("Pages").split(",");
 
 				List<Image> images = new ArrayList<>();
-
+				//
+				imagePanel.setWidth("500px");
+				imagePanel.setHeight("380px");
+				//
 				// Add page-mapping
 				for (String i : pfl) {
 					Image page = new Image();
@@ -217,8 +232,10 @@ public class LemmaEditorWidget extends SimplePanel {
 					imagePanel.add(i);
 
 				}
+				imageContainer.setSize("500px", "380px");
+				imageContainer.setWidget(imagePanel);
 
-				finalBase.add(imagePanel);
+				finalBase.add(imageContainer);
 				finalBase.add(text_editor);
 
 			}
@@ -226,7 +243,7 @@ public class LemmaEditorWidget extends SimplePanel {
 
 	}
 
-	private VerticalPanel textEdit(TranslationMap translations) {
+	private VerticalPanel lemmaContainer(TranslationMap translations) {
 		Label lbl = new Label(translations.get("lemma"));
 		RichTextArea rta_a = new RichTextArea();
 		DOM.setElementAttribute(rta_a.getElement(), "id", "rta_langA");
@@ -240,7 +257,7 @@ public class LemmaEditorWidget extends SimplePanel {
 		return langA;
 	}
 
-	private VerticalPanel richEdit(TranslationMap translations) {
+	private VerticalPanel contentContainer(TranslationMap translations) {
 		Label lbl = new Label(translations.get("content"));
 		RichTextArea rta_b = new RichTextArea();
 		RichTextToolbar toolbar = new RichTextToolbar(rta_b);
@@ -255,7 +272,7 @@ public class LemmaEditorWidget extends SimplePanel {
 		return langB;
 	}
 
-	private VerticalPanel modifyPercentage(TranslationMap translations) {
+	private VerticalPanel correctionContainer(TranslationMap translations) {
 		Label lbl = new Label(translations.get("correction"));
 
 		RichTextArea per = new RichTextArea();
