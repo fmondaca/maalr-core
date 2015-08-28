@@ -431,6 +431,8 @@ public class ResultCellTable extends Composite {
 			@Override
 			public void onClick(ClickEvent event) {
 				popup.hide();
+				imagePanel.clear();
+				popup.clear();
 			}
 		});
 
