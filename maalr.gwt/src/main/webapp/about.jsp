@@ -23,7 +23,7 @@
 		               <h1 class="title"><fmt:message key="main.title"/></h1>
 					<div class="exp"><fmt:message key="main.content"/></div>
 					
-					<h1 class="title"><fmt:message key="entry.title"/></h1>
+					<h3 class="title"><fmt:message key="entry.title"/></h3>
 					<div >
 						<img class="img_dict" src="${dictContext}/assets/img/cuico-img.png" alt="img-cuico" width="850px" height="300px"/>
 				     </div>
@@ -31,9 +31,9 @@
 						<fmt:message key="entry.explanation"/>
 					</div>
 					
-					<h1 class="title"><fmt:message key="edit.title"/></h1>
+					<h3 class="title"><fmt:message key="edit.title"/></h3>
 					<div >
-						<img class="img_dict" src="${dictContext}/assets/img/ulmo-img.png" alt="img-editor" width="850px" height="300px"/>
+						<img class="img_dict" src="${dictContext}/assets/img/cuico_editor-img.png" alt="img-editor" width="850px" height="300px"/>
 				     </div>
 					<div class="exp">
 						<fmt:message key="edit.explanation"/>
