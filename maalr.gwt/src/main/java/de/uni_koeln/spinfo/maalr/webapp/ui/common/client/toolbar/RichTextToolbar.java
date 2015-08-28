@@ -362,8 +362,9 @@ public class RichTextToolbar extends Composite {
 			// strings.createLink()));
 			// topPanel.add(removeLink = createPushButton(images.removeLink(),
 			// strings.removeLink()));
-			topPanel.add(removeFormat = createPushButton(images.removeFormat(),
-					strings.removeFormat()));
+			// topPanel.add(removeFormat =
+			// createPushButton(images.removeFormat(),
+			// strings.removeFormat()));
 		}
 
 		if (basic != null) {
