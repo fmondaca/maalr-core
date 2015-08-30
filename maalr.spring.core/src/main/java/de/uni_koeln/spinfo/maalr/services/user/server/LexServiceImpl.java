@@ -83,48 +83,52 @@ public class LexServiceImpl implements LexService {
 		// If all 3 variables are clean
 		if (lemma_new != null && content_new != null && correction_new != null) {
 
-			// If Lemma and Content have not been modified, go back
+			// If Lemma and Content have not been modified
 			if (lemma_src.equals(lemma_new) && content_new.equals(content_src)) {
-				throw new MaalrException("dialog.nochanges");
-			} else {
 
-				// is the correction value still the same?
+				// If a user thinks that an entry is already fully corrected but
+				// it does not belong to the 661 uncorrected
+				if (!correction_src.equals("15")
+						&& correction_new.equals("100")) {
+
+					// Put the new values into the LemmaVersion
+					entry = updateEntryValues(entry, lemma_new, content_new,
+							correction_new);
+
+				} else {
+
+					throw new MaalrException("dialog.nochanges");
+				}
+
+			}
+
+			// Lemma and content were modified
+			else {
+
+				// Is the correction value still the same?
 				if (correction_new.equals(correction_src)) {
 
 					throw new MaalrException("dialog.nocorrection");
 
 				}
-				// Put the new values into the LemmaVersion
 
+				// Put the new values into the LemmaVersion
 				else {
 
-					// Lemma
-					// html
-					entry.putEntryValue("Lemma", lemma_new);
-					// txt
-					String lemma_txt = lemma_new.replaceAll("<[^>]*>", "");
-					entry.putEntryValue("Lemma_txt", lemma_txt);
-
-					// Content
-					// html
-					entry.putEntryValue("Content", content_new);
-					// txt
-					String content_txt = content_new.replaceAll("<[^>]*>", "");
-					entry.putEntryValue("Content_txt", content_txt);
-
-					// Correction
-					entry.putEntryValue("Correction", correction_new);
+					entry = updateEntryValues(entry, lemma_new, content_new,
+							correction_new);
 
 				}
 
 			}
 
 		} else {
+			// What is he doing?
 			throw new MaalrException("dialog.bad");
 
 		}
 
-		// UPDATE
+		// WRITE CHANGES INTO THE DB
 		try {
 			BasicDBObject old = Database.getInstance().getById(
 					entry.getLexEntryId());
@@ -136,6 +140,29 @@ public class LexServiceImpl implements LexService {
 			// throw new MaalrException("Failed to suggest modification: " + e);
 			throw new MaalrException(e.getMessage());
 		}
+	}
+
+	private LemmaVersion updateEntryValues(LemmaVersion entry,
+			String lemma_new, String content_new, String correction_new) {
+
+		// Lemma
+		// html
+		entry.putEntryValue("Lemma", lemma_new);
+		// txt
+		String lemma_txt = lemma_new.replaceAll("<[^>]*>", "");
+		entry.putEntryValue("Lemma_txt", lemma_txt);
+
+		// Content
+		// html
+		entry.putEntryValue("Content", content_new);
+		// txt
+		String content_txt = content_new.replaceAll("<[^>]*>", "");
+		entry.putEntryValue("Content_txt", content_txt);
+
+		// Correction
+		entry.putEntryValue("Correction", correction_new);
+
+		return entry;
 	}
 
 	private String cleanInput(String toCheck) {
