@@ -127,7 +127,9 @@ public class SpringBackend {
 						throw new MaalrException("dialog.failure.comment");
 					}
 				} else {
-					if(value.length() > 20000) {
+					
+					//The longest string in content has 35353 chars. We'll set the max in 35400
+					if(value.length() > 35400) {
 						//	throw new MaalrException("A field cannot contain more than 2000 characters.");
 						//workaround for i18n
 						throw new MaalrException("dialog.failure.lemma");
