@@ -60,6 +60,8 @@ public class Configuration {
 	private static final String LEX_FILE = "lex.file";
 
 	private static final String TOOLBAR = "toolbar";
+	
+	private static final String LESSTHAN = "lessthan";
 
 	private static final String MONGODB_PORT = "mongodb.port";
 
@@ -78,6 +80,8 @@ public class Configuration {
 	private static final String BACKUP_NUMS = "backup.nums";
 
 	private Set<String> whiteList = new LinkedHashSet<>();
+	
+	private Set<String> lessThan = new LinkedHashSet<>();
 
 	private Properties properties;
 
@@ -151,6 +155,8 @@ public class Configuration {
 		}
 
 		whiteList = readWhiteList(getForWhiteList());
+		
+		lessThan = addLessThanVariations(getLessThan());
 
 	}
 
@@ -186,6 +192,11 @@ public class Configuration {
 		properties.put(LUCENE_DIR, dir);
 	}
 
+	public void boi(String dir) {
+		properties.put(LUCENE_DIR, dir);
+	}
+
+	
 	public LemmaDescription getLemmaDescription() {
 		return dictConfig.getLemmaDescription();
 	}
@@ -208,6 +219,10 @@ public class Configuration {
 
 	public String getToolBar() {
 		return properties.getProperty(TOOLBAR);
+	}
+	
+	public String getLessThan() {
+		return properties.getProperty(LESSTHAN);
 	}
 
 	public ClientOptions getClientOptions() {
@@ -288,6 +303,10 @@ public class Configuration {
 	public Set<String> getWhiteList() {
 		return whiteList;
 	}
+	
+	public Set<String> getLessThanVariations() {
+		return lessThan;
+	}
 
 	private Set<String> readWhiteList(String file) {
 
@@ -357,6 +376,33 @@ public class Configuration {
 	}
 
 	private Set<String> addTagsFromToolbar(String path) throws IOException {
+
+		Set<String> tagstb = new HashSet<String>();
+
+		File toRead = new File(path);
+		FileInputStream inputStream = new FileInputStream(toRead);
+		InputStreamReader inputStreamReader = new InputStreamReader(
+				inputStream, "UTF8");
+		LineNumberReader reader = new LineNumberReader(inputStreamReader);
+
+		String currentLine;
+
+		while ((currentLine = reader.readLine()) != null) {
+
+			// Normalize text
+			currentLine = Normalizer
+					.normalize(currentLine, Normalizer.Form.NFC);
+
+			tagstb.add(currentLine);
+
+		}
+
+		reader.close();
+		return tagstb;
+	}
+	
+	
+	private Set<String> addLessThanVariations(String path) throws IOException {
 
 		Set<String> tagstb = new HashSet<String>();
 
