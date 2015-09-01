@@ -43,6 +43,8 @@ import de.uni_koeln.spinfo.maalr.services.user.shared.LexService;
 public class LexServiceImpl implements LexService {
 
 	private Set<String> whiteList = Configuration.getInstance().getWhiteList();
+	private Set<String> lessthan = Configuration.getInstance()
+			.getLessThanVariations();
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -165,7 +167,7 @@ public class LexServiceImpl implements LexService {
 		return entry;
 	}
 
-	private String cleanInput(String toCheck) {
+	private String cleanInput(String toCheck) throws MaalrException {
 
 		Set<String> tags = new LinkedHashSet<>();
 
@@ -175,7 +177,18 @@ public class LexServiceImpl implements LexService {
 		// Normalize input
 		toCheck = Normalizer.normalize(toCheck, Normalizer.Form.NFC);
 		// Unescape entities
-		toCheck = StringEscapeUtils.unescapeHtml4(toCheck);
+	    toCheck = StringEscapeUtils.unescapeHtml4(toCheck);
+
+		
+		// Check if less than in any flavor is present
+		for (String s : lessthan) {
+			if (toCheck.contains(s)) {
+				
+				throw new MaalrException("dialog.bad.less");
+				
+			}
+
+		}
 
 		Matcher matcher = pattern.matcher(toCheck);
 
