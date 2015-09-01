@@ -2,29 +2,20 @@ package de.spinfo.uni_koeln.html_parser.parser;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.io.OutputStreamWriter;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import de.spinfo.uni_koeln.html_parser.data.Entry;
 import de.spinfo.uni_koeln.html_parser.data.RawEntry;
 import de.spinfo.uni_koeln.html_parser.utils.FileUtils;
 
@@ -35,32 +26,8 @@ public class ParseHtml {
 	public static String markedLemmata = "markedEntries_2015-08-21T17:44:34Z.html";
 	public static String markedLemmata_add = "markedEntries_2015-08-07T16:32:04Z.html";
 
-	private static String pathToReplace = "../maalr.lenz/toReplace.tab";
-
 	public static String output_dir = "data/output/";
 	public static String input_dir = "data/input/";
-
-	private String bold = "<font style=\"font-size:medium;font-family:Constantia;font-weight:bold;\">";
-	private String bold_serif = "<font style=\"font-size:medium;font-family:Constantia, serif;font-weight:bold;\">";
-	private String bold_italic = "<font style=\"font-size:medium;font-family:Constantia, serif;font-weight:bold;font-style:italic;\">";
-	private String bold_italic_b = "<font style=\"font-size:medium;font-family:Constantia, serif;font-style:italic;font-weight:bold;\">";
-	private String normal = "<font style=\"font-size:medium;font-family:Constantia;\">";
-	private String normal_serif = "<font style=\"font-size:medium;font-family:Constantia, serif;\">";
-	private String normal_serif_italic = "<font style=\"font-size:medium;font-family:Constantia, serif;font-style:italic;\">";
-	private String normal_italic = "<font style=\"font-size:medium;font-family:Constantia;font-style:italic;\">";
-	private String doulos_normal = "<font style=\"font-size:medium;font-family:Doulos SIL, fantasy;\">";
-	private String doulos_italic = "<font style=\"font-size:medium;font-family:Doulos SIL, fantasy;font-style:italic;\">";
-	private String small_italic_serif = "<font style=\"font-size:85%;font-family:Constantia, serif;font-style:italic;\">";
-	private String small_italic = "<font style=\"font-size:85%;font-family:Constantia;font-style:italic;\">";
-	private String small_normal_serif = "<font style=\"font-size:85%;font-family:Constantia, serif;\">";
-	private String small_bold_serif = "<font style=\"font-size:85%;font-family:Constantia, serif;font-weight:bold;\">";
-	private String small_bold_serif_italic = "<font style=\"font-size:85%;font-family:Constantia, serif;font-weight:bold;font-style:italic;\">";
-	private String small_normal = "<font style=\"font-size:85%;font-family:Constantia;\">";
-	private String font_end = "</font>";
-	private String head_start = "<h3>";
-	private String head_end = "</h3>";
-	private String p_start = "<p>";
-	private String p_end = "</p>";
 
 	private boolean found = false;
 
@@ -442,8 +409,6 @@ public class ParseHtml {
 		return entries;
 	}
 
-
-
 	public List<String> getLemmata(List<RawEntry> rawEntries) {
 
 		List<String> lemmata = new ArrayList<>();
@@ -467,6 +432,17 @@ public class ParseHtml {
 		}
 		return lemmata;
 
+	}
+
+	public int getMaxLengthContent(List<RawEntry> entries) {
+
+		Set<Integer> contentlength = new HashSet<>();
+		for (RawEntry entry : entries) {
+
+			contentlength.add(entry.getContent().length());
+		}
+
+		return Collections.max(contentlength);
 	}
 
 }
