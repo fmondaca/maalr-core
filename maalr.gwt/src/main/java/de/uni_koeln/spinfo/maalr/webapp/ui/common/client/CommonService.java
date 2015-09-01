@@ -40,7 +40,6 @@ public interface CommonService extends RemoteService {
 
 	TranslationMap getEditorTranslation(String locale);
 
-	Set<String> getWhiteList();
 
 
 }

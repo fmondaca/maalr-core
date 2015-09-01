@@ -39,6 +39,4 @@ public interface CommonServiceAsync {
 	void getEditorTranslation(String locale,
 			AsyncCallback<TranslationMap> asyncCallback);
 
-	void getWhiteList(AsyncCallback<Set<String>> callback);
-
 }

@@ -48,12 +48,10 @@ public class CommonServiceController implements CommonService {
 
 	private ClientOptions clientOptions;
 
-	private Set<String> whiteList;
 
 	public CommonServiceController() {
 		lemmaDescription = Configuration.getInstance().getLemmaDescription();
 		clientOptions = Configuration.getInstance().getClientOptions();
-		whiteList = Configuration.getInstance().getWhiteList();
 	}
 
 	@Override
@@ -94,10 +92,7 @@ public class CommonServiceController implements CommonService {
 		return Localizer.getEditorTranslations(locale);
 	}
 
-	@Override
-	public Set<String> getWhiteList() {
-		return whiteList;
-	}
+
 
 
 }
