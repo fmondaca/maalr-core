@@ -16,7 +16,6 @@
 package de.uni_koeln.spinfo.maalr.webapp.ui.common.client;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
