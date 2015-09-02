@@ -15,12 +15,10 @@
  ******************************************************************************/
 package de.uni_koeln.spinfo.maalr.services.admin.shared;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.UnsupportedEncodingException;
@@ -29,18 +27,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.tika.exception.TikaException;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.html.HtmlParser;
-import org.apache.tika.sax.BodyContentHandler;
 import org.jsoup.Jsoup;
 import org.jsoup.examples.HtmlToPlainText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.xml.sax.SAXException;
 
 import com.mongodb.DBObject;
 
@@ -123,9 +115,6 @@ public class DataLoader {
 
 					// Normalize text
 					line = Normalizer.normalize(line, Normalizer.Form.NFC);
-
-					// Unescape entities
-					// line = StringEscapeUtils.unescapeHtml4(line);
 
 					if (!line.startsWith("</c>")) {
 
