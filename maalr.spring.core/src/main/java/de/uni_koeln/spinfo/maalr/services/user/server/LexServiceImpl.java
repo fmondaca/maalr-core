@@ -15,14 +15,11 @@
  ******************************************************************************/
 package de.uni_koeln.spinfo.maalr.services.user.server;
 
-import java.text.Normalizer;
-import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.examples.HtmlToPlainText;
+import org.jsoup.safety.Whitelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +39,7 @@ import de.uni_koeln.spinfo.maalr.services.user.shared.LexService;
 @Service("lexService" /* Don't forget to add new services to gwt-servlet.xml! */)
 public class LexServiceImpl implements LexService {
 
-	private Set<String> whiteList = Configuration.getInstance().getWhiteList();
-	private Set<String> lessthan = Configuration.getInstance()
-			.getLessThanVariations();
+	private Whitelist whiteList = Configuration.getInstance().getWhiteList();
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -68,67 +63,16 @@ public class LexServiceImpl implements LexService {
 	public String suggestModification(LemmaVersion entry,
 			Map<String, String> toUpdate) throws MaalrException {
 
-		// Get text from source LemmaVersion for comparing with modified
-		String lemma_src = entry.getEntryValue("Lemma").trim();
-		String content_src = entry.getEntryValue("Content").trim();
-		String correction_src = entry.getEntryValue("Correction").trim();
-
 		String lemma_new = toUpdate.get("Lemma").trim();
 		String content_new = toUpdate.get("Content").trim();
 		String correction_new = toUpdate.get("Correction").trim();
 
-		// Clean input
-		lemma_new = cleanInput(lemma_new);
-		content_new = cleanInput(content_new);
-		correction_new = cleanInput(correction_new);
+		// // Clean input
+		lemma_new = Jsoup.clean(lemma_new, whiteList);
+		content_new = Jsoup.clean(content_new, whiteList);
+		correction_new = Jsoup.clean(correction_new, whiteList);
 
-		// If all 3 variables are clean
-		if (lemma_new != null && content_new != null && correction_new != null) {
-
-			// If Lemma and Content have not been modified
-			if (lemma_src.equals(lemma_new) && content_new.equals(content_src)) {
-
-				// If a user thinks that an entry is already fully corrected but
-				// it does not belong to the 661 uncorrected
-				if (!correction_src.equals("15")
-						&& correction_new.equals("100")) {
-
-					// Put the new values into the LemmaVersion
-					entry = updateEntryValues(entry, lemma_new, content_new,
-							correction_new);
-
-				} else {
-
-					throw new MaalrException("dialog.nochanges");
-				}
-
-			}
-
-			// Lemma and content were modified
-			else {
-
-				// Is the correction value still the same?
-				if (correction_new.equals(correction_src)) {
-
-					throw new MaalrException("dialog.nocorrection");
-
-				}
-
-				// Put the new values into the LemmaVersion
-				else {
-
-					entry = updateEntryValues(entry, lemma_new, content_new,
-							correction_new);
-
-				}
-
-			}
-
-		} else {
-			// What is he doing?
-			throw new MaalrException("dialog.bad");
-
-		}
+		entry = updateEntryValues(entry, lemma_new, content_new, correction_new);
 
 		// WRITE CHANGES INTO THE DB
 		try {
@@ -151,71 +95,20 @@ public class LexServiceImpl implements LexService {
 		// html
 		entry.putEntryValue("Lemma", lemma_new);
 		// txt
-		String lemma_txt = lemma_new.replaceAll("<[^>]*>", "");
-		entry.putEntryValue("Lemma_txt", lemma_txt);
+		entry.putEntryValue("Lemma_txt",
+				new HtmlToPlainText().getPlainText(Jsoup.parse(lemma_new)));
 
 		// Content
 		// html
 		entry.putEntryValue("Content", content_new);
 		// txt
-		String content_txt = content_new.replaceAll("<[^>]*>", "");
-		entry.putEntryValue("Content_txt", content_txt);
+		entry.putEntryValue("Content_txt",
+				new HtmlToPlainText().getPlainText(Jsoup.parse(content_new)));
 
 		// Correction
 		entry.putEntryValue("Correction", correction_new);
 
 		return entry;
-	}
-
-	private String cleanInput(String toCheck) throws MaalrException {
-
-		Set<String> tags = new LinkedHashSet<>();
-
-		String HTML_TAG_PATTERN = "<(\"[^\"]*\"|'[^']*'|[^'\">])*>";
-		Pattern pattern = Pattern.compile(HTML_TAG_PATTERN);
-
-		// Normalize input
-		toCheck = Normalizer.normalize(toCheck, Normalizer.Form.NFC);
-		// Unescape entities
-	    toCheck = StringEscapeUtils.unescapeHtml4(toCheck);
-
-		
-		// Check if less than in any flavor is present
-		for (String s : lessthan) {
-			if (toCheck.contains(s)) {
-				
-				throw new MaalrException("dialog.bad.less");
-				
-			}
-
-		}
-
-		Matcher matcher = pattern.matcher(toCheck);
-
-		// Get all tags
-		while (matcher.find()) {
-			tags.add(matcher.group());
-		}
-
-		int counter = 0;
-
-		for (String s : tags) {
-
-			if (!whiteList.contains(s)) {
-				logger.info("NOT FOUND: " + s);
-				counter++;
-
-			}
-
-		}
-
-		if (counter > 0) {
-
-			return null;
-
-		} else {
-			return toCheck;
-		}
 	}
 
 }
