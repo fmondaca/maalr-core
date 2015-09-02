@@ -29,12 +29,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.html.HtmlParser;
 import org.apache.tika.sax.BodyContentHandler;
+import org.jsoup.Jsoup;
+import org.jsoup.examples.HtmlToPlainText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,7 +114,8 @@ public class DataLoader {
 				line = line.replace("<en>", "").replace("</en>", "");
 
 				version.setValue("Lemma", line);
-				version.setValue("Lemma_txt", getTextFromHTML(line));
+				version.setValue("Lemma_txt",
+						new HtmlToPlainText().getPlainText(Jsoup.parse(line)));
 
 				StringBuffer content = new StringBuffer();
 
@@ -123,8 +125,7 @@ public class DataLoader {
 					line = Normalizer.normalize(line, Normalizer.Form.NFC);
 
 					// Unescape entities
-
-					line = StringEscapeUtils.unescapeHtml4(line);
+					// line = StringEscapeUtils.unescapeHtml4(line);
 
 					if (!line.startsWith("</c>")) {
 
@@ -133,10 +134,8 @@ public class DataLoader {
 						content.append("\n");
 					} else {
 						version.setValue("Content", content.toString());
-						version.setValue("Content_txt",
-								getTextFromHTML(content.toString()));
-
-						// getPages
+						version.setValue("Content_txt", new HtmlToPlainText()
+								.getPlainText(Jsoup.parse(content.toString())));
 
 						line = reader.readLine();
 						line = Normalizer.normalize(line, Normalizer.Form.NFC);
@@ -207,26 +206,6 @@ public class DataLoader {
 		// }
 		// loginManager.logout();
 		logger.info("Dataloader initialized.");
-	}
-
-	private String getTextFromHTML(String stringWithHTML) throws IOException {
-
-		InputStream is = new ByteArrayInputStream(stringWithHTML.getBytes());
-		BodyContentHandler handler = new BodyContentHandler();
-		Metadata metadata = new Metadata();
-		try {
-			new HtmlParser().parse(is, handler, metadata, new ParseContext());
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TikaException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String plainText = handler.toString();
-
-		return plainText;
-
 	}
 
 }
