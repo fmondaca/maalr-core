@@ -31,24 +31,6 @@ public class ParseHtml {
 
 	private boolean found = false;
 
-	public Set<String> getTags() {
-
-		Set<String> tags = new HashSet<>();
-		tags.add("<no>");
-		tags.add("<ni>");
-		tags.add("<bo>");
-		tags.add("<bi>");
-		tags.add("<sn>");
-		tags.add("<si>");
-		tags.add("<sb>");
-		tags.add("<se>");
-		tags.add("<dn>");
-		tags.add("<di>");
-		tags.add("<en>");
-
-		return tags;
-	}
-
 	public Set<String> getMarkedEntriesTags() {
 
 		Set<String> tags = new HashSet<>();
@@ -444,5 +426,7 @@ public class ParseHtml {
 
 		return Collections.max(contentlength);
 	}
+
+	
 
 }
