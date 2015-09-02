@@ -17,24 +17,16 @@ package de.uni_koeln.spinfo.maalr.common.server.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.io.UnsupportedEncodingException;
-import java.text.Normalizer;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Properties;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.jsoup.safety.Whitelist;
 import org.slf4j.LoggerFactory;
 
 import de.uni_koeln.spinfo.maalr.common.server.searchconfig.DictionaryConfiguration;
@@ -60,7 +52,7 @@ public class Configuration {
 	private static final String LEX_FILE = "lex.file";
 
 	private static final String TOOLBAR = "toolbar";
-	
+
 	private static final String LESSTHAN = "lessthan";
 
 	private static final String MONGODB_PORT = "mongodb.port";
@@ -79,9 +71,7 @@ public class Configuration {
 
 	private static final String BACKUP_NUMS = "backup.nums";
 
-	private Set<String> whiteList = new LinkedHashSet<>();
-	
-	private Set<String> lessThan = new LinkedHashSet<>();
+	private Whitelist whiteList = new Whitelist();
 
 	private Properties properties;
 
@@ -154,9 +144,7 @@ public class Configuration {
 					e);
 		}
 
-		whiteList = readWhiteList(getForWhiteList());
-		
-		lessThan = addLessThanVariations(getLessThan());
+		whiteList = getWL();
 
 	}
 
@@ -196,7 +184,6 @@ public class Configuration {
 		properties.put(LUCENE_DIR, dir);
 	}
 
-	
 	public LemmaDescription getLemmaDescription() {
 		return dictConfig.getLemmaDescription();
 	}
@@ -220,7 +207,7 @@ public class Configuration {
 	public String getToolBar() {
 		return properties.getProperty(TOOLBAR);
 	}
-	
+
 	public String getLessThan() {
 		return properties.getProperty(LESSTHAN);
 	}
@@ -300,132 +287,28 @@ public class Configuration {
 		return properties.getProperty(MONGODB_NAME);
 	}
 
-	public Set<String> getWhiteList() {
-		return whiteList;
-	}
-	
-	public Set<String> getLessThanVariations() {
-		return lessThan;
-	}
-
-	private Set<String> readWhiteList(String file) {
-
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream(file);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		InputStreamReader isr = null;
-		try {
-			isr = new InputStreamReader(fis, "UTF8");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		LineNumberReader reader = new LineNumberReader(isr);
-
-		String HTML_TAG_PATTERN = "<(\"[^\"]*\"|'[^']*'|[^'\">])*>";
-		Pattern pattern = Pattern.compile(HTML_TAG_PATTERN);
-
-		String currentLine;
-
-		try {
-			while ((currentLine = reader.readLine()) != null) {
-
-				// Normalize text
-				currentLine = Normalizer.normalize(currentLine,
-						Normalizer.Form.NFC);
-
-				// Unescape entities
-				currentLine = StringEscapeUtils.unescapeHtml4(currentLine);
-
-				Matcher matcher = pattern.matcher(currentLine);
-
-				while (matcher.find()) {
-					whiteList.add(matcher.group());
-				}
-
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// Close the stream
-		try {
-			reader.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		try {
-			for (String s : addTagsFromToolbar(getToolBar())) {
-
-				whiteList.add(s);
-
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+	public Whitelist getWhiteList() {
 		return whiteList;
 	}
 
-	private Set<String> addTagsFromToolbar(String path) throws IOException {
+	private Whitelist getWL() {
 
-		Set<String> tagstb = new HashSet<String>();
+		whiteList.addAttributes("table", "border");
+		whiteList.addAttributes("font", "size", "face", "style");
+		whiteList.addAttributes("span", "style");
+		whiteList.addAttributes("br", "clear");
+		whiteList.addTags("sub");
+		whiteList.addTags("b");
+		whiteList.addTags("p");
+		whiteList.addTags("tr");
+		whiteList.addTags("div");
+		whiteList.addTags("td");
+		whiteList.addTags("sup");
+		whiteList.addTags("br");
+		whiteList.addTags("i");
+		whiteList.addTags("sup");
 
-		File toRead = new File(path);
-		FileInputStream inputStream = new FileInputStream(toRead);
-		InputStreamReader inputStreamReader = new InputStreamReader(
-				inputStream, "UTF8");
-		LineNumberReader reader = new LineNumberReader(inputStreamReader);
-
-		String currentLine;
-
-		while ((currentLine = reader.readLine()) != null) {
-
-			// Normalize text
-			currentLine = Normalizer
-					.normalize(currentLine, Normalizer.Form.NFC);
-
-			tagstb.add(currentLine);
-
-		}
-
-		reader.close();
-		return tagstb;
-	}
-	
-	
-	private Set<String> addLessThanVariations(String path) throws IOException {
-
-		Set<String> tagstb = new HashSet<String>();
-
-		File toRead = new File(path);
-		FileInputStream inputStream = new FileInputStream(toRead);
-		InputStreamReader inputStreamReader = new InputStreamReader(
-				inputStream, "UTF8");
-		LineNumberReader reader = new LineNumberReader(inputStreamReader);
-
-		String currentLine;
-
-		while ((currentLine = reader.readLine()) != null) {
-
-			// Normalize text
-			currentLine = Normalizer
-					.normalize(currentLine, Normalizer.Form.NFC);
-
-			tagstb.add(currentLine);
-
-		}
-
-		reader.close();
-		return tagstb;
+		return whiteList;
 	}
 
 }
