@@ -25,7 +25,7 @@
 					
 					<h3 class="title"><fmt:message key="entry.title"/></h3>
 					<div >
-						<img class="img_dict" src="${dictContext}/assets/img/cuico-img.png" alt="img-cuico" width="850px" height="300px"/>
+						<img class="img_dict" src="${dictContext}/assets/img/cuico.png" alt="img-cuico" width="850px" height="300px"/>
 				     </div>
 					<div class="exp">
 						<fmt:message key="entry.explanation"/>
@@ -33,7 +33,7 @@
 					
 					<h3 class="title"><fmt:message key="edit.title"/></h3>
 					<div >
-						<img class="img_dict" src="${dictContext}/assets/img/cuico_editor-img.png" alt="img-editor" width="850px" height="300px"/>
+						<img class="img_dict" src="${dictContext}/assets/img/huahua_editor.png" alt="img-editor" width="850px" height="300px"/>
 				     </div>
 					<div class="exp">
 						<fmt:message key="edit.explanation"/>
