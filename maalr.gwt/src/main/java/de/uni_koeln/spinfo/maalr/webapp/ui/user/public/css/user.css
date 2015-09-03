@@ -440,7 +440,8 @@ ul#navi_bottom_menu {
 }
 
 #navi_bottom_menu a {
-	font-weight: 300;
+	font-weight: 400;
+	font-size: 14px;
 	color: #eaf0f2;
 	padding-right: 30px;
 	text-decoration: none;
