@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.spinfo.uni_koeln.html_parser.data.RawEntry;
@@ -22,7 +27,7 @@ public class ParseHtmlTest {
 	// 2. modifyTags
 	// 3. addEntryTags
 	// 4. identateEntries
-
+	@Ignore
 	@Test
 	public void doTheFirstThreeSteps() throws IOException {
 
@@ -45,13 +50,19 @@ public class ParseHtmlTest {
 
 		File f = new File(ParseHtml.input_dir + ParseHtml.markedLemmata);
 
-		List<RawEntry> rawEntries = parser.identateEntries(f);
+		List<RawEntry> rawEntries = parser.formatEntries(f);
 
-		FileUtils.printList(rawEntries, ParseHtml.output_dir, "rawEntries_",
-				"txt");
+		// int max_length_content = parser.getMaxLengthContent(rawEntries);
+
+		// Get the longest string in content
+		// System.out.println(max_length_content);
+//
+		FileUtils.printList(rawEntries, ParseHtml.output_dir,
+				"rawEntries", "txt");
 
 	}
 
+	@Ignore
 	@Test
 	public void getPageMappingTest() throws IOException {
 
@@ -63,6 +74,7 @@ public class ParseHtmlTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void getAllFontTypes() throws IOException {
 
@@ -79,4 +91,5 @@ public class ParseHtmlTest {
 
 	}
 
+	
 }
