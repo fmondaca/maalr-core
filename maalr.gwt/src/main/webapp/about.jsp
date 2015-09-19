@@ -3,7 +3,7 @@
 <%@ page import="de.uni_koeln.spinfo.maalr.common.server.util.Configuration" %>
 <%@ page import="de.uni_koeln.spinfo.maalr.common.shared.searchconfig.Localizer" %>
 
-<fmt:setLocale value="<%=session.getAttribute("pl")%>" />
+<fmt:setLocale value='<%=session.getAttribute("pl")%>' />
 <fmt:setBundle basename="de.uni_koeln.spinfo.maalr.webapp.i18n.text" />
 
 
