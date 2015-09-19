@@ -23,7 +23,7 @@
 			<div class="container well" id="login_container">
 				<h1><fmt:message key="maalr.login.header" /></h1>
 				<br>
-				<%-- login info text 
+				<%-- login info text --%>
 				<div id="maalr_login_info">
 					<span class="glyphicon icon-info-sign"></span>
 					<p><fmt:message key="maalr.login.welcome" /></p>
@@ -47,7 +47,7 @@
 						</div>
 					</div>
 				</form>
-				<hr> --%>
+				<hr> 
 				<%-- OPEN-ID SIGN IN --%>
 				<div id="openid_login"> 
 					<div class="input_wrapper">
