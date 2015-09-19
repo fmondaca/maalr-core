@@ -46,7 +46,7 @@ public class ParseHtmlTest {
 	// Do the final one
 	// @Ignore
 	@Test
-	public void testIdentateEntries() throws IOException {
+	public void testFormatEntries() throws IOException {
 
 		File f = new File(ParseHtml.input_dir + ParseHtml.markedLemmata);
 
