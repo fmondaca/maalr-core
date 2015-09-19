@@ -293,7 +293,7 @@ public class ParseHtml {
 
 	}
 
-	public List<RawEntry> identateEntries(File toRead) throws IOException {
+	public List<RawEntry> formatEntries(File toRead) throws IOException {
 		List<RawEntry> entries = new ArrayList<>();
 		FileInputStream inputStream = new FileInputStream(toRead);
 		InputStreamReader inputStreamReader = new InputStreamReader(
