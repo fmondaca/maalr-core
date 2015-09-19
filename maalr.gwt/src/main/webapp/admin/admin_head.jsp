@@ -13,9 +13,9 @@
 
 <!DOCTYPE html>
 
-<html lang="<%=session.getAttribute("pl")%>">
+<html lang='<%=session.getAttribute("pl")%>'>
 
-<fmt:setLocale value="<%=session.getAttribute("pl") %>" />
+<fmt:setLocale value='<%=session.getAttribute("pl")%>' />
 <fmt:setBundle basename="de.uni_koeln.spinfo.maalr.webapp.i18n.text" />
 
 <head>

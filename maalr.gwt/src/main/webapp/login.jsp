@@ -6,7 +6,7 @@
 <%@ taglib prefix='c' uri='http://java.sun.com/jstl/core_rt' %>
 <%@ taglib prefix='fmt' uri='http://java.sun.com/jsp/jstl/fmt' %>
 
-<fmt:setLocale value="<%=session.getAttribute("pl")%>" />
+<fmt:setLocale value='<%=session.getAttribute("pl")%>'/>
 <fmt:setBundle basename="de.uni_koeln.spinfo.maalr.webapp.i18n.text" />
 
 <%-- HTML HEADER --%>
@@ -23,7 +23,7 @@
 			<div class="container well" id="login_container">
 				<h1><fmt:message key="maalr.login.header" /></h1>
 				<br>
-				<%-- login info text  --%>
+				<%-- login info text 
 				<div id="maalr_login_info">
 					<span class="glyphicon icon-info-sign"></span>
 					<p><fmt:message key="maalr.login.welcome" /></p>
@@ -47,7 +47,7 @@
 						</div>
 					</div>
 				</form>
-				<hr>
+				<hr> --%>
 				<%-- OPEN-ID SIGN IN --%>
 				<div id="openid_login"> 
 					<div class="input_wrapper">
