@@ -102,8 +102,7 @@ body {
 }
 
 a#maalr-current-user {
-	color: #000 !important;
-	margin-left: -120px;
+	color: #eaf0f2;
 }
 
 ul.nav a#editor_backend {
