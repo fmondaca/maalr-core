@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <dictionaryConfiguration>
-	
+
 	<databaseColumns>
 		<column name="Lemma" />
 		<column name="Content" />
@@ -117,16 +117,16 @@
 			<uifield id="method" type="RADIO" />
 			<!-- <uifield id="pageSize" buildin="true" type="COMBO" label="Results 
 				per Page"/> -->
-			<uifield id="highlight" buildin="true" type="CHECKBOX" />
+			<!--<uifield id="highlight" buildin="true" type="CHECKBOX" /> -->
 			<uifield id="suggestions" buildin="true" type="CHECKBOX" />
 		</advancedFrontendQueryFields>
 		<defaultBackendQueryFields>
 			<uifield id="searchPhrase" type="TEXT" submit="true" />
-			<uifield id="highlight" buildin="true" type="CHECKBOX" />
+			<!--<uifield id="highlight" buildin="true" type="CHECKBOX" /> -->
 		</defaultBackendQueryFields>
 		<advancedBackendQueryFields>
 			<uifield id="searchPhrase" type="TEXT" submit="true" />
-			<uifield id="highlight" buildin="true" type="CHECKBOX" />
+			<!--<uifield id="highlight" buildin="true" type="CHECKBOX" /> -->
 			<uifield id="language" type="RADIO" />
 			<uifield id="method" type="RADIO" />
 			<!-- <uifield id="category" type="ORACLE" /> <uifield id="subSemantics" 
