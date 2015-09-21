@@ -66,13 +66,22 @@ public class LexServiceImpl implements LexService {
 		String lemma_new = toUpdate.get("Lemma").trim();
 		String content_new = toUpdate.get("Content").trim();
 		String correction_new = toUpdate.get("Correction").trim();
+		String correction_src = entry.getEntryValue("Correction").trim();
 
-		// // Clean input
+		// Clean input
 		lemma_new = Jsoup.clean(lemma_new, whiteList);
 		content_new = Jsoup.clean(content_new, whiteList);
 		correction_new = Jsoup.clean(correction_new, whiteList);
+		int correction = Integer.parseInt(correction_new);
 
-		entry = updateEntryValues(entry, lemma_new, content_new, correction_new);
+		if ((correction_new.equals(correction_src))) {
+			throw new MaalrException("dialog.nocorrection");
+		} else if (correction > 100 || correction <= 15) {
+			throw new MaalrException("correction.wrongvalue");
+		} else {
+			entry = updateEntryValues(entry, lemma_new, content_new,
+					correction_new);
+		}
 
 		// WRITE CHANGES INTO THE DB
 		try {
