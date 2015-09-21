@@ -146,7 +146,7 @@ public class DataLoader {
 				}
 
 				LexEntry entry = new LexEntry(version);
-				System.out.println(entry.toString());
+				//System.out.println(entry.toString());
 				entry.setCurrent(version);
 				entry.getCurrent().setStatus(Status.NEW_ENTRY);
 				entry.getCurrent().setVerification(Verification.ACCEPTED);
@@ -162,7 +162,7 @@ public class DataLoader {
 				entry.getCurrent().setCreatorRole(Role.ADMIN_5);
 				entries.add(Converter.convertLexEntry(entry));
 
-				System.out.println(version.toString());
+				//System.out.println(version.toString());
 				if (entries.size() == 100) {
 					db.insertBatch(entries);
 					entries.clear();

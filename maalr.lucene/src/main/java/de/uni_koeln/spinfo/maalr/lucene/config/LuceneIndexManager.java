@@ -811,7 +811,7 @@ public class LuceneIndexManager {
 				.entrySet();
 		for (Entry<String, String> entry : entries) {
 
-			logger.info("adding field: " + entry);
+			//logger.info("adding field: " + entry);
 
 			if (ignored.contains(entry.getKey()))
 				continue;
