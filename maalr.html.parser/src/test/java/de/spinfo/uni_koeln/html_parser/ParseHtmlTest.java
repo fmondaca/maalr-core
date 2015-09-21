@@ -26,7 +26,7 @@ public class ParseHtmlTest {
 	// 1. mark uncorrected entries
 	// 2. modifyTags
 	// 3. addEntryTags
-	// 4. identateEntries
+	// 4. formatEntries
 	@Ignore
 	@Test
 	public void doTheFirstThreeSteps() throws IOException {
@@ -51,14 +51,16 @@ public class ParseHtmlTest {
 		File f = new File(ParseHtml.input_dir + ParseHtml.markedLemmata);
 
 		List<RawEntry> rawEntries = parser.formatEntries(f);
+		
+		System.out.println(rawEntries.size());
 
 		// int max_length_content = parser.getMaxLengthContent(rawEntries);
 
 		// Get the longest string in content
 		// System.out.println(max_length_content);
 //
-		FileUtils.printList(rawEntries, ParseHtml.output_dir,
-				"rawEntries", "txt");
+//		FileUtils.printList(rawEntries, ParseHtml.output_dir,
+//				"rawEntries", "txt");
 
 	}
 
