@@ -354,56 +354,45 @@ public class LemmaEditorWidget extends SimplePanel {
 		corr = corr.replaceAll("[^\\d]", "");
 
 		toUpdate.put("Correction", corr);
-		int correction = Integer.parseInt(corr);
 
-		if (correction > 100 || correction < 15) {
+		AsyncCallback<String> callback = new AsyncCallback<String>() {
 
-			Window.alert(translation.get("correction.wrongvalue"));
-			ok.setEnabled(false);
-			popup.hide();
-			return;
+			@Override
+			public void onFailure(Throwable caught) {
+				cancel.setEnabled(true);
+				reset.setEnabled(true);
+				ok.setText(translation.get("button.ok"));
+				ok.setType(ButtonType.DANGER);
+				ok.setEnabled(false);
+				Dialog.showError(translation.get("dialog.failure"),
+						translation.get(caught.getMessage())); // exception
+																// from
+																// SpringBackend
 
-		} else {
+				popup.hide();
+				return;
 
-			AsyncCallback<String> callback = new AsyncCallback<String>() {
+			}
 
-				@Override
-				public void onFailure(Throwable caught) {
-					cancel.setEnabled(true);
-					reset.setEnabled(true);
-					ok.setText(translation.get("button.ok"));
-					ok.setType(ButtonType.DANGER);
-					ok.setEnabled(false);
-					Dialog.showError(translation.get("dialog.failure"),
-							translation.get(caught.getMessage())); // exception
-																	// from
-																	// SpringBackend
+			@Override
+			public void onSuccess(String result) {
+				ok.setText(translation.get("dialog.success"));
+				ok.setType(ButtonType.SUCCESS);
+				Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
 
-					popup.hide();
-					return;
+					@Override
+					public boolean execute() {
+						popup.hide();
+						return false;
+					}
+				}, 1000);
 
-				}
+			}
 
-				@Override
-				public void onSuccess(String result) {
-					ok.setText(translation.get("dialog.success"));
-					ok.setType(ButtonType.SUCCESS);
-					Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
+		};
 
-						@Override
-						public boolean execute() {
-							popup.hide();
-							return false;
-						}
-					}, 1000);
+		lexService.suggestModification(lemma, toUpdate, callback);
 
-				}
-
-			};
-
-			lexService.suggestModification(lemma, toUpdate, callback);
-
-		}
 	}
 
 	public void updateFromAdvancedEditor(LemmaVersion lemma) {
