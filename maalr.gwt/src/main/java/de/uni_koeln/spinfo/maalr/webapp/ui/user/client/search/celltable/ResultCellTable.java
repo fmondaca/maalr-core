@@ -103,13 +103,13 @@ public class ResultCellTable extends Composite {
 
 	private LemmaDescription description;
 
-	private Column<LemmaVersion, SafeHtml> columnA;
+	private Column<LemmaVersion, SafeHtml> lemmaColumn;
 
-	private Column<LemmaVersion, SafeHtml> columnB;
-
-	private Column<LemmaVersion, String> optionsColumn;
+	private Column<LemmaVersion, SafeHtml> contentColumn;
 
 	private Column<LemmaVersion, String> correctionColumn;
+
+	private Column<LemmaVersion, String> editColumn;
 
 	private Column<LemmaVersion, String> imageColumn;
 
@@ -126,18 +126,17 @@ public class ResultCellTable extends Composite {
 	};
 
 	public ResultCellTable() {
-		AsyncLemmaDescriptionLoader
-				.afterLemmaDescriptionLoaded(new AsyncCallback<LemmaDescription>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						// TODO Auto-generated method stub
-					}
+		AsyncLemmaDescriptionLoader.afterLemmaDescriptionLoaded(new AsyncCallback<LemmaDescription>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+			}
 
-					@Override
-					public void onSuccess(LemmaDescription result) {
-						description = result;
-					}
-				});
+			@Override
+			public void onSuccess(LemmaDescription result) {
+				description = result;
+			}
+		});
 
 		cellTable = new CellTable<LemmaVersion>(KEY_PROVIDER);
 		cellTable.addStyleName("resultlist");
@@ -192,21 +191,18 @@ public class ResultCellTable extends Composite {
 	// });
 	// }
 
-	private void addColumnA(String langA, final boolean b) {
+	private void addLemmaColumn(String langA, final boolean b) {
 
 		final SafeHtmlCell leftCell = new SafeHtmlCell();
-		columnA = new Column<LemmaVersion, SafeHtml>(leftCell) {
+		lemmaColumn = new Column<LemmaVersion, SafeHtml>(leftCell) {
 
 			@Override
 			public SafeHtml getValue(LemmaVersion object) {
 				SafeHtmlBuilder sb = new SafeHtmlBuilder();
-				String toDisplay = description.toString(object,
-						UseCase.RESULT_LIST, b);
-				String redirect = b ? object.getEntryValue("redirect_a")
-						: object.getEntryValue("redirect_b");
+				String toDisplay = description.toString(object, UseCase.RESULT_LIST, b);
+				String redirect = b ? object.getEntryValue("redirect_a") : object.getEntryValue("redirect_b");
 				if (maalrQuery.isHighlight() && redirect == null) {
-					toDisplay = Highlighter.highlight(toDisplay,
-							maalrQuery.getValue("searchPhrase"));
+					toDisplay = Highlighter.highlight(toDisplay, maalrQuery.getValue("searchPhrase"));
 				}
 				if (redirect != null) {
 					MaalrQuery mq = new MaalrQuery();
@@ -214,16 +210,13 @@ public class ResultCellTable extends Composite {
 					mq.setQueryValue(redir[0], redir[1]);
 					String text = redir[1];
 					if (maalrQuery.isHighlight()) {
-						text = Highlighter.highlight(text,
-								maalrQuery.getValue("searchPhrase"));
+						text = Highlighter.highlight(text, maalrQuery.getValue("searchPhrase"));
 					}
-					String url = "<a href=\"" + Window.Location.getPath() + "#"
-							+ mq.toURL() + "\">" + text + "</a>";
+					String url = "<a href=\"" + Window.Location.getPath() + "#" + mq.toURL() + "\">" + text + "</a>";
 					toDisplay = toDisplay.replace(redir[1], url);
 				}
 				if (!object.isApproved()) {
-					toDisplay = "<span class=\"unverified\">" + toDisplay
-							+ "</span>";
+					toDisplay = "<span class=\"unverified\">" + toDisplay + "</span>";
 				}
 
 				// Render HTML properly
@@ -234,27 +227,21 @@ public class ResultCellTable extends Composite {
 			}
 		};
 
-		cellTable.addColumn(
-				columnA,
-				new SafeHtmlBuilder().appendHtmlConstant(
-						"<span class=\"maalr_result_title\">" + langA
-								+ "</span>").toSafeHtml());
+		cellTable.addColumn(lemmaColumn, new SafeHtmlBuilder()
+				.appendHtmlConstant("<span class=\"maalr_result_title\">" + langA + "</span>").toSafeHtml());
 	}
 
-	private void addColumnB(String langB, final boolean b) {
-		columnB = new Column<LemmaVersion, SafeHtml>(new SafeHtmlCell()) {
+	private void addContentColumn(String langB, final boolean b) {
+		contentColumn = new Column<LemmaVersion, SafeHtml>(new SafeHtmlCell()) {
 
 			@Override
 			public SafeHtml getValue(LemmaVersion object) {
 				SafeHtmlBuilder sb = new SafeHtmlBuilder();
-				String toDisplay = description.toString(object,
-						UseCase.RESULT_LIST, b);
+				String toDisplay = description.toString(object, UseCase.RESULT_LIST, b);
 
-				String redirect = b ? object.getEntryValue("redirect_a")
-						: object.getEntryValue("redirect_b");
+				String redirect = b ? object.getEntryValue("redirect_a") : object.getEntryValue("redirect_b");
 				if (maalrQuery.isHighlight() && redirect == null) {
-					toDisplay = Highlighter.highlight(toDisplay,
-							maalrQuery.getValue("searchPhrase"));
+					toDisplay = Highlighter.highlight(toDisplay, maalrQuery.getValue("searchPhrase"));
 				}
 				if (redirect != null) {
 					MaalrQuery mq = new MaalrQuery();
@@ -262,18 +249,14 @@ public class ResultCellTable extends Composite {
 					mq.setQueryValue(redir[0], redir[1]);
 					String text = redir[1];
 					if (maalrQuery.isHighlight()) {
-						text = Highlighter.highlight(text,
-								maalrQuery.getValue("searchPhrase"));
+						text = Highlighter.highlight(text, maalrQuery.getValue("searchPhrase"));
 					}
-					String url = "<a href=\"" + Window.Location.getPath() + "#"
-							+ mq.toURL() + "\">" + text + "</a>";
+					String url = "<a href=\"" + Window.Location.getPath() + "#" + mq.toURL() + "\">" + text + "</a>";
 					toDisplay = toDisplay.replace(redir[1], url);
-					toDisplay = "<a href=\"" + mq.toURL() + "\">" + redir[1]
-							+ "</a>";
+					toDisplay = "<a href=\"" + mq.toURL() + "\">" + redir[1] + "</a>";
 				}
 				if (!object.isApproved()) {
-					toDisplay = "<span class=\"unverified\">" + toDisplay
-							+ "</span>";
+					toDisplay = "<span class=\"unverified\">" + toDisplay + "</span>";
 				}
 
 				// Render HTML properly
@@ -284,80 +267,11 @@ public class ResultCellTable extends Composite {
 			}
 
 		};
-		cellTable.addColumn(
-				columnB,
-				new SafeHtmlBuilder().appendHtmlConstant(
-						"<span class=\"maalr_result_title\">" + langB
-								+ "</span>").toSafeHtml());
+		cellTable.addColumn(contentColumn, new SafeHtmlBuilder()
+				.appendHtmlConstant("<span class=\"maalr_result_title\">" + langB + "</span>").toSafeHtml());
 	}
 
-	private void addOptionsColumn(TranslationMap translationMap) {
-
-		final TextButtonCell cell = new TextButtonCell() {
-
-			@Override
-			public Set<String> getConsumedEvents() {
-				Set<String> consumed = new HashSet<String>();
-				consumed.add(BrowserEvents.CLICK);
-				return consumed;
-			}
-
-			@Override
-			public void onBrowserEvent(
-					com.google.gwt.cell.client.Cell.Context context,
-					Element parent, String value, NativeEvent event,
-					ValueUpdater<String> valueUpdater) {
-				super.onBrowserEvent(context, parent, value, event,
-						valueUpdater);
-				if (event.getType().equals(BrowserEvents.CLICK)) {
-					LemmaVersion selected = dataProvider.getList().get(
-							hoveredRow);
-
-					// Workaround not to open the editor, because setEnabled
-					// does not appear to block this call
-					if (!selected.getEntryValue("Correction").equals("100")) {
-						onButtonClicked(selected);
-					}
-
-				}
-			}
-
-			private void onButtonClicked(LemmaVersion selected) {
-				final LemmaVersion lemma = new LemmaVersion();
-				lemma.setEntryValues(selected.getEntryValues());
-				lemma.setMaalrValues(selected.getMaalrValues());
-
-				openModifyEditor(lemma);
-			}
-		};
-
-		final String modify = translationMap.get("maalr.query.result_modify");
-
-		optionsColumn = new Column<LemmaVersion, String>(cell) {
-
-			@Override
-			public String getValue(LemmaVersion object) {
-
-				if (object.getEntryValue("Correction").equals("100")) {
-
-					cell.setEnabled(false);
-
-				} else {
-
-					cell.setEnabled(true);
-
-				}
-
-				return modify;
-			}
-
-		};
-
-		cellTable.addColumn(optionsColumn);
-
-	}
-
-	private void addPercentageColumn() {
+	private void addCorrectionColumn() {
 
 		final LabelCell progressCell = new LabelCell(LabelType.WARNING);
 
@@ -380,6 +294,68 @@ public class ResultCellTable extends Composite {
 
 	}
 
+	private void addEditColumn(TranslationMap translationMap) {
+
+		final TextButtonCell cell = new TextButtonCell() {
+
+			@Override
+			public Set<String> getConsumedEvents() {
+				Set<String> consumed = new HashSet<String>();
+				consumed.add(BrowserEvents.CLICK);
+				return consumed;
+			}
+
+			@Override
+			public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value,
+					NativeEvent event, ValueUpdater<String> valueUpdater) {
+				super.onBrowserEvent(context, parent, value, event, valueUpdater);
+				if (event.getType().equals(BrowserEvents.CLICK)) {
+					LemmaVersion selected = dataProvider.getList().get(hoveredRow);
+
+					// Workaround not to open the editor, because setEnabled
+					// does not appear to block this call
+					if (!selected.getEntryValue("Correction").equals("100")) {
+						onButtonClicked(selected);
+					}
+
+				}
+			}
+
+			private void onButtonClicked(LemmaVersion selected) {
+				final LemmaVersion lemma = new LemmaVersion();
+				lemma.setEntryValues(selected.getEntryValues());
+				lemma.setMaalrValues(selected.getMaalrValues());
+
+				openModifyEditor(lemma);
+			}
+		};
+
+		final String modify = translationMap.get("maalr.query.result_modify");
+
+		editColumn = new Column<LemmaVersion, String>(cell) {
+
+			@Override
+			public String getValue(LemmaVersion object) {
+
+				if (object.getEntryValue("Correction").equals("100")) {
+
+					cell.setEnabled(false);
+
+				} else {
+
+					cell.setEnabled(true);
+
+				}
+
+				return modify;
+			}
+
+		};
+
+		cellTable.addColumn(editColumn);
+
+	}
+
 	private void addImageColumn(TranslationMap translationMap) {
 
 		final ButtonCell cell = new ButtonCell(IconType.BOOK) {
@@ -392,15 +368,11 @@ public class ResultCellTable extends Composite {
 			}
 
 			@Override
-			public void onBrowserEvent(
-					com.google.gwt.cell.client.Cell.Context context,
-					Element parent, String value, NativeEvent event,
-					ValueUpdater<String> valueUpdater) {
-				super.onBrowserEvent(context, parent, value, event,
-						valueUpdater);
+			public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value,
+					NativeEvent event, ValueUpdater<String> valueUpdater) {
+				super.onBrowserEvent(context, parent, value, event, valueUpdater);
 				if (event.getType().equals(BrowserEvents.CLICK)) {
-					LemmaVersion selected = dataProvider.getList().get(
-							hoveredRow);
+					LemmaVersion selected = dataProvider.getList().get(hoveredRow);
 					openModal(selected);
 				}
 			}
@@ -506,8 +478,7 @@ public class ResultCellTable extends Composite {
 							setSuggestVisible(false);
 							return;
 						} else {
-							info = info.replaceAll("\\{0\\}",
-									MaalrQueryFormatter.getQueryLabel(query));
+							info = info.replaceAll("\\{0\\}", MaalrQueryFormatter.getQueryLabel(query));
 							// info = info.replaceAll("\\{1\\}",
 							// result.get("suggest.button"));
 							label.setHTML(info);
@@ -547,8 +518,7 @@ public class ResultCellTable extends Composite {
 		}
 	}
 
-	private void addColumns(final MaalrQuery maalrQuery,
-			final List<LemmaVersion> dataList) {
+	private void addColumns(final MaalrQuery maalrQuery, final List<LemmaVersion> dataList) {
 
 		LocalizedStrings.afterLoad(new AsyncCallback<TranslationMap>() {
 
@@ -565,12 +535,10 @@ public class ResultCellTable extends Composite {
 					defaultOrder = false;
 				}
 
-				addColumnA(translationMap.get(description
-						.getLanguageName(defaultOrder)), defaultOrder);
-				addColumnB(translationMap.get(description
-						.getLanguageName(!defaultOrder)), !defaultOrder);
-				addPercentageColumn();
-				addOptionsColumn(translationMap);
+				addLemmaColumn(translationMap.get(description.getLanguageName(defaultOrder)), defaultOrder);
+				addContentColumn(translationMap.get(description.getLanguageName(!defaultOrder)), !defaultOrder);
+				addCorrectionColumn();
+				addEditColumn(translationMap);
 				addImageColumn(translationMap);
 
 			}
@@ -579,11 +547,9 @@ public class ResultCellTable extends Composite {
 	}
 
 	private void addResultLabel(MaalrQuery maalrQuery, final QueryResult result) {
-		int a = ((maalrQuery.getPageNr() + 1) * maalrQuery.getPageSize())
-				- (maalrQuery.getPageSize() - 1);
+		int a = ((maalrQuery.getPageNr() + 1) * maalrQuery.getPageSize()) - (maalrQuery.getPageSize() - 1);
 		int b = ((maalrQuery.getPageNr() + 1) * maalrQuery.getPageSize());
-		if (((maalrQuery.getPageNr() + 1) * maalrQuery.getPageSize()) > result
-				.getMaxEntries()) {
+		if (((maalrQuery.getPageNr() + 1) * maalrQuery.getPageSize()) > result.getMaxEntries()) {
 			b = result.getMaxEntries();
 		}
 		final String formatted = MaalrQueryFormatter.getQueryLabel(maalrQuery);
@@ -598,12 +564,10 @@ public class ResultCellTable extends Composite {
 					toShow = toShow.replaceAll("\\{0\\}", "");
 					toShow = toShow.replaceAll("\\{1\\}", first + "");
 					toShow = toShow.replaceAll("\\{2\\}", last + "");
-					toShow = toShow.replaceAll("\\{3\\}",
-							result.getMaxEntries() + "");
-					String text = "<span style=\"font-size: large;font-weight: bold; text-align: left;\">"
-							+ toShow + "</span>";
-					String wrappedSearchPhraseForCss = "<span id=\"searchphrase\">"
-							+ formatted + "</span>";
+					toShow = toShow.replaceAll("\\{3\\}", result.getMaxEntries() + "");
+					String text = "<span style=\"font-size: large;font-weight: bold; text-align: left;\">" + toShow
+							+ "</span>";
+					String wrappedSearchPhraseForCss = "<span id=\"searchphrase\">" + formatted + "</span>";
 					label.setHTML(wrappedSearchPhraseForCss + text);
 				}
 
