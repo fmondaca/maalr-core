@@ -373,7 +373,7 @@ public class ResultCellTable extends Composite {
 				super.onBrowserEvent(context, parent, value, event, valueUpdater);
 				if (event.getType().equals(BrowserEvents.CLICK)) {
 					LemmaVersion selected = dataProvider.getList().get(hoveredRow);
-					openModal(selected);
+					openImageModal(selected);
 				}
 			}
 
@@ -390,7 +390,7 @@ public class ResultCellTable extends Composite {
 
 	}
 
-	private void openModal(LemmaVersion selected) {
+	private void openImageModal(LemmaVersion selected) {
 		final Modal popup = new Modal(true);
 		popup.setBackdrop(BackdropType.STATIC);
 		popup.setCloseVisible(true);
