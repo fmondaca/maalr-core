@@ -294,9 +294,9 @@ public class ResultCellTable extends Composite {
 
 	}
 
-	private void addEditColumn(TranslationMap translationMap) {
+	private void addEditColumn() {
 
-		final TextButtonCell cell = new TextButtonCell() {
+		final ButtonCell cell = new ButtonCell(IconType.EDIT_SIGN){
 
 			@Override
 			public Set<String> getConsumedEvents() {
@@ -308,13 +308,15 @@ public class ResultCellTable extends Composite {
 			@Override
 			public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value,
 					NativeEvent event, ValueUpdater<String> valueUpdater) {
+
 				super.onBrowserEvent(context, parent, value, event, valueUpdater);
 				if (event.getType().equals(BrowserEvents.CLICK)) {
 					LemmaVersion selected = dataProvider.getList().get(hoveredRow);
 
-					// Workaround not to open the editor, because setEnabled
-					// does not appear to block this call
-					if (!selected.getEntryValue("Correction").equals("100")) {
+
+					Element editButton = parent.getFirstChildElement();
+					Element editS = editButton.getFirstChildElement();
+					if (!selected.getEntryValue("Correction").equals("100") && event.getEventTarget().equals(editButton)||event.getEventTarget().equals(editS)) {
 						onButtonClicked(selected);
 					}
 
@@ -330,7 +332,6 @@ public class ResultCellTable extends Composite {
 			}
 		};
 
-		final String modify = translationMap.get("maalr.query.result_modify");
 
 		editColumn = new Column<LemmaVersion, String>(cell) {
 
@@ -339,15 +340,15 @@ public class ResultCellTable extends Composite {
 
 				if (object.getEntryValue("Correction").equals("100")) {
 
-					cell.setEnabled(false);
+					cell.setIcon(IconType.LOCK);
 
 				} else {
 
-					cell.setEnabled(true);
+					cell.setIcon(IconType.EDIT_SIGN);
 
 				}
 
-				return modify;
+				return "";
 			}
 
 		};
@@ -356,7 +357,7 @@ public class ResultCellTable extends Composite {
 
 	}
 
-	private void addImageColumn(TranslationMap translationMap) {
+	private void addImageColumn() {
 
 		final ButtonCell cell = new ButtonCell(IconType.BOOK) {
 
@@ -370,8 +371,12 @@ public class ResultCellTable extends Composite {
 			@Override
 			public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value,
 					NativeEvent event, ValueUpdater<String> valueUpdater) {
+
 				super.onBrowserEvent(context, parent, value, event, valueUpdater);
-				if (event.getType().equals(BrowserEvents.CLICK)) {
+
+				Element imageButton = parent.getFirstChildElement();
+				Element imageS = imageButton.getFirstChildElement();
+				if (event.getType().equals(BrowserEvents.CLICK) && event.getEventTarget().equals(imageButton) || event.getEventTarget().equals(imageS)  ) {
 					LemmaVersion selected = dataProvider.getList().get(hoveredRow);
 					openImageModal(selected);
 				}
@@ -538,8 +543,8 @@ public class ResultCellTable extends Composite {
 				addLemmaColumn(translationMap.get(description.getLanguageName(defaultOrder)), defaultOrder);
 				addContentColumn(translationMap.get(description.getLanguageName(!defaultOrder)), !defaultOrder);
 				addCorrectionColumn();
-				addEditColumn(translationMap);
-				addImageColumn(translationMap);
+				addEditColumn();
+				addImageColumn();
 
 			}
 		});
