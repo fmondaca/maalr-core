@@ -34,6 +34,7 @@ import com.github.gwtbootstrap.client.ui.ListBox;
 import com.github.gwtbootstrap.client.ui.RadioButton;
 import com.github.gwtbootstrap.client.ui.base.TextBox;
 import com.github.gwtbootstrap.client.ui.constants.FormType;
+import com.github.gwtbootstrap.client.ui.constants.IconType;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
@@ -307,7 +308,7 @@ public class ConfigurableSearchArea extends Form {
 		group.add(widget);
 		
 		if(field.hasSubmitButton()) {
-			submit = new Button(field.getSubmitLabel());
+			submit = new Button("",IconType.SEARCH);
 			submit.getElement().getStyle().setMarginLeft(10, Unit.PX);
 			final Widget tmp = widget;
 			submit.addClickHandler(new ClickHandler() {
