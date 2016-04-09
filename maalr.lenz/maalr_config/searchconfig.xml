@@ -21,13 +21,7 @@
 		<!-- Depending on the selected language, a query is executed on different 
 			fields. Note that the language selection choice MUST be named language. -->
 		<columnSelector id="language">
-			<options>
-				<option id="both" default="true">
-					<columns>
-						<column reference="Lemma_txt" />
-						<column reference="Content_txt" />
-					</columns>
-				</option>
+			<options>	
 				<option id="lemma">
 					<columns>
 						<column reference="Lemma_txt" />
@@ -35,6 +29,12 @@
 				</option>
 				<option id="content">
 					<columns>
+						<column reference="Content_txt" />
+					</columns>
+				</option>
+				<option id="both" default="true">
+					<columns>
+						<column reference="Lemma_txt" />
 						<column reference="Content_txt" />
 					</columns>
 				</option>
