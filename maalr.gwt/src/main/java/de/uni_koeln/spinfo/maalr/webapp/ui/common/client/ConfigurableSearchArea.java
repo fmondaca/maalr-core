@@ -214,6 +214,7 @@ public class ConfigurableSearchArea extends Form {
 		
 		add(optionsPanel);
 		extended = new Button();
+		extended.setIcon(IconType.WRENCH);
 		//extended.setText(configuration.getMoreLabel());
 		extended.addClickHandler(new ClickHandler() {
 			
@@ -221,8 +222,10 @@ public class ConfigurableSearchArea extends Form {
 			public void onClick(ClickEvent event) {
 				if(configuration == defaultConfiguration) {
 					setExtended(true);
+					extended.setIcon(IconType.CHEVRON_UP);
 				} else {
 					setExtended(false);
+					extended.setIcon(IconType.WRENCH);
 				}
 			}
 		});
@@ -240,13 +243,13 @@ public class ConfigurableSearchArea extends Form {
 				public void onSuccess(ArrayList<UiConfiguration> results) {
 					defaultConfiguration = results.get(0);
 					extendedConfiguration = results.get(1);
-					extended.setText(defaultConfiguration.getMoreLabel());
+					//extended.setText(defaultConfiguration.getMoreLabel());
 					configuration = defaultConfiguration;
 					buildSearchPanel(configuration);
 				}
 			});
 		} else {
-			extended.setText(configuration.getMoreLabel());
+			//extended.setText(configuration.getMoreLabel());
 			buildSearchPanel(configuration);
 		}
 	}
@@ -257,7 +260,7 @@ public class ConfigurableSearchArea extends Form {
 	 */
 	public void setExtended(boolean extended) {
 		configuration = extended ? extendedConfiguration : defaultConfiguration;
-		this.extended.setText(extended ? configuration.getLessLabel() : configuration.getMoreLabel());
+		//this.extended.setText(extended ? configuration.getLessLabel() : configuration.getMoreLabel());
 		buildSearchPanel(configuration);
 		if(SearchHelper.getLastQuery() != null) {
 			setQuery(SearchHelper.getLastQuery());
@@ -308,7 +311,8 @@ public class ConfigurableSearchArea extends Form {
 		group.add(widget);
 		
 		if(field.hasSubmitButton()) {
-			submit = new Button("",IconType.SEARCH);
+			submit = new Button();
+			submit.setIcon(IconType.SEARCH);
 			submit.getElement().getStyle().setMarginLeft(10, Unit.PX);
 			final Widget tmp = widget;
 			submit.addClickHandler(new ClickHandler() {
