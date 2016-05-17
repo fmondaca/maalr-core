@@ -251,12 +251,17 @@ label#highlight.gwt-checkbox-maalr.checkbox {
 	padding-left: 30px;
 }
 
+#searchphrase{
+font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+font-weight:bold;
+font-size:20px;
+}
+
 #result_cell_label #searchphrase {
 	margin-left: 10px;
 }
 
 .maalr_result_title {
-	padding-left: 10px;
 	color: rgb(23,54,90);
 }
 
