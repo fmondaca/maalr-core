@@ -16,7 +16,6 @@
 package de.uni_koeln.spinfo.maalr.services.user.shared;
 
 import java.util.Map;
-import java.util.Set;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
