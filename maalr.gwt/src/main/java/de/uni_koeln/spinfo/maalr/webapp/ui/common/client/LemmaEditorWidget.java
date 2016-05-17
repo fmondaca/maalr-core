@@ -34,15 +34,12 @@ import com.github.gwtbootstrap.client.ui.constants.ControlGroupType;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
@@ -80,8 +77,7 @@ public class LemmaEditorWidget extends SimplePanel {
 	}
 
 	private static LexServiceAsync lexService = GWT.create(LexService.class);
-	private static LemmaEditorBinder uiBinder = GWT
-			.create(LemmaEditorBinder.class);
+	private static LemmaEditorBinder uiBinder = GWT.create(LemmaEditorBinder.class);
 
 	Logger logger = Logger.getLogger("LemmaEditorWidget");
 
@@ -163,10 +159,8 @@ public class LemmaEditorWidget extends SimplePanel {
 	 * 
 	 */
 	@UiConstructor
-	public LemmaEditorWidget(final LemmaVersion lemma,
-			final LemmaDescription description, final UseCase useCase,
-			final int columns, final boolean showLanguageHeader,
-			Button toggleAntlr) {
+	public LemmaEditorWidget(final LemmaVersion lemma, final LemmaDescription description, final UseCase useCase,
+			final int columns, final boolean showLanguageHeader, Button toggleAntlr) {
 
 		this.description = description;
 
@@ -183,14 +177,10 @@ public class LemmaEditorWidget extends SimplePanel {
 
 				// this.translations = translations;
 
-				DOM.setElementAttribute(text_editor.getElement(), "id",
-						"text_editor");
-				DOM.setElementAttribute(finalBase.getElement(), "id",
-						"finalBase");
-				DOM.setElementAttribute(imageContainer.getElement(), "id",
-						"imageContainer");
-				DOM.setElementAttribute(imagePanel.getElement(), "id",
-						"imagePanel");
+				DOM.setElementAttribute(text_editor.getElement(), "id", "text_editor");
+				DOM.setElementAttribute(finalBase.getElement(), "id", "finalBase");
+				DOM.setElementAttribute(imageContainer.getElement(), "id", "imageContainer");
+				DOM.setElementAttribute(imagePanel.getElement(), "id", "imagePanel");
 
 				langA = lemmaContainer(translations);
 				langB = contentContainer(translations);
@@ -200,28 +190,20 @@ public class LemmaEditorWidget extends SimplePanel {
 				percentage = correctionContainer(translations);
 				text_editor.add(percentage);
 
-				String baseURL = GWT.getHostPageBaseURL();
-
-				// Workaround to get the right path for the images being in
-				// editor-modus
-				if (GWT.getModuleName().endsWith("editor")) {
-					baseURL = baseURL.replace("editor/", "");
-
-				}
-
-				String[] pfl = lemma.getEntryValue("Pages").split(",");
-
-				List<Image> images = new ArrayList<>();
-				//
 				imagePanel.setWidth("500px");
 				imagePanel.setHeight("380px");
-				//
+
+				String baseURL = "/images/";
+
+				List<Image> images = new ArrayList<>();
+				String[] pfl = lemma.getEntryValue("Pages").split(",");
+
 				// Add page-mapping
 				for (String i : pfl) {
 					Image page = new Image();
 					StringBuffer buffer = new StringBuffer();
 					buffer.append(baseURL);
-					buffer.append("images/page-");
+					buffer.append("page-");
 					buffer.append(i.trim());
 					buffer.append(".jpg");
 					page.setUrl(buffer.toString());
@@ -322,10 +304,8 @@ public class LemmaEditorWidget extends SimplePanel {
 			}
 		}
 		initial = new LemmaVersion();
-		initial.setEntryValues(new HashMap<String, String>(lemma
-				.getEntryValues()));
-		initial.setMaalrValues(new HashMap<String, String>(lemma
-				.getMaalrValues()));
+		initial.setEntryValues(new HashMap<String, String>(lemma.getEntryValues()));
+		initial.setMaalrValues(new HashMap<String, String>(lemma.getMaalrValues()));
 	}
 
 	/**
@@ -334,9 +314,8 @@ public class LemmaEditorWidget extends SimplePanel {
 	 * @param lemma
 	 *            must not be <code>null</code>.
 	 */
-	public void updateFromEditor(final LemmaVersion lemma, final Button ok,
-			final Modal popup, final Button cancel, final Button reset,
-			final TranslationMap translation) {
+	public void updateFromEditor(final LemmaVersion lemma, final Button ok, final Modal popup, final Button cancel,
+			final Button reset, final TranslationMap translation) {
 
 		String lem = fields.get("Lemma").getHTML();
 
@@ -364,10 +343,9 @@ public class LemmaEditorWidget extends SimplePanel {
 				ok.setText(translation.get("button.ok"));
 				ok.setType(ButtonType.DANGER);
 				ok.setEnabled(false);
-				Dialog.showError(translation.get("dialog.failure"),
-						translation.get(caught.getMessage())); // exception
-																// from
-																// SpringBackend
+				Dialog.showError(translation.get("dialog.failure"), translation.get(caught.getMessage())); // exception
+																											// from
+																											// SpringBackend
 
 				popup.hide();
 				return;
@@ -459,20 +437,16 @@ public class LemmaEditorWidget extends SimplePanel {
 		return true;
 	}
 
-	public void markFields(Map<String, Difference> compared,
-			Map<String, String> oldValues) {
+	public void markFields(Map<String, Difference> compared, Map<String, String> oldValues) {
 		for (String field : groups.keySet()) {
 			feedback.get(field).setVisible(false);
 			groups.get(field).setType(ControlGroupType.NONE);
 		}
 		for (String field : compared.keySet()) {
 			if (compared.get(field) != Difference.NEW) {
-				feedback.get(field).setText(
-						compared.get(field).getDisplayName() + ", was: "
-								+ oldValues.get(field));
+				feedback.get(field).setText(compared.get(field).getDisplayName() + ", was: " + oldValues.get(field));
 			} else {
-				feedback.get(field).setText(
-						compared.get(field).getDisplayName());
+				feedback.get(field).setText(compared.get(field).getDisplayName());
 			}
 			feedback.get(field).setVisible(true);
 			groups.get(field).setType(ControlGroupType.WARNING);
