@@ -39,7 +39,7 @@
 							<div class="row-fluid">
 								<div class="span12">
 									<div class="gwt-HTML">
-										<span style="font-size: large; font-weight: bold; text-align: left;">
+										<span style="text-align: left;">
 											<fmt:message key="maalr.query.results">
 													<fmt:param><%=MaalrQueryFormatter.getQueryLabel(mQuery)%></fmt:param> 
 	   												<fmt:param><%=(mQuery.getPageNr()*mQuery.getPageSize() + 1)%></fmt:param>
