@@ -19,7 +19,9 @@ import java.util.Map;
 
 import org.jsoup.Jsoup;
 import org.jsoup.examples.HtmlToPlainText;
+import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,13 +62,16 @@ public class LexServiceImpl implements LexService {
 	}
 
 	@Override
-	public String suggestModification(LemmaVersion entry,
-			Map<String, String> toUpdate) throws MaalrException {
+	public String suggestModification(LemmaVersion entry, Map<String, String> toUpdate) throws MaalrException {
 
 		String lemma_new = toUpdate.get("Lemma").trim();
 		String content_new = toUpdate.get("Content").trim();
 		String correction_new = toUpdate.get("Correction").trim();
 		String correction_src = entry.getEntryValue("Correction").trim();
+
+		// Check size attr
+		lemma_new = checkSize(lemma_new);
+		content_new = checkSize(content_new);
 
 		// Clean input
 		lemma_new = Jsoup.clean(lemma_new, whiteList);
@@ -79,14 +84,12 @@ public class LexServiceImpl implements LexService {
 		} else if (correction > 100 || correction <= 15) {
 			throw new MaalrException("correction.wrongvalue");
 		} else {
-			entry = updateEntryValues(entry, lemma_new, content_new,
-					correction_new);
+			entry = updateEntryValues(entry, lemma_new, content_new, correction_new);
 		}
 
 		// WRITE CHANGES INTO THE DB
 		try {
-			BasicDBObject old = Database.getInstance().getById(
-					entry.getLexEntryId());
+			BasicDBObject old = Database.getInstance().getById(entry.getLexEntryId());
 			LexEntry oldEntry = Converter.convertToLexEntry(old);
 			db.suggestUpdate(oldEntry, entry);
 			return null;
@@ -97,27 +100,59 @@ public class LexServiceImpl implements LexService {
 		}
 	}
 
-	private LemmaVersion updateEntryValues(LemmaVersion entry,
-			String lemma_new, String content_new, String correction_new) {
+	private LemmaVersion updateEntryValues(LemmaVersion entry, String lemma_new, String content_new,
+			String correction_new) {
 
 		// Lemma
 		// html
 		entry.putEntryValue("Lemma", lemma_new);
 		// txt
-		entry.putEntryValue("Lemma_txt",
-				new HtmlToPlainText().getPlainText(Jsoup.parse(lemma_new)));
+		entry.putEntryValue("Lemma_txt", new HtmlToPlainText().getPlainText(Jsoup.parse(lemma_new)));
 
 		// Content
 		// html
 		entry.putEntryValue("Content", content_new);
 		// txt
-		entry.putEntryValue("Content_txt",
-				new HtmlToPlainText().getPlainText(Jsoup.parse(content_new)));
+		entry.putEntryValue("Content_txt", new HtmlToPlainText().getPlainText(Jsoup.parse(content_new)));
 
 		// Correction
 		entry.putEntryValue("Correction", correction_new);
 
 		return entry;
+	}
+
+	private String checkSize(String s) {
+
+		Document doc = Jsoup.parse(s);
+
+		Elements fonts = doc.getElementsByTag("font");
+
+		for (org.jsoup.nodes.Element e : fonts) {
+
+			String currentElement = e.outerHtml();
+			System.out.println("0: " + currentElement);
+
+			// Default: if size not set, check if the parent is set to 2. If
+			// not, set all to 3
+
+			if (e.attr("size").equals("") && !e.parent().attr("size").equals("2") || !e.attr("size").equals("2")
+					|| !e.attr("size").equals("2")) {
+
+				e.attr("size", "3");
+				System.out.println("1: " + e);
+
+			}
+
+			// if parent set to 2, but children are 3
+			if (e.attr("size").equals("3") && e.parent().attr("size").equals("2")) {
+
+				e.attr("size", "2");
+				System.out.println("2: " + e);
+			}
+
+		}
+
+		return doc.body().html().trim();
 	}
 
 }
