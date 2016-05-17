@@ -170,26 +170,22 @@ public class RichTextToolbar extends Composite {
 	 * We use an inner EventHandler class to avoid exposing event methods on the
 	 * RichTextToolbar itself.
 	 */
-	private class EventHandler implements ClickHandler, ChangeHandler,
-			KeyUpHandler {
+	private class EventHandler implements ClickHandler, ChangeHandler, KeyUpHandler {
 
 		public void onChange(ChangeEvent event) {
 			Widget sender = (Widget) event.getSource();
 
 			if (sender == backColors) {
-				basic.setBackColor(backColors.getValue(backColors
-						.getSelectedIndex()));
+				basic.setBackColor(backColors.getValue(backColors.getSelectedIndex()));
 				backColors.setSelectedIndex(0);
 			} else if (sender == foreColors) {
-				basic.setForeColor(foreColors.getValue(foreColors
-						.getSelectedIndex()));
+				basic.setForeColor(foreColors.getValue(foreColors.getSelectedIndex()));
 				foreColors.setSelectedIndex(0);
 			} else if (sender == fonts) {
 				basic.setFontName(fonts.getValue(fonts.getSelectedIndex()));
 				fonts.setSelectedIndex(0);
 			} else if (sender == fontSizes) {
-				basic.setFontSize(fontSizesConstants[fontSizes
-						.getSelectedIndex() - 1]);
+				basic.setFontSize(fontSizesConstants[fontSizes.getSelectedIndex() - 1]);
 				fontSizes.setSelectedIndex(0);
 			}
 		}
@@ -267,9 +263,9 @@ public class RichTextToolbar extends Composite {
 	private static final RichTextArea.FontSize[] fontSizesConstants = new RichTextArea.FontSize[] {
 			// RichTextArea.FontSize.XX_SMALL,
 			RichTextArea.FontSize.X_SMALL, RichTextArea.FontSize.SMALL,
-	// RichTextArea.FontSize.MEDIUM,
-	// RichTextArea.FontSize.LARGE, RichTextArea.FontSize.X_LARGE,
-	// RichTextArea.FontSize.XX_LARGE
+			// RichTextArea.FontSize.MEDIUM,
+			// RichTextArea.FontSize.LARGE, RichTextArea.FontSize.X_LARGE,
+			// RichTextArea.FontSize.XX_LARGE
 	};
 
 	private Images images = (Images) GWT.create(Images.class);
@@ -328,22 +324,15 @@ public class RichTextToolbar extends Composite {
 		richText.addStyleName("hasRichTextToolbar");
 
 		if (basic != null) {
-			topPanel.add(bold = createToggleButton(images.bold(),
-					strings.bold()));
-			topPanel.add(italic = createToggleButton(images.italic(),
-					strings.italic()));
+			topPanel.add(bold = createToggleButton(images.bold(), strings.bold()));
+			topPanel.add(italic = createToggleButton(images.italic(), strings.italic()));
 			// topPanel.add(underline = createToggleButton(images.underline(),
 			// strings.underline()));
-			topPanel.add(subscript = createToggleButton(images.subscript(),
-					strings.subscript()));
-			topPanel.add(superscript = createToggleButton(images.superscript(),
-					strings.superscript()));
-			topPanel.add(justifyLeft = createPushButton(images.justifyLeft(),
-					strings.justifyLeft()));
-			topPanel.add(justifyCenter = createPushButton(
-					images.justifyCenter(), strings.justifyCenter()));
-			topPanel.add(justifyRight = createPushButton(images.justifyRight(),
-					strings.justifyRight()));
+			topPanel.add(subscript = createToggleButton(images.subscript(), strings.subscript()));
+			topPanel.add(superscript = createToggleButton(images.superscript(), strings.superscript()));
+			topPanel.add(justifyLeft = createPushButton(images.justifyLeft(), strings.justifyLeft()));
+			topPanel.add(justifyCenter = createPushButton(images.justifyCenter(), strings.justifyCenter()));
+			topPanel.add(justifyRight = createPushButton(images.justifyRight(), strings.justifyRight()));
 		}
 
 		if (extended != null) {
@@ -422,7 +411,10 @@ public class RichTextToolbar extends Composite {
 
 		lb.addItem(strings.size());
 
+		// size ='2'
 		lb.addItem(strings.xsmall());
+
+		// size ='3'
 		lb.addItem(strings.small());
 		// lb.addItem(strings.medium());
 		// lb.addItem(strings.large());
@@ -455,6 +447,7 @@ public class RichTextToolbar extends Composite {
 			underline.setDown(basic.isUnderlined());
 			subscript.setDown(basic.isSubscript());
 			superscript.setDown(basic.isSuperscript());
+
 		}
 
 		if (extended != null) {
