@@ -31,7 +31,6 @@ import com.github.gwtbootstrap.client.ui.constants.BackdropType;
 import com.github.gwtbootstrap.client.ui.constants.IconType;
 import com.github.gwtbootstrap.client.ui.constants.LabelType;
 import com.google.gwt.cell.client.SafeHtmlCell;
-import com.google.gwt.cell.client.TextButtonCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
@@ -296,7 +295,7 @@ public class ResultCellTable extends Composite {
 
 	private void addEditColumn() {
 
-		final ButtonCell cell = new ButtonCell(IconType.EDIT_SIGN){
+		final ButtonCell cell = new ButtonCell(IconType.EDIT_SIGN) {
 
 			@Override
 			public Set<String> getConsumedEvents() {
@@ -313,10 +312,10 @@ public class ResultCellTable extends Composite {
 				if (event.getType().equals(BrowserEvents.CLICK)) {
 					LemmaVersion selected = dataProvider.getList().get(hoveredRow);
 
-
 					Element editButton = parent.getFirstChildElement();
 					Element editS = editButton.getFirstChildElement();
-					if (!selected.getEntryValue("Correction").equals("100") && event.getEventTarget().equals(editButton)||event.getEventTarget().equals(editS)) {
+					if (!selected.getEntryValue("Correction").equals("100") && event.getEventTarget().equals(editButton)
+							|| event.getEventTarget().equals(editS)) {
 						onButtonClicked(selected);
 					}
 
@@ -331,7 +330,6 @@ public class ResultCellTable extends Composite {
 				openModifyEditor(lemma);
 			}
 		};
-
 
 		editColumn = new Column<LemmaVersion, String>(cell) {
 
@@ -376,7 +374,8 @@ public class ResultCellTable extends Composite {
 
 				Element imageButton = parent.getFirstChildElement();
 				Element imageS = imageButton.getFirstChildElement();
-				if (event.getType().equals(BrowserEvents.CLICK) && event.getEventTarget().equals(imageButton) || event.getEventTarget().equals(imageS)  ) {
+				if (event.getType().equals(BrowserEvents.CLICK) && event.getEventTarget().equals(imageButton)
+						|| event.getEventTarget().equals(imageS)) {
 					LemmaVersion selected = dataProvider.getList().get(hoveredRow);
 					openImageModal(selected);
 				}
@@ -413,7 +412,7 @@ public class ResultCellTable extends Composite {
 			}
 		});
 
-		String baseURL = GWT.getHostPageBaseURL();
+		String baseURL = "/images/";
 
 		List<Image> images = new ArrayList<>();
 		String[] pfl = selected.getEntryValue("Pages").split(",");
@@ -422,7 +421,7 @@ public class ResultCellTable extends Composite {
 			Image page = new Image();
 			StringBuffer buffer = new StringBuffer();
 			buffer.append(baseURL);
-			buffer.append("images/page-");
+			buffer.append("page-");
 			buffer.append(i.trim());
 			buffer.append(".jpg");
 			page.setUrl(buffer.toString());
@@ -570,8 +569,7 @@ public class ResultCellTable extends Composite {
 					toShow = toShow.replaceAll("\\{1\\}", first + "");
 					toShow = toShow.replaceAll("\\{2\\}", last + "");
 					toShow = toShow.replaceAll("\\{3\\}", result.getMaxEntries() + "");
-					String text = "<span style=\"font-size: large;font-weight: bold; text-align: left;\">" + toShow
-							+ "</span>";
+					String text = "<span style=\"text-align: left;\">" + toShow + "</span>";
 					String wrappedSearchPhraseForCss = "<span id=\"searchphrase\">" + formatted + "</span>";
 					label.setHTML(wrappedSearchPhraseForCss + text);
 				}

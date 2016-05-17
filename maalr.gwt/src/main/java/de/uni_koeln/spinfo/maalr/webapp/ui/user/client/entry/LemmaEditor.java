@@ -36,9 +36,7 @@ import de.uni_koeln.spinfo.maalr.webapp.ui.common.client.i18n.LocalizedStrings;
 
 public class LemmaEditor {
 
-
 	private static TranslationMap translation = null;
-
 
 	static Logger logger = Logger.getLogger("LemmaEditor");
 
@@ -73,20 +71,17 @@ public class LemmaEditor {
 			@Override
 			public void onSuccess(TranslationMap result) {
 				translation = result;
-				LemmaEditorWidget editor = internalOpenEditor(toModify,
-						translation.get("modify.title"),
+				LemmaEditorWidget editor = internalOpenEditor(toModify, translation.get("modify.title"),
 						translation.get("modify.subtext"), true);
 				editor.setData(toModify);
 			}
 		});
 	}
 
-	private static LemmaEditorWidget internalOpenEditor(
-			final LemmaVersion lemma, String title, String subTitle,
+	private static LemmaEditorWidget internalOpenEditor(final LemmaVersion lemma, String title, String subTitle,
 			final boolean modify) {
 
-		final LemmaEditorWidget editor = new LemmaEditorWidget(lemma, 
-				AsyncLemmaDescriptionLoader.getDescription(),
+		final LemmaEditorWidget editor = new LemmaEditorWidget(lemma, AsyncLemmaDescriptionLoader.getDescription(),
 				UseCase.FIELDS_FOR_SIMPLE_EDITOR, 1, false, null);
 		final Modal popup = new Modal(true);
 		popup.setBackdrop(BackdropType.STATIC);
@@ -102,8 +97,7 @@ public class LemmaEditor {
 			// popup.setTitle(translation.get("header.suggest"));
 			description = translation.get("description.suggest");
 		}
-		final PopupEditor popupEditor = new PopupEditor(title, subTitle,
-				description, editor, translation, true, true);
+		final PopupEditor popupEditor = new PopupEditor(title, subTitle, description, editor, translation, true, true);
 		ModalFooter footer = new ModalFooter(cancel, reset, ok);
 		reset.addClickHandler(new ClickHandler() {
 
@@ -135,8 +129,7 @@ public class LemmaEditor {
 				}
 				clicked = true;
 
-				popupEditor.updateFromEditor(lemma, ok, popup, cancel, reset,
-						translation);
+				popupEditor.updateFromEditor(lemma, ok, popup, cancel, reset, translation);
 			}
 		});
 
