@@ -80,20 +80,17 @@
 	</servlet-mapping>
 
 	<!-- remote logging -->
-	<!-- TODO: disable when production-ready! -->
-	<servlet>
-		<servlet-name>remoteLogging</servlet-name>
-		<servlet-class>de.uni_koeln.spinfo.maalr.webapp.util.Slf4JRemoteLoggingService</servlet-class>
-	</servlet>
+	<!-- TODO: disable when production-ready! <servlet> <servlet-name>remoteLogging</servlet-name> 
+		<servlet-class>de.uni_koeln.spinfo.maalr.webapp.util.Slf4JRemoteLoggingService</servlet-class> 
+		</servlet> <servlet-mapping> <servlet-name>remoteLogging</servlet-name> <url-pattern>/de.uni_koeln.spinfo.maalr/remote_logging</url-pattern> 
+		<url-pattern>/de.uni_koeln.spinfo.maalr.admin/remote_logging</url-pattern> 
+		<url-pattern>/de.uni_koeln.spinfo.maalr.user/remote_logging</url-pattern> 
+		<url-pattern>/de.uni_koeln.spinfo.maalr.editor/remote_logging</url-pattern> 
+		<url-pattern>/de.uni_koeln.spinfo.maalr.antlr/remote_logging</url-pattern> 
+		</servlet-mapping> -->
 
-	<servlet-mapping>
-		<servlet-name>remoteLogging</servlet-name>
-		<url-pattern>/de.uni_koeln.spinfo.maalr/remote_logging</url-pattern>
-		<url-pattern>/de.uni_koeln.spinfo.maalr.admin/remote_logging</url-pattern>
-		<url-pattern>/de.uni_koeln.spinfo.maalr.user/remote_logging</url-pattern>
-		<url-pattern>/de.uni_koeln.spinfo.maalr.editor/remote_logging</url-pattern>
-		<url-pattern>/de.uni_koeln.spinfo.maalr.antlr/remote_logging</url-pattern>
-	</servlet-mapping>
+
+
 
 	<!-- Remove at least some whitespaces from the generated HTML -->
 	<!-- See http://stackoverflow.com/questions/208736/strip-whitespace-from-jsp-output -->
