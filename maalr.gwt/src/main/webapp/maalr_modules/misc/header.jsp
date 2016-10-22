@@ -8,7 +8,7 @@
 
 <div id="navi_head">
 	<div id="brand_title">
-		<a class="brand active" href="${dictContext}"><%=Configuration.getInstance().getLongName()%></a>
+		<a class="brand active" href="/"><%=Configuration.getInstance().getLongName()%></a>
 	</div>
 	<%-- MAIN MENU --%>
     <ul class="left">
