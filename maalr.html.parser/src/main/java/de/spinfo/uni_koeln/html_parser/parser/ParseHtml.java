@@ -23,8 +23,9 @@ public class ParseHtml {
 
 	public static String doc = "lenz-20150625.htm";
 	public static String addenda = "lenz-20150625_addenda.html";
-	public static String markedLemmata = "markedEntries_2015-08-21T17:44:34Z.html";
+	public static String markedLemmata = "markedEntries_2016-04-15T17:42:51Z.html";
 	public static String markedLemmata_add = "markedEntries_2015-08-07T16:32:04Z.html";
+	public static String mapped = "markedEntries_2015-08-07T16:32:04Z.html";
 
 	public static String output_dir = "data/output/";
 	public static String input_dir = "data/input/";
@@ -41,20 +42,17 @@ public class ParseHtml {
 		return tags;
 	}
 
-	public List<String> markUncorrectedEntries(String fileToParse)
-			throws IOException {
+	public List<String> markUncorrectedEntries(String fileToParse) throws IOException {
 		List<String> list = new ArrayList<>();
 
 		File toRead = new File(fileToParse);
 		FileInputStream inputStream = new FileInputStream(toRead);
-		InputStreamReader inputStreamReader = new InputStreamReader(
-				inputStream, "UTF8");
+		InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF8");
 
 		LineNumberReader reader = new LineNumberReader(inputStreamReader);
 		String line;
 
-		final Pattern pattern = Pattern
-				.compile("<h2>(.+?)</h2>|<h3>(.+?)</h3>|<h4>(.+?)</h4>|<h5>(.+?)</h5>");
+		final Pattern pattern = Pattern.compile("<h2>(.+?)</h2>|<h3>(.+?)</h3>|<h4>(.+?)</h4>|<h5>(.+?)</h5>");
 
 		while ((line = reader.readLine()) != null) {
 
@@ -111,8 +109,7 @@ public class ParseHtml {
 			line = line.replace("large", "medium");
 
 			// delete unwanted tags
-			line = line.replaceAll("<a href=(.+?)\">", "").replaceAll("</a>",
-					"");
+			line = line.replaceAll("<a href=(.+?)\">", "").replaceAll("</a>", "");
 			line = line.replaceAll("<a name=(.+?)\">", "");
 			line = line.replaceAll("<h1>", "").replaceAll("</h1>", "");
 			line = line.replaceAll("<h2>", "").replaceAll("</h2>", "");
@@ -131,37 +128,29 @@ public class ParseHtml {
 
 			for (String s : fonts) {
 
-				line = line.replaceAll(
-						"<font style=\"font-size: medium;font-family: " + s
-								+ "(.+?)\">",
+				line = line.replaceAll("<font style=\"font-size: medium;font-family: " + s + "(.+?)\">",
 						"<font face=\"Constantia\" size=\"3\">");
-				line = line.replaceAll(
-						"<font style=\"font-size: large;font-family: " + s
-								+ "(.+?)\">",
+				line = line.replaceAll("<font style=\"font-size: large;font-family: " + s + "(.+?)\">",
 						"<font face=\"Constantia\" size=\"3\">");
-				line = line.replaceAll(
-						"<font style=\"font-size: x-large;font-family: " + s
-								+ "(.+?)\">",
+				line = line.replaceAll("<font style=\"font-size: x-large;font-family: " + s + "(.+?)\">",
 						"<font face=\"Constantia\" size=\"3\">");
-				line = line.replaceAll(
-						"<font style=\"font-size: xx-large;font-family: " + s
-								+ "(.+?)\">",
+				line = line.replaceAll("<font style=\"font-size: xx-large;font-family: " + s + "(.+?)\">",
 						"<font face=\"Constantia\" size=\"3\">");
 
-				line = line.replaceAll(
-						"<font style=\"font-size: xx-small;font-family: " + s
-								+ "(.+?)\">",
+				line = line.replaceAll("<font style=\"font-size: xx-small;font-family: " + s + "(.+?)\">",
 						"<font face=\"Constantia\" size=\"2\">");
-				line = line.replaceAll(
-						"<font style=\"font-size: x-small;font-family: " + s
-								+ "(.+?)\">",
+				line = line.replaceAll("<font style=\"font-size: x-small;font-family: " + s + "(.+?)\">",
 						"<font face=\"Constantia\" size=\"2\">");
-				line = line.replaceAll(
-						"<font style=\"font-size: small;font-family: " + s
-								+ "(.+?)\">",
+				line = line.replaceAll("<font style=\"font-size: small;font-family: " + s + "(.+?)\">",
 						"<font face=\"Constantia\" size=\"2\">");
 
 			}
+
+			// medium to '3'
+			line = line.replaceAll("<font style=\"font-size: medium;", "<font size=\"3\" style=\"");
+			// small to '2'
+			line = line.replaceAll("<font style=\"font-size: small;", "<font size=\"2\" style=\"");
+
 			// System.out.println(line);
 			modified.add(line);
 
@@ -177,16 +166,15 @@ public class ParseHtml {
 		int counter = 0;
 		for (String s : toProcess) {
 
-			final Pattern pattern = Pattern
-					.compile("<font style=\"font-size: medium;font-family: Constantia, serif;font-weight: bold;\">(.+?)</font>");
+			final Pattern pattern = Pattern.compile(
+					"<font size=\"3\" style=\"font-family: Constantia, serif;font-weight: bold;\">(.+?)</font>");
 			final Matcher matcher = pattern.matcher(s);
 
 			if (matcher.find()) {
 				String found = matcher.group(1);
 				found = found
-						.replaceAll(
-								"<font style=\"font-size: medium;font-family: Constantia, serif;font-weight: bold;\">",
-								"").replaceAll("&nbsp;", "");
+						.replaceAll("<font size=\"3\" style=\"font-family: Constantia, serif;font-weight: bold;\">", "")
+						.replaceAll("&nbsp;", "");
 
 				// if it's the start of an entry
 				if (Character.isDigit(found.charAt(0))) {
@@ -226,15 +214,13 @@ public class ParseHtml {
 		return list;
 	}
 
-	public Map<String, List<Integer>> getPageMapping(String file)
-			throws IOException {
+	public Map<String, List<Integer>> getPageMapping(String file) throws IOException {
 
 		Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
 
 		File toRead = new File(file);
 		FileInputStream inputStream = new FileInputStream(toRead);
-		InputStreamReader inputStreamReader = new InputStreamReader(
-				inputStream, "UTF8");
+		InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF8");
 		LineNumberReader reader = new LineNumberReader(inputStreamReader);
 		String line;
 
@@ -273,8 +259,7 @@ public class ParseHtml {
 		Set<String> set = new HashSet<>();
 		File toRead = new File(fileToParse);
 		FileInputStream inputStream = new FileInputStream(toRead);
-		InputStreamReader inputStreamReader = new InputStreamReader(
-				inputStream, "UTF8");
+		InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF8");
 		LineNumberReader reader = new LineNumberReader(inputStreamReader);
 		String line;
 
@@ -296,13 +281,11 @@ public class ParseHtml {
 	public List<RawEntry> formatEntries(File toRead) throws IOException {
 		List<RawEntry> entries = new ArrayList<>();
 		FileInputStream inputStream = new FileInputStream(toRead);
-		InputStreamReader inputStreamReader = new InputStreamReader(
-				inputStream, "UTF8");
+		InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF8");
 		LineNumberReader reader = new LineNumberReader(inputStreamReader);
 		String line;
 
-		Map<String, List<Integer>> map = getPageMapping(ParseHtml.input_dir
-				+ "20150898_mappedentries.txt");
+		Map<String, List<Integer>> map = getPageMapping(ParseHtml.input_dir + "20150898_mappedentries.txt");
 
 		while ((line = reader.readLine()) != null) {
 
@@ -416,6 +399,31 @@ public class ParseHtml {
 
 	}
 
+	public List<String> getCleanedLemmata(List<RawEntry> rawEntries) {
+
+		List<String> lemmata = new ArrayList<>();
+
+		for (RawEntry e : rawEntries) {
+			String s = e.getLemma();
+			s = s.replace("<en>", "").replace("</en>", "");
+			String[] t = s.split("\\s+");
+			StringBuffer buffer = new StringBuffer();
+
+			// buffer.append(t[0]);
+			// buffer.append("\t");
+
+			for (int i = 1; i < t.length; i++) {
+
+				buffer.append(t[i]);
+				buffer.append(" ");
+			}
+
+			lemmata.add(buffer.toString());
+		}
+		return lemmata;
+
+	}
+
 	public int getMaxLengthContent(List<RawEntry> entries) {
 
 		Set<Integer> contentlength = new HashSet<>();
@@ -426,7 +434,5 @@ public class ParseHtml {
 
 		return Collections.max(contentlength);
 	}
-
-	
 
 }
