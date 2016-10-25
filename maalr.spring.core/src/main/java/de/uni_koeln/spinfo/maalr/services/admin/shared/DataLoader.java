@@ -69,6 +69,7 @@ public class DataLoader {
 		}
 
 		FileInputStream fis = null;
+		logger.info("Reading data from - file " + file + "");
 		try {
 			fis = new FileInputStream(file);
 		} catch (FileNotFoundException e) {
