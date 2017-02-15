@@ -23,7 +23,7 @@
 			<div class="container well" id="login_container">
 				<h1><fmt:message key="maalr.login.header" /></h1>
 				<br>
-				<%-- login info text 
+				<%-- login info text --%>
 				<div id="maalr_login_info">
 					<span class="glyphicon icon-info-sign"></span>
 					<p><fmt:message key="maalr.login.welcome" /></p>
@@ -46,16 +46,16 @@
 							<input name="submit" type="submit" value=<fmt:message key="maalr.login.sendButton"/> id="internal_login">
 						</div>
 					</div>
-				</form> --%>
+				</form> 
 				<hr> 
-				<%-- OPEN-ID SIGN IN --%>
+				<%-- OPEN-ID SIGN IN 
 				<div id="openid_login"> 
 					<div class="input_wrapper">
-						<button type="submit" id="persona_signin"><%--<fmt:message key="maalr.login.persona"/>--%>
+						<button type="submit" id="persona_signin"><%--<fmt:message key="maalr.login.persona"/>
 						<img src="${dictContext}/assets/img/persona.png" alt="persona_signin" />
 						</button>
 					</div>
-				</div>
+				</div> --%>
 			</div>
 		</div>
 		
