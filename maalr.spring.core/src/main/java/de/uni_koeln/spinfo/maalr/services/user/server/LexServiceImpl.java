@@ -64,10 +64,10 @@ public class LexServiceImpl implements LexService {
 	@Override
 	public String suggestModification(LemmaVersion entry, Map<String, String> toUpdate) throws MaalrException {
 
-		String lemma_new = toUpdate.get("Lemma").trim();
-		String content_new = toUpdate.get("Content").trim();
-		String correction_new = toUpdate.get("Correction").trim();
-		String correction_src = entry.getEntryValue("Correction").trim();
+		String lemma_new = toUpdate.get("lemma").trim();
+		String content_new = toUpdate.get("content").trim();
+		String correction_new = toUpdate.get("correction").trim();
+		String correction_src = entry.getEntryValue("correction").trim();
 
 		// Check size attr
 		lemma_new = checkSize(lemma_new);
@@ -104,19 +104,16 @@ public class LexServiceImpl implements LexService {
 			String correction_new) {
 
 		// Lemma
-		// html
-		entry.putEntryValue("Lemma", lemma_new);
-		// txt
-		entry.putEntryValue("Lemma_txt", new HtmlToPlainText().getPlainText(Jsoup.parse(lemma_new)));
-
+		entry.putEntryValue("lemma", lemma_new);
+		
 		// Content
 		// html
-		entry.putEntryValue("Content", content_new);
+		entry.putEntryValue("content", content_new);
 		// txt
-		entry.putEntryValue("Content_txt", new HtmlToPlainText().getPlainText(Jsoup.parse(content_new)));
+		entry.putEntryValue("content_txt", new HtmlToPlainText().getPlainText(Jsoup.parse(content_new)));
 
 		// Correction
-		entry.putEntryValue("Correction", correction_new);
+		entry.putEntryValue("correction", correction_new);
 
 		return entry;
 	}

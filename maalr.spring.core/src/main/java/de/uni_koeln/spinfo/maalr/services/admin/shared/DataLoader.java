@@ -106,9 +106,8 @@ public class DataLoader {
 
 				line = line.replace("<en>", "").replace("</en>", "");
 
-				version.setValue("Lemma", line);
-				version.setValue("Lemma_txt",
-						new HtmlToPlainText().getPlainText(Jsoup.parse(line)));
+				version.setValue("lemma", line);
+
 
 				StringBuffer content = new StringBuffer();
 
@@ -123,8 +122,8 @@ public class DataLoader {
 						content.append(line);
 						content.append("\n");
 					} else {
-						version.setValue("Content", content.toString());
-						version.setValue("Content_txt", new HtmlToPlainText()
+						version.setValue("content", content.toString());
+						version.setValue("content_txt", new HtmlToPlainText()
 								.getPlainText(Jsoup.parse(content.toString())));
 
 						line = reader.readLine();
@@ -132,7 +131,7 @@ public class DataLoader {
 						line = line.replace("<p>", "").replace("</p>", "");
 						line = line.replace("[", "").replace("]", "");
 
-						version.setValue("Pages", line);
+						version.setValue("pages", line);
 
 						break;
 					}
@@ -141,9 +140,9 @@ public class DataLoader {
 
 				// Until 1000 Paltrahuan
 				if (ce <= 1001) {
-					version.setValue("Correction", "95");
+					version.setValue("correction", "95");
 				} else {
-					version.setValue("Correction", "15");
+					version.setValue("correction", "15");
 				}
 
 				LexEntry entry = new LexEntry(version);
@@ -178,9 +177,6 @@ public class DataLoader {
 
 		}
 		db.insertBatch(entries);
-
-		System.out.println(entries.size());
-		logger.info("ENTRIES SIZE: ", entries.size());
 		entries.clear();
 
 		// loginManager.login("admin", "admin");
