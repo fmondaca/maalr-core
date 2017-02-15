@@ -196,7 +196,7 @@ public class LemmaEditorWidget extends SimplePanel {
 				String baseURL = "/images/";
 
 				List<Image> images = new ArrayList<>();
-				String[] pfl = lemma.getEntryValue("Pages").split(",");
+				String[] pfl = lemma.getEntryValue("pages").split(",");
 
 				// Add page-mapping
 				for (String i : pfl) {
@@ -234,7 +234,7 @@ public class LemmaEditorWidget extends SimplePanel {
 		rta_a.setHeight("2em");
 		langA.add(lbl);
 		langA.add(rta_a);
-		fields.put("Lemma", rta_a);
+		fields.put("lemma", rta_a);
 
 		return langA;
 	}
@@ -249,7 +249,7 @@ public class LemmaEditorWidget extends SimplePanel {
 		langB.add(toolbar);
 		langB.add(rta_b);
 
-		fields.put("Content", rta_b);
+		fields.put("content", rta_b);
 
 		return langB;
 	}
@@ -263,7 +263,7 @@ public class LemmaEditorWidget extends SimplePanel {
 
 		percentage.add(lbl);
 		percentage.add(per);
-		fields.put("Correction", per);
+		fields.put("correction", per);
 
 		return percentage;
 	}
@@ -282,7 +282,7 @@ public class LemmaEditorWidget extends SimplePanel {
 		toSet.addAll(description.getEditorFields(false));
 
 		// Add correction
-		toSet.add("Correction");
+		toSet.add("correction");
 
 		if (lemma == null) {
 			for (String key : toSet) {
@@ -317,22 +317,22 @@ public class LemmaEditorWidget extends SimplePanel {
 	public void updateFromEditor(final LemmaVersion lemma, final Button ok, final Modal popup, final Button cancel,
 			final Button reset, final TranslationMap translation) {
 
-		String lem = fields.get("Lemma").getHTML();
+		String lem = fields.get("lemma").getHTML();
 
-		String con = fields.get("Content").getHTML();
+		String con = fields.get("content").getHTML();
 
-		String corr = fields.get("Correction").getHTML();
+		String corr = fields.get("correction").getHTML();
 
 		Map<String, String> toUpdate = new HashMap<>();
 
-		toUpdate.put("Lemma", lem);
+		toUpdate.put("lemma", lem);
 
-		toUpdate.put("Content", con);
+		toUpdate.put("content", con);
 
 		// clean correction
 		corr = corr.replaceAll("[^\\d]", "");
 
-		toUpdate.put("Correction", corr);
+		toUpdate.put("correction", corr);
 
 		AsyncCallback<String> callback = new AsyncCallback<String>() {
 
@@ -382,7 +382,7 @@ public class LemmaEditorWidget extends SimplePanel {
 		toSet.addAll(description.getEditorFields(false));
 
 		// Add correction
-		toSet.add("Correction");
+		toSet.add("correction");
 
 		for (String key : toSet) {
 			HasHTML field = fields.get(key);

@@ -279,7 +279,7 @@ public class ResultCellTable extends Composite {
 			@Override
 			public String getValue(LemmaVersion object) {
 
-				String toReturn = object.getEntryValue("Correction");
+				String toReturn = object.getEntryValue("correction");
 				StringBuffer buffer = new StringBuffer();
 				buffer.append(toReturn);
 				buffer.append("%");
@@ -314,7 +314,7 @@ public class ResultCellTable extends Composite {
 
 					Element editButton = parent.getFirstChildElement();
 					Element editS = editButton.getFirstChildElement();
-					if (!selected.getEntryValue("Correction").equals("100") && event.getEventTarget().equals(editButton)
+					if (!selected.getEntryValue("correction").equals("100") && event.getEventTarget().equals(editButton)
 							|| event.getEventTarget().equals(editS)) {
 						onButtonClicked(selected);
 					}
@@ -336,7 +336,7 @@ public class ResultCellTable extends Composite {
 			@Override
 			public String getValue(LemmaVersion object) {
 
-				if (object.getEntryValue("Correction").equals("100")) {
+				if (object.getEntryValue("correction").equals("100")) {
 
 					cell.setIcon(IconType.LOCK);
 
@@ -415,7 +415,7 @@ public class ResultCellTable extends Composite {
 		String baseURL = "/images/";
 
 		List<Image> images = new ArrayList<>();
-		String[] pfl = selected.getEntryValue("Pages").split(",");
+		String[] pfl = selected.getEntryValue("pages").split(",");
 		// Add page-mapping
 		for (String i : pfl) {
 			Image page = new Image();
