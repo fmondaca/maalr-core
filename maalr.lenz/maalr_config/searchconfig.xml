@@ -2,12 +2,11 @@
 <dictionaryConfiguration>
 
 	<databaseColumns>
-		<column name="Lemma" />
-		<column name="Content" />
-		<column name="Lemma_txt" />
-		<column name="Content_txt" />
-		<column name="Correction" />
-		<column name="Pages" />
+		<column name="lemma" />
+		<column name="content" />
+		<column name="content_txt" />
+		<column name="correction" />
+		<column name="pages" />
 	</databaseColumns>
 
 	<queryKeys>
@@ -24,18 +23,18 @@
 			<options>	
 				<option id="lemma">
 					<columns>
-						<column reference="Lemma_txt" />
+						<column reference="lemma" />
 					</columns>
 				</option>
 				<option id="content">
 					<columns>
-						<column reference="Content_txt" />
+						<column reference="content" />
 					</columns>
 				</option>
 				<option id="both" default="true">
 					<columns>
-						<column reference="Lemma_txt" />
-						<column reference="Content_txt" />
+						<column reference="lemma" />
+						<column reference="content_txt" />
 					</columns>
 				</option>
 			</options>
@@ -58,50 +57,49 @@
 	</queryBuilders>
 	<!-- Lemma description -->
 	<languages>
-		<language id="lemma" mainColumn="Lemma_txt">
+		<language id="lemma" mainColumn="lemma">
 			<editors>
 				<frontend_editor>
 					<fields>
-						<field column="Lemma"></field>
-						<field column="Lemma_txt"></field>
-						<field column="Correction"></field>
+						<field column="lemma"></field>
+						<field column="correction"></field>
 					</fields>
 				</frontend_editor>
 				<backend_editor>
 					<fields>
 						<!-- Editors must ensure that this field is not empty (visitors don't 
 							have to) -->
-						<field column="Lemma" allowsNull="false"></field>
+						<field column="lemma" allowsNull="false"></field>
 
 					</fields>
 				</backend_editor>
 			</editors>
 			<results>
 				<fields>
-					<field column="Lemma" format="{0}"></field>
+					<field column="lemma" format="{0}"></field>
 
 				</fields>
 			</results>
 		</language>
-		<language id="content" mainColumn="Content_txt">
+		<language id="content" mainColumn="content_txt">
 			<editors>
 				<frontend_editor>
 					<fields>
-						<field column="Content"></field>
-						<field column="Content_txt"></field>
-						<field column="Correction"></field>
+						<field column="content"></field>
+						<field column="content_txt"></field>
+						<field column="correction"></field>
 					</fields>
 				</frontend_editor>
 				<backend_editor>
 					<fields>
-						<field column="Content" allowsNull="false"></field>
+						<field column="content" allowsNull="false"></field>
 
 					</fields>
 				</backend_editor>
 			</editors>
 			<results>
 				<fields>
-					<field column="Content" format="{0}"></field>
+					<field column="content" format="{0}"></field>
 
 				</fields>
 			</results>
