@@ -174,21 +174,6 @@ public class ResultCellTable extends Composite {
 		});
 	}
 
-	// New entries disabled in LENZ
-	// private void openEditor() {
-	// GWT.runAsync(new RunAsyncCallback() {
-	//
-	// @Override
-	// public void onSuccess() {
-	// LemmaEditor.openEditor();
-	// }
-	//
-	// @Override
-	// public void onFailure(Throwable reason) {
-	// Window.alert("Code download failed");
-	// }
-	// });
-	// }
 
 	private void addLemmaColumn(String langA, final boolean b) {
 
