@@ -489,17 +489,6 @@ public class ResultCellTable extends Composite {
 			suggest.setVisible(visible);
 	}
 
-	// New Entries disabled in LENZ
-
-	// private void initSuggestButton(TranslationMap result) {
-	// suggest = new Button(result.get("suggest.button"), IconType.INFO_SIGN);
-	// suggest.addClickHandler(new ClickHandler() {
-	// @Override
-	// public void onClick(ClickEvent event) {
-	// openEditor();
-	// }
-	// });
-	// }
 
 	private void removeColumns() {
 		while (cellTable.getColumnCount() > 0) {
