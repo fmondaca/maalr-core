@@ -28,7 +28,7 @@
 				</option>
 				<option id="content">
 					<columns>
-						<column reference="content" />
+						<column reference="content_txt" />
 					</columns>
 				</option>
 				<option id="both" default="true">
@@ -47,11 +47,9 @@
 			columnSelectorId="language">
 			<options>
 				<option id="normal" default="true" preset="DEFAULT" />
-				<!-- <option id="normal" default="true" builderClass="de.uni_koeln.spinfo.pg.querybuilder.DefaultPGQueryBuilder"/> -->
 				<option id="intern" preset="INFIX" />
 				<option id="prefix" preset="PREFIX" />
 				<option id="suffix" preset="SUFFIX" />
-				<option id="exact" preset="EXACT" />
 			</options>
 		</queryBuilder>
 	</queryBuilders>
@@ -86,7 +84,6 @@
 				<frontend_editor>
 					<fields>
 						<field column="content"></field>
-						<field column="content_txt"></field>
 						<field column="correction"></field>
 					</fields>
 				</frontend_editor>
@@ -100,7 +97,6 @@
 			<results>
 				<fields>
 					<field column="content" format="{0}"></field>
-
 				</fields>
 			</results>
 		</language>
