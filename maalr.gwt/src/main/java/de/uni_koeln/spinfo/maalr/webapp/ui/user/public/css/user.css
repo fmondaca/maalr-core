@@ -15,7 +15,6 @@ body {
 #navi_head {
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 	background-color: rgb(23,54,90);
-	text-decoration: overline;
 	width: 100%;
 	z-index: 998;
 	height: 140px;
@@ -57,12 +56,11 @@ body {
 
 #navi_head .left a {
 	color: #eaf0f2;
-	padding: 0 20px;
-	text-decoration: overline;
+	padding: 0 10px;
 	border-right: 1px solid #E1DFDF;
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 	font-weight: 400;
-	font-size: 14px;
+	font-size: 13px;
 }
 
 #navi_head .left a:hover, #navi_head .right a:hover {
@@ -77,13 +75,11 @@ body {
 #navi_head .right a {
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 	font-weight: 300;
-	font-size: 14px;
+	font-size: 13px;
 	border: none;
 	padding-right: 20px;
 	color: rgb(234, 240, 242);
-	text-decoration: overline;
 	font-weight: 500;
-	font-size: 14px;
 }
 
 /* LOGIN NAVI */
@@ -146,7 +142,7 @@ img.login_icon {
 	border: 1px solid #e3e3e3;
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 	border-radius: 4px;
-	margin: -40px 0px 0px 50px;
+	margin: -40px 0px 0px 15px;
 	padding 3px;
 }
 
