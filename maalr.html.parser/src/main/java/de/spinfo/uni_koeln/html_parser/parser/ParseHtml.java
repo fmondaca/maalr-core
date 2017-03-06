@@ -21,9 +21,9 @@ import de.spinfo.uni_koeln.html_parser.utils.FileUtils;
 
 public class ParseHtml {
 
-	public static String doc = "lenz-20150625.htm";
+	public static String doc = "lenz-20170303.html";
 	public static String addenda = "lenz-20150625_addenda.html";
-	public static String markedLemmata = "markedEntries_2016-04-15T17:42:51Z.html";
+	public static String markedLemmata = "markedEntries_2017-03-03T16:28:13Z.html";
 	public static String markedLemmata_add = "markedEntries_2015-08-07T16:32:04Z.html";
 	public static String mapped = "markedEntries_2015-08-07T16:32:04Z.html";
 
