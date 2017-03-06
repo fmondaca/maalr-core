@@ -106,7 +106,7 @@ public class DataLoader {
 
 				line = line.replace("<en>", "").replace("</en>", "");
 
-				version.setValue("lemma", line);
+				version.setValue("header", line);
 
 
 				StringBuffer content = new StringBuffer();
@@ -122,8 +122,8 @@ public class DataLoader {
 						content.append(line);
 						content.append("\n");
 					} else {
-						version.setValue("content", content.toString());
-						version.setValue("content_txt", new HtmlToPlainText()
+						version.setValue("body", content.toString());
+						version.setValue("body_txt", new HtmlToPlainText()
 								.getPlainText(Jsoup.parse(content.toString())));
 
 						line = reader.readLine();

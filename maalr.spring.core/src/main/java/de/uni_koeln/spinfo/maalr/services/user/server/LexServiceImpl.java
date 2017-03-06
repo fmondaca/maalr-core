@@ -64,27 +64,27 @@ public class LexServiceImpl implements LexService {
 	@Override
 	public String suggestModification(LemmaVersion entry, Map<String, String> toUpdate) throws MaalrException {
 
-		String lemma_new = toUpdate.get("lemma").trim();
-		String content_new = toUpdate.get("content").trim();
-		String correction_new = toUpdate.get("correction").trim();
-		String correction_src = entry.getEntryValue("correction").trim();
+		String newHeader = toUpdate.get("header").trim();
+		String newBody = toUpdate.get("body").trim();
+		String newCorrection = toUpdate.get("correction").trim();
+		String actualCorrection = entry.getEntryValue("correction").trim();
 
 		// Check size attr
-		lemma_new = checkSize(lemma_new);
-		content_new = checkSize(content_new);
+		newHeader = checkSize(newHeader);
+		newBody = checkSize(newBody);
 
 		// Clean input
-		lemma_new = Jsoup.clean(lemma_new, whiteList);
-		content_new = Jsoup.clean(content_new, whiteList);
-		correction_new = Jsoup.clean(correction_new, whiteList);
-		int correction = Integer.parseInt(correction_new);
+		newHeader = Jsoup.clean(newHeader, whiteList);
+		newBody = Jsoup.clean(newBody, whiteList);
+		newCorrection = Jsoup.clean(newCorrection, whiteList);
+		int correction = Integer.parseInt(newCorrection);
 
-		if ((correction_new.equals(correction_src))) {
+		if ((newCorrection.equals(actualCorrection))) {
 			throw new MaalrException("dialog.nocorrection");
 		} else if (correction > 100 || correction <= 15) {
 			throw new MaalrException("correction.wrongvalue");
 		} else {
-			entry = updateEntryValues(entry, lemma_new, content_new, correction_new);
+			entry = updateEntryValues(entry, newHeader, newBody, newCorrection);
 		}
 
 		// WRITE CHANGES INTO THE DB
@@ -100,20 +100,20 @@ public class LexServiceImpl implements LexService {
 		}
 	}
 
-	private LemmaVersion updateEntryValues(LemmaVersion entry, String lemma_new, String content_new,
-			String correction_new) {
+	private LemmaVersion updateEntryValues(LemmaVersion entry, String newHeader, String newBody,
+			String newCorrection) {
 
-		// Lemma
-		entry.putEntryValue("lemma", lemma_new);
+		// Header
+		entry.putEntryValue("header", newHeader);
 		
-		// Content
+		// Body
 		// html
-		entry.putEntryValue("content", content_new);
+		entry.putEntryValue("body", newBody);
 		// txt
-		entry.putEntryValue("content_txt", new HtmlToPlainText().getPlainText(Jsoup.parse(content_new)));
+		entry.putEntryValue("bodyt_txt", new HtmlToPlainText().getPlainText(Jsoup.parse(newBody)));
 
 		// Correction
-		entry.putEntryValue("correction", correction_new);
+		entry.putEntryValue("correction", newCorrection);
 
 		return entry;
 	}
