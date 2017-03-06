@@ -102,15 +102,15 @@ public class ResultCellTable extends Composite {
 
 	private LemmaDescription description;
 
-	private Column<LemmaVersion, SafeHtml> lemmaColumn;
+	private Column<LemmaVersion, SafeHtml> headerColumn;
 
-	private Column<LemmaVersion, SafeHtml> contentColumn;
+	private Column<LemmaVersion, SafeHtml> bodyColumn;
 
 	private Column<LemmaVersion, String> correctionColumn;
 
-	private Column<LemmaVersion, String> editColumn;
+	private Column<LemmaVersion, String> openEditorColumn;
 
-	private Column<LemmaVersion, String> imageColumn;
+	private Column<LemmaVersion, String> openImageColumn;
 
 	private VerticalPanel imagePanel = new VerticalPanel();
 
@@ -175,10 +175,10 @@ public class ResultCellTable extends Composite {
 	}
 
 
-	private void addLemmaColumn(String langA, final boolean b) {
+	private void addHeaderColumn(String langA, final boolean b) {
 
 		final SafeHtmlCell leftCell = new SafeHtmlCell();
-		lemmaColumn = new Column<LemmaVersion, SafeHtml>(leftCell) {
+		headerColumn = new Column<LemmaVersion, SafeHtml>(leftCell) {
 
 			@Override
 			public SafeHtml getValue(LemmaVersion object) {
@@ -211,12 +211,12 @@ public class ResultCellTable extends Composite {
 			}
 		};
 
-		cellTable.addColumn(lemmaColumn, new SafeHtmlBuilder()
+		cellTable.addColumn(headerColumn, new SafeHtmlBuilder()
 				.appendHtmlConstant("<span class=\"maalr_result_title\">" + langA + "</span>").toSafeHtml());
 	}
 
-	private void addContentColumn(String langB, final boolean b) {
-		contentColumn = new Column<LemmaVersion, SafeHtml>(new SafeHtmlCell()) {
+	private void addBodyColumn(String langB, final boolean b) {
+		bodyColumn = new Column<LemmaVersion, SafeHtml>(new SafeHtmlCell()) {
 
 			@Override
 			public SafeHtml getValue(LemmaVersion object) {
@@ -251,7 +251,7 @@ public class ResultCellTable extends Composite {
 			}
 
 		};
-		cellTable.addColumn(contentColumn, new SafeHtmlBuilder()
+		cellTable.addColumn(bodyColumn, new SafeHtmlBuilder()
 				.appendHtmlConstant("<span class=\"maalr_result_title\">" + langB + "</span>").toSafeHtml());
 	}
 
@@ -316,7 +316,7 @@ public class ResultCellTable extends Composite {
 			}
 		};
 
-		editColumn = new Column<LemmaVersion, String>(cell) {
+		openEditorColumn = new Column<LemmaVersion, String>(cell) {
 
 			@Override
 			public String getValue(LemmaVersion object) {
@@ -336,7 +336,7 @@ public class ResultCellTable extends Composite {
 
 		};
 
-		cellTable.addColumn(editColumn);
+		cellTable.addColumn(openEditorColumn);
 
 	}
 
@@ -368,14 +368,14 @@ public class ResultCellTable extends Composite {
 
 		};
 
-		imageColumn = new Column<LemmaVersion, String>(cell) {
+		openImageColumn = new Column<LemmaVersion, String>(cell) {
 			@Override
 			public String getValue(LemmaVersion object) {
 				return "";
 			}
 		};
 
-		cellTable.addColumn(imageColumn);
+		cellTable.addColumn(openImageColumn);
 
 	}
 
@@ -513,8 +513,8 @@ public class ResultCellTable extends Composite {
 					defaultOrder = false;
 				}
 
-				addLemmaColumn(translationMap.get(description.getLanguageName(defaultOrder)), defaultOrder);
-				addContentColumn(translationMap.get(description.getLanguageName(!defaultOrder)), !defaultOrder);
+				addHeaderColumn(translationMap.get(description.getLanguageName(defaultOrder)), defaultOrder);
+				addBodyColumn(translationMap.get(description.getLanguageName(!defaultOrder)), !defaultOrder);
 				addCorrectionColumn();
 				addEditColumn();
 				addImageColumn();
