@@ -93,13 +93,13 @@ public class LemmaEditorWidget extends SimplePanel {
 
 	// Text
 	@UiField
-	VerticalPanel text_editor = new VerticalPanel();
+	VerticalPanel textEditorPanel = new VerticalPanel();
 	@UiField
-	VerticalPanel langA = new VerticalPanel();
+	VerticalPanel headerPanel = new VerticalPanel();
 	@UiField
-	VerticalPanel langB = new VerticalPanel();
+	VerticalPanel bodyPanel = new VerticalPanel();
 	@UiField
-	VerticalPanel percentage = new VerticalPanel();
+	VerticalPanel correctionPanel = new VerticalPanel();
 
 	private LemmaDescription description;
 
@@ -177,18 +177,18 @@ public class LemmaEditorWidget extends SimplePanel {
 
 				// this.translations = translations;
 
-				DOM.setElementAttribute(text_editor.getElement(), "id", "text_editor");
 				DOM.setElementAttribute(finalBase.getElement(), "id", "finalBase");
+				DOM.setElementAttribute(textEditorPanel.getElement(), "id", "textEditor");
 				DOM.setElementAttribute(imageContainer.getElement(), "id", "imageContainer");
 				DOM.setElementAttribute(imagePanel.getElement(), "id", "imagePanel");
 
-				langA = lemmaContainer(translations);
-				langB = contentContainer(translations);
+				headerPanel = headerContainer(translations);
+				bodyPanel = bodyContainer(translations);
 
-				text_editor.add(langA);
-				text_editor.add(langB);
-				percentage = correctionContainer(translations);
-				text_editor.add(percentage);
+				textEditorPanel.add(headerPanel);
+				textEditorPanel.add(bodyPanel);
+				correctionPanel = correctionContainer(translations);
+				textEditorPanel.add(correctionPanel);
 
 				imagePanel.setWidth("500px");
 				imagePanel.setHeight("380px");
@@ -218,40 +218,40 @@ public class LemmaEditorWidget extends SimplePanel {
 				imageContainer.setWidget(imagePanel);
 
 				finalBase.add(imageContainer);
-				finalBase.add(text_editor);
+				finalBase.add(textEditorPanel);
 
 			}
 		});
 
 	}
 
-	private VerticalPanel lemmaContainer(TranslationMap translations) {
-		Label lbl = new Label(translations.get("lemma"));
+	private VerticalPanel headerContainer(TranslationMap translations) {
+		Label lbl = new Label(translations.get("header"));
 		RichTextArea rta_a = new RichTextArea();
-		DOM.setElementAttribute(rta_a.getElement(), "id", "rta_langA");
-		DOM.setElementAttribute(langA.getElement(), "id", "langA");
+		DOM.setElementAttribute(rta_a.getElement(), "id", "rtaHeaderPanel");
+		DOM.setElementAttribute(headerPanel.getElement(), "id", "headerPanel");
 
 		rta_a.setHeight("2em");
-		langA.add(lbl);
-		langA.add(rta_a);
-		fields.put("lemma", rta_a);
+		headerPanel.add(lbl);
+		headerPanel.add(rta_a);
+		fields.put("header", rta_a);
 
-		return langA;
+		return headerPanel;
 	}
 
-	private VerticalPanel contentContainer(TranslationMap translations) {
-		Label lbl = new Label(translations.get("content"));
+	private VerticalPanel bodyContainer(TranslationMap translations) {
+		Label lbl = new Label(translations.get("body"));
 		RichTextArea rta_b = new RichTextArea();
 		RichTextToolbar toolbar = new RichTextToolbar(rta_b);
-		DOM.setElementAttribute(langB.getElement(), "id", "langB");
-		DOM.setElementAttribute(rta_b.getElement(), "id", "rta_langB");
-		langB.add(lbl);
-		langB.add(toolbar);
-		langB.add(rta_b);
+		DOM.setElementAttribute(bodyPanel.getElement(), "id", "bodyPanel");
+		DOM.setElementAttribute(rta_b.getElement(), "id", "rtaBodyPanel");
+		bodyPanel.add(lbl);
+		bodyPanel.add(toolbar);
+		bodyPanel.add(rta_b);
 
-		fields.put("content", rta_b);
+		fields.put("body", rta_b);
 
-		return langB;
+		return bodyPanel;
 	}
 
 	private VerticalPanel correctionContainer(TranslationMap translations) {
@@ -259,13 +259,13 @@ public class LemmaEditorWidget extends SimplePanel {
 
 		RichTextArea per = new RichTextArea();
 		per.setHeight("2em");
-		DOM.setElementAttribute(per.getElement(), "id", "per");
+		DOM.setElementAttribute(per.getElement(), "id", "correctionPanel");
 
-		percentage.add(lbl);
-		percentage.add(per);
+		correctionPanel.add(lbl);
+		correctionPanel.add(per);
 		fields.put("correction", per);
 
-		return percentage;
+		return correctionPanel;
 	}
 
 	/**
@@ -317,22 +317,22 @@ public class LemmaEditorWidget extends SimplePanel {
 	public void updateFromEditor(final LemmaVersion lemma, final Button ok, final Modal popup, final Button cancel,
 			final Button reset, final TranslationMap translation) {
 
-		String lem = fields.get("lemma").getHTML();
+		String header = fields.get("header").getHTML();
 
-		String con = fields.get("content").getHTML();
+		String body = fields.get("body").getHTML();
 
-		String corr = fields.get("correction").getHTML();
+		String correction = fields.get("correction").getHTML();
 
 		Map<String, String> toUpdate = new HashMap<>();
 
-		toUpdate.put("lemma", lem);
+		toUpdate.put("header", header);
 
-		toUpdate.put("content", con);
+		toUpdate.put("body", body);
 
-		// clean correction
-		corr = corr.replaceAll("[^\\d]", "");
+		// cleanup string
+		correction = correction.replaceAll("[^\\d]", "");
 
-		toUpdate.put("correction", corr);
+		toUpdate.put("correction", correction);
 
 		AsyncCallback<String> callback = new AsyncCallback<String>() {
 
@@ -376,12 +376,11 @@ public class LemmaEditorWidget extends SimplePanel {
 	public void updateFromAdvancedEditor(LemmaVersion lemma) {
 		List<String> toSet = new ArrayList<String>();
 
-		// first language
+		// header
 		toSet.addAll(description.getEditorFields(true));
-		// second language
+		// body
 		toSet.addAll(description.getEditorFields(false));
-
-		// Add correction
+		//correction
 		toSet.add("correction");
 
 		for (String key : toSet) {

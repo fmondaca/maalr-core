@@ -8,10 +8,10 @@
 			<g:FlowPanel ui:field="imagePanel" />
 		</g:ScrollPanel>
 
-		<g:VerticalPanel ui:field="text_editor">
-			<g:VerticalPanel ui:field="langA" />
-			<g:VerticalPanel ui:field="langB" />
-			<g:VerticalPanel ui:field="percentage" />
+		<g:VerticalPanel ui:field="textEditorPanel">
+			<g:VerticalPanel ui:field="headerPanel" />
+			<g:VerticalPanel ui:field="bodyPanel" />
+			<g:VerticalPanel ui:field="correctionPanel" />
 		</g:VerticalPanel>
 
 	</g:HorizontalPanel>
