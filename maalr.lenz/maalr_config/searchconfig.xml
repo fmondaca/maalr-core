@@ -2,9 +2,9 @@
 <dictionaryConfiguration>
 
 	<databaseColumns>
-		<column name="lemma" />
-		<column name="content" />
-		<column name="content_txt" />
+		<column name="header" />
+		<column name="body" />
+		<column name="body_txt" />
 		<column name="correction" />
 		<column name="pages" />
 	</databaseColumns>
@@ -21,20 +21,20 @@
 			fields. Note that the language selection choice MUST be named language. -->
 		<columnSelector id="language">
 			<options>	
-				<option id="lemma">
+				<option id="header">
 					<columns>
-						<column reference="lemma" />
+						<column reference="header" />
 					</columns>
 				</option>
-				<option id="content">
+				<option id="body">
 					<columns>
-						<column reference="content_txt" />
+						<column reference="body_txt" />
 					</columns>
 				</option>
 				<option id="both" default="true">
 					<columns>
-						<column reference="lemma" />
-						<column reference="content_txt" />
+						<column reference="header" />
+						<column reference="body_txt" />
 					</columns>
 				</option>
 			</options>
@@ -53,13 +53,13 @@
 			</options>
 		</queryBuilder>
 	</queryBuilders>
-	<!-- Lemma description -->
+	<!-- header description -->
 	<languages>
-		<language id="lemma" mainColumn="lemma">
+		<language id="header" mainColumn="header">
 			<editors>
 				<frontend_editor>
 					<fields>
-						<field column="lemma"></field>
+						<field column="header"></field>
 						<field column="correction"></field>
 					</fields>
 				</frontend_editor>
@@ -67,36 +67,36 @@
 					<fields>
 						<!-- Editors must ensure that this field is not empty (visitors don't 
 							have to) -->
-						<field column="lemma" allowsNull="false"></field>
+						<field column="header" allowsNull="false"></field>
 
 					</fields>
 				</backend_editor>
 			</editors>
 			<results>
 				<fields>
-					<field column="lemma" format="{0}"></field>
+					<field column="header" format="{0}"></field>
 
 				</fields>
 			</results>
 		</language>
-		<language id="content" mainColumn="content_txt">
+		<language id="body" mainColumn="body_txt">
 			<editors>
 				<frontend_editor>
 					<fields>
-						<field column="content"></field>
+						<field column="body"></field>
 						<field column="correction"></field>
 					</fields>
 				</frontend_editor>
 				<backend_editor>
 					<fields>
-						<field column="content" allowsNull="false"></field>
+						<field column="body" allowsNull="false"></field>
 
 					</fields>
 				</backend_editor>
 			</editors>
 			<results>
 				<fields>
-					<field column="content" format="{0}"></field>
+					<field column="body" format="{0}"></field>
 				</fields>
 			</results>
 		</language>
