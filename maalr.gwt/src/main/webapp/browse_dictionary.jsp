@@ -14,11 +14,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%-- HTML HEADER --%>
-<jsp:include page="/maalr_modules/misc/htmlhead.jsp" />
+<%@ include file="/maalr_modules/misc/htmlhead.jsp"%>
 
 	<body>
 		<div id="top">
-			<jsp:include page="/maalr_modules/misc/header.jsp" />
+			<%@ include file=="/maalr_modules/misc/header.jsp"%>
 		</div>
 		
 		<div id="content">
@@ -26,7 +26,7 @@
 		</div>
 		
 		<div id="bottom">
-			<jsp:include page="/maalr_modules/misc/footer.jsp" />
+			<%@ include file="/maalr_modules/misc/footer.jsp"%>
 		</div>
 		
 	</body>

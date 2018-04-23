@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<jsp:include page="/maalr_modules/misc/htmlhead.jsp" />
+<%@ include file page="/maalr_modules/misc/htmlhead.jsp"%>
 
 	<body>
-		<jsp:include page="/maalr_modules/misc/header.jsp" />
+		<%@ include file="/maalr_modules/misc/header.jsp"%>
 	
 			<%@ include file="/maalr_modules/misc/language_widget.jsp" %>
 			<%@ include file="/maalr_modules/misc/login_widget.jsp" %>

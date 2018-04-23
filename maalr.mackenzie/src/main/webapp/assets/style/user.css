@@ -23,7 +23,7 @@ input {
 /* HEAD 
 /* HEAD-TITLE */
 #navi_head {
-	background-color: rgb(23,54,90);
+	background-color: #175a3b;
 	width: 100%;
 	z-index: 998;
 	height: 140px;
@@ -43,7 +43,7 @@ input {
 
 #navi_head .active {
 	font-weight: 700;
-	font-size: 42px;
+	font-size: 24px;
 	color: #eaf0f2;
 }
 
@@ -424,7 +424,7 @@ input#internal_login {
 
 /* FOOTER */
 footer {
-	background-color: rgb(23,54,90);
+	background-color: #175a3b;
 	clear: both;
 	width: 100%;
 	height: 40px;
@@ -436,7 +436,6 @@ footer {
 
 ul#navi_bottom_menu {
 	color: #eaf0f2;
-	padding: 10px 0px 0px 0px;
 	margin-left: 50px;
 }
 

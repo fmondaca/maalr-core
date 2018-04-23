@@ -10,11 +10,14 @@
 <%@ page import="de.uni_koeln.spinfo.maalr.lucene.query.MaalrQueryFormatter" %>
 <%@ page import="de.uni_koeln.spinfo.maalr.lucene.query.QueryResult" %>
 <%@ page import="de.uni_koeln.spinfo.maalr.lucene.util.QueryBuilder" %>
+<%@ page import="de.uni_koeln.spinfo.maalr.common.shared.searchconfig.Localizer" %>
+<%@ page import="java.util.Locale" %>
+
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setLocale value="<%=session.getAttribute("pl")%>" />
+<fmt:setLocale value='<%=session.getAttribute("locale")%>'/>
 <fmt:setBundle basename="de.uni_koeln.spinfo.maalr.webapp.i18n.text" />
 
 <%
@@ -39,7 +42,7 @@
 							<div class="row-fluid">
 								<div class="span12">
 									<div class="gwt-HTML">
-										<span style="font-size: large; font-weight: bold; text-align: left;">
+										<span style="text-align: left;">
 											<fmt:message key="maalr.query.results">
 													<fmt:param><%=MaalrQueryFormatter.getQueryLabel(mQuery)%></fmt:param> 
 	   												<fmt:param><%=(mQuery.getPageNr()*mQuery.getPageSize() + 1)%></fmt:param>
@@ -61,18 +64,7 @@
 									<td align="left" style="vertical-align: top;" width="100%">
 										<table class="table resultlist" style="width: 100%;">
 											<thead>
-												<tr __gwt_header_row="0">
-													<th colspan="1" class="GDPXEMADAC GDPXEMADOB"
-														><span
-														class="maalr_result_title"
-														style="color: #002994; font-size: large;"><%=Configuration.getInstance().getLemmaDescription().getLanguageName(true)%></span></th>
-													<th colspan="1" class="GDPXEMADAC"
-														><span
-														class="maalr_result_title"
-														style="color: #002994; font-size: large;"><%=Configuration.getInstance().getLemmaDescription().getLanguageName(false)%></span></th>
-													<th colspan="1" class="GDPXEMADAC GDPXEMADIC"
-														></th>
-												</tr>
+												
 											</thead>
 											<tfoot style="display: none;" aria-hidden="true"></tfoot>
 											<tbody style="">
@@ -154,7 +146,7 @@
 		} else if(mQuery.getValue("searchPhrase") != null){ 
 	%>
 	<div class="well">
-		<jsp:include page="/maalr_modules/misc/notfound.jsp" />
+		<%@ include file="/maalr_modules/misc/notfound.jsp"%>
 	</div>
 	<% 
 		} 

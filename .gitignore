@@ -4,6 +4,7 @@ exports/
 bin/
 maalr/index/
 maalr/backup/
+maalr.mackenzie/mackenzie/
 *.jar
 *.class
 *.prefs
@@ -15,3 +16,7 @@ maalr/backup/
 
 *.classpath
 *.prefs
+*.ods
+*.tsv
+*.pdf
+

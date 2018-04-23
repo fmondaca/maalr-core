@@ -15,16 +15,16 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setLocale value="<%=session.getAttribute("pl")%>" />
+<fmt:setLocale value='<%=session.getAttribute("locale")%>'/>
 <fmt:setBundle basename="de.uni_koeln.spinfo.maalr.webapp.i18n.text" />
 
 <%-- HTML HEADER --%>
-<%@ include file="/maalr_modules/misc/htmlhead.jsp" %>
+<%@ include file="/maalr_modules/misc/htmlhead.jsp"%>
 
 	<body>
 	
 		<%-- NAVIGATION --%>
-		<%@ include file="/maalr_modules/misc/header.jsp" %>
+		<%@ include file="/maalr_modules/misc/header.jsp"%>
 	
 		<div id="content" class="content">
 		
@@ -51,7 +51,7 @@
 			</div>
 		</div>
 		
-		<jsp:include page="/maalr_modules/misc/footer.jsp" />
+		<%@ include file="/maalr_modules/misc/footer.jsp"%>
 
 		<%-- GWT AJAX BROWSER HISTORY SUPPORT --%>
 		<iframe src="javascript:''" id="__gwt_historyFrame" style="width: 0; height: 0; border: 0"></iframe>

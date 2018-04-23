@@ -45,11 +45,7 @@ public class Localizer {
 		// FIXME: method is called three times. the last two time locale is set
 		// with empty string. 
 		TranslationMap map = translations.get(locale);
-		if (!locale.equals("")) {
-			//logger.info("locale for ui coniguration : " + locale);
-			LOCALE = locale;
-			map = translations.get(LOCALE);
-		}
+		
 		if (map == null) {
 			map = new TranslationMap();
 			Properties translation = new Properties();

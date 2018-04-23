@@ -4,19 +4,19 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%
-	if(session.getAttribute("pl") == null) {
-		session.setAttribute("pl", request.getLocale().getLanguage());
+	if(session.getAttribute("locale") == null) {
+		session.setAttribute("locale", request.getLocale().getLanguage());
 	}
-	if(request.getParameter("pl") != null) {
-		session.setAttribute("pl", request.getParameter("pl"));
+	if(request.getParameter("locale") != null) {
+		session.setAttribute("locale", request.getParameter("locale"));
 	}
 %>
 
 <!DOCTYPE html>
 
-<html lang="<%=session.getAttribute("pl") %>">
+<html lang='<%=session.getAttribute("locale") %>'>
 
-<fmt:setLocale value="<%=session.getAttribute("pl") %>" />
+<fmt:setLocale value='<%=session.getAttribute("locale") %>'/>
 <fmt:setBundle basename="de.uni_koeln.spinfo.maalr.webapp.i18n.text" />
 
 <head>
@@ -45,6 +45,7 @@
 <link href="${dictContext}/de.uni_koeln.spinfo.maalr.user/css/bootstrap.min.css" rel="stylesheet">
 <link href="${dictContext}/de.uni_koeln.spinfo.maalr.user/css/gwt-bootstrap.css" rel="stylesheet">
 <link href="${dictContext}/de.uni_koeln.spinfo.maalr.user/css/font-awesome.css" rel="stylesheet">
-<link href="${dictContext}/de.uni_koeln.spinfo.maalr.user/css/user.css" rel="stylesheet">
+<link href="${dictContext}/assets/style/user.css" rel="stylesheet">
+<link href="${dictContext}/assets/style/about.css" rel="stylesheet">
 
 </head>

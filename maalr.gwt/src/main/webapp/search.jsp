@@ -1,15 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setLocale value="<%=session.getAttribute("pl")%>" />
+<fmt:setLocale value='<%=session.getAttribute("locale")%>'/>
 <fmt:setBundle basename="de.uni_koeln.spinfo.maalr.webapp.i18n.text" />
 
-<jsp:include page="jsp/modules/htmlhead.jsp" />
+<%@ include file="jsp/modules/htmlhead.jsp"%>
 
 	<body>
 	
-		<jsp:include page="/maalr_modules/misc/header.jsp" />
+		<%@ include file="/maalr_modules/misc/header.jsp"%>
 		
 		<div class="content">
 			<div class="container-fluid">

@@ -20,6 +20,6 @@
 		<%
 			}
 		%>
-				<li><%@ include file="/maalr_modules/login/loginmodule.jsp"%></li>
+				<li><jsp:include page="/maalr_modules/login/loginmodule.jsp"/></li>
 	</ul>
 </div>
