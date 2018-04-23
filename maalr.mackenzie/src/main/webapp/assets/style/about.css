@@ -1,0 +1,85 @@
+@charset "UTF-8";
+	
+	
+/* about.html */	
+
+.anchor::before {
+  content:"";
+  display:block;
+  height:140px; /* fixed header height*/
+  margin:-140px 0 0; /* negative fixed header height */
+}
+
+/*cell table*/
+.body_cell, .header_cell{
+font-family: Constantia;
+}
+
+
+div#about_title {
+    margin-top: 130px;
+}
+
+.title {
+text-align: left;
+margin-left: 200px;
+}
+
+.subtitle {
+text-align: left;
+margin-left: 200px;
+}
+
+.section {
+text-align: left;
+margin-top: 30px;
+margin-bottom: 30px;
+margin-left: 200px;
+margin-right: 200px;
+}
+
+
+.img_dict {
+display: block;
+margin-left: auto;
+margin-right: auto; 
+border: 1px solid rgb(23,54,90);
+margin-top: 25px;
+margin-bottom: 25px;
+}
+
+.img_desc{
+display: table;
+margin: 0 auto;
+font-weight: bold;
+}
+
+.exp {
+text-align: justify;
+font-size:medium;
+margin-top: 30px;
+margin-bottom: 30px;
+margin-left: 200px;
+margin-right: 200px;
+
+}
+
+
+/*abbr and signs table*/
+
+.abbr_row, .sign_row{
+vertical-align:top;
+}
+
+.sign_cell_l{
+width:30px;
+}
+
+.abbr_cell_r, .sign_cell_r{
+padding-left:30px;
+}
+
+p.reference {
+text-align: right;
+}
+
